@@ -1,0 +1,47 @@
+{
+  "name": "my-travel-guide",
+  "private": true,
+  "dependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "@babel/preset-react": "^7.0.0",
+    "@rails/webpacker": "3.5",
+    "axios": "^0.18.0",
+    "babel-loader": "^8.0.5",
+    "bootstrap": "^4.3.1",
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.10.0",
+    "immutability-helper": "^3.0.0",
+    "jquery": "^3.3.1",
+    "prop-types": "^15.7.2",
+    "quill": "^1.3.6",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3",
+    "react-google-maps": "^9.4.5",
+    "react-quill": "^1.3.3",
+    "react-router-dom": "^4.3.1"
+  },
+  "devDependencies": {
+    "babel-jest": "^24.1.0",
+    "jest": "^24.1.0",
+    "webpack-dev-server": "2.11.2"
+  },
+  "scripts": {
+    "test": "jest",
+    "test-watch": "jest --watch"
+  },
+  "jest": {
+    "roots": [
+      "test/javascript"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "app/javascript/packs"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/test/javascript/__mocks__/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/test/javascript/__mocks__/styleMock.js"
+    }
+  }
+}

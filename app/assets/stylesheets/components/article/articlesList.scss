@@ -1,0 +1,23 @@
+.articles-container {
+  margin-top: 20px;
+}
+
+.article-card {
+  width: 18rem;
+  margin: 20px 0;
+
+  .card:hover {
+    box-shadow: 0 4px 6px rgba(50,50,93,0.11), 0 1px 3px rgba(0,0,0,0.08)
+  }
+
+  .card-body p {
+    min-height: 72px;
+  }
+
+  a {
+    color: inherit;
+    &:hover {
+      color: inherit;
+    }
+  }
+}

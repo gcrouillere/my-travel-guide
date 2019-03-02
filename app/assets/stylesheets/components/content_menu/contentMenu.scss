@@ -1,0 +1,45 @@
+.contentMenu {
+  text-align: center;
+  padding: 10px 0px 10px 10px;
+  position: fixed;
+  border: 1px solid rgba(0,0,0,.05);
+  left: -168px;
+  top: 0;
+  z-index: 1;
+  background-color: #F7F7F7;
+  height: 100vh;
+  width: 235px;
+  display: flex;
+  transition: all 0.3s ease-in-out;
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .expand {
+    display: flex;
+    align-items: center;
+    z-index: 2;
+    background: linear-gradient(to right, #F7F7F7, #fefefe);
+    cursor: pointer;
+    span {
+      padding: 10px;
+      font-size: 80px;
+      font-weight: 100;
+      right: 0;
+      color: #fff;
+      text-shadow: 1px 0px 2px #ccc;
+      }
+  }
+}
+
+.contentMenu.expanded {
+  left: 0;
+  transition: all 0.3s ease-in-out;
+}
