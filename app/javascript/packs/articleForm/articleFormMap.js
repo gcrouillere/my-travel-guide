@@ -54,6 +54,15 @@ class ArticleFormMap extends Component {
     this.initMap();
   }
 
+  recordMap = () => {
+    $.ajax({
+      method: "PUT",
+      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+      url: `/articles/${this.state.id}`,
+      data: {article: {title: title}}
+    })
+  }
+
   render() {
     return (
       <div className="mapBloc">
