@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_28_202129) do
+ActiveRecord::Schema.define(version: 2019_03_04_084417) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,15 @@ ActiveRecord::Schema.define(version: 2019_02_28_202129) do
     t.index ["article_id"], name: "index_maps_on_article_id"
   end
 
+  create_table "markers", force: :cascade do |t|
+    t.float "lat"
+    t.float "lng"
+    t.bigint "map_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["map_id"], name: "index_markers_on_map_id"
+  end
+
   create_table "text_contents", force: :cascade do |t|
     t.text "text"
     t.bigint "article_id"
@@ -58,5 +67,6 @@ ActiveRecord::Schema.define(version: 2019_02_28_202129) do
   add_foreign_key "article_audience_selections", "articles"
   add_foreign_key "article_audience_selections", "audience_selections"
   add_foreign_key "maps", "articles"
+  add_foreign_key "markers", "maps"
   add_foreign_key "text_contents", "articles"
 end
