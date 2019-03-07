@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import TextContent from './textContent'
+import TextContentForm from './articleForm/textContentForm'
 import $ from 'jquery'
 import 'react-quill/dist/quill.snow.css';
 

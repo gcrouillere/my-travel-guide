@@ -5,6 +5,7 @@ class CreateMaps < ActiveRecord::Migration[5.2]
       t.string :name
       t.float :lat
       t.float :lng
+      t.integer :position
       t.references :article, foreign_key: true
 
       t.timestamps

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import TextContent from './textContent'
-import ArticleFormStepOne from './articleForm/articleFormStepOne'
-import ArticleFormMap from './articleForm/articleFormMap'
+import AudienceForm from './articleForm/audienceForm'
+import TextContentForm from './articleForm/textContentForm'
+import MapForm from './articleForm/mapForm'
 import ContentMenu from './articleForm/contentMenu'
 import $ from 'jquery'
 import update from 'immutability-helper'
@@ -13,9 +13,11 @@ class ArticleForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      textContents: [],
-      audiencesSelection: [],
-      maps: [],
+      articleElements: [],
+      draggedElementId: null,
+      hoveredElement: null,
+      draggedElementPosition: null,
+      previousHoveredElementPosition: null,
       title: "",
       id: null
     }
@@ -28,9 +30,10 @@ class ArticleForm extends Component {
         url: `/articles/${this.props.match.params.id}`,
         dataType: "JSON"
       }).done((data) => {
-        this.setState({title: data.title, textContents: data.text_contents, id: data.id,
-          audiencesSelection: data.audience_selections, maps: data.maps});
-      });
+        this.setState({title: data.title, id: data.id,
+        articleElements: data.text_contents.concat(data.maps).sort((x, y) => x.position - y.position)});
+        console.log(this.state)
+      })
     } else {
       $.ajax({
         method: 'POST',
@@ -39,7 +42,7 @@ class ArticleForm extends Component {
         dataType: "JSON",
         data: {article: {title: "", audiencesSelection:[]}}
       }).done((data) => {
-        this.setState({title: data.title, textContents: [], id: data.id});
+        this.setState({title: data.title, articleElements: [], id: data.id});
         this.props.history.push(`/articles/${data.id}/edit`)
       });
     }
@@ -52,8 +55,11 @@ class ArticleForm extends Component {
       beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
       url: `/articles/${this.state.id}`,
       data: {article: {title: title}}
+    }).done((data) => {
+      this.setState({title: title})
+    }).fail((data) => {
+      console.log(data)
     })
-    this.setState({title: title})
   }
 
   addNewTextContent = (id) => {
@@ -64,25 +70,84 @@ class ArticleForm extends Component {
       dataType: "JSON",
       data: {text_content: {text: "", article_id: id}}
     }).done((data) => {
-      const textContents = update(this.state.textContents, {$splice: [[0, 0, data]]})
-      this.setState({textContents: textContents})
+      const articleElements = update(this.state.articleElements, {$splice: [[0, 0, data]]}).sort((x, y) => x.position - y.position)
+      this.setState({ articleElements: articleElements })
     }).fail((data) => {
       console.log(data)
     })
   }
 
-  addNewMap = (id) => {
+  addNewMap = (id, mapCenter) => {
+    document.querySelector(".mapInitialCenterOverlay").classList.remove("active")
+    const zoom = (mapCenter.lat == 0 && mapCenter.lng == 0) ? 1 : 11
     $.ajax({
       method: 'POST',
       beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
       url: `/maps/`,
       dataType: "JSON",
-      data: {map: {lat: 41.0082, lng: 28.9784, zoom: 8, article_id: id}}
+      data: {map: {lat: mapCenter.lat, lng: mapCenter.lng, zoom: zoom, article_id: id}}
     }).done((data) => {
-      const maps = update(this.state.maps, {$splice: [[0, 0, data]]})
-      this.setState({maps: maps})
+      const articleElements = update(this.state.articleElements, {$push: [data]})
+      this.setState({ articleElements: articleElements.sort((x, y) => x.position - y.position) })
     }).fail((data) => {
       console.log(data)
+    })
+  }
+
+  onDragStart = (event, id, className, position) => {
+    this.setState({
+      initialPosition: position,
+      draggedElementId: id,
+      draggedElementPosition: position,
+      previousHoveredElementPosition: position
+    })
+    console.log(this.state.initialPosition)
+  }
+
+  onDragOver = (event, id, position) => {
+    event.preventDefault();
+  }
+
+  onDragLeave = (event, id, position) => {
+    if (position == this.state.draggedElementPosition || position != this.state.previousHoveredElementPosition) {
+      document.querySelectorAll(".dropZone-before, .dropZone-after").forEach(x => x.classList.remove("active"))
+    }
+  }
+
+  onDragEnter = (event, id, position) => {
+    event.preventDefault();
+    if (position !== this.state.draggedElementPosition && position == this.state.previousHoveredElementPosition) {
+      if (this.state.draggedElementPosition > position) {
+        document.querySelector(`#content-${position} .dropZone-before`).classList.add("active")
+      } else {
+        document.querySelector(`#content-${position} .dropZone-after`).classList.add("active")
+      }
+    } else {
+      document.querySelectorAll(".dropZone-before").forEach(x => x.classList.remove("active"))
+      this.setState({previousHoveredElementPosition: position})
+    }
+  }
+
+  onDrop = (event, id, position) => {
+    document.querySelectorAll(".dropZone-before , .dropZone-after").forEach(x => x.classList.remove("active"))
+    console.log(`draged id ${this.state.draggedElementId}`)
+    console.log(`target position ${position}`)
+    console.log(`init position ${this.state.initialPosition}`)
+    $.ajax({
+      method: 'POST',
+      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+      url: `/articles/element_position_update/`,
+      dataType: "JSON",
+      data: {article: this.state.id, positions: {
+        init: {id: this.state.draggedElementId, position: this.state.initialPosition},
+        target: {id: id, position: position}
+      }}
+    }).done((data) => {
+      console.log(data)
+      const sortedElements = data.text_contents.concat(data.maps).sort((x, y) => x.position - y.position)
+      console.log(this.state.articleElements)
+      this.setState({articleElements: sortedElements})
+      console.log(this.state.articleElements)
     })
   }
 
@@ -90,7 +155,7 @@ class ArticleForm extends Component {
     return (
       <div className="container article-container">
 
-        <ArticleFormStepOne manageAudience={this.manageAudience} audiencesSelection={this.state.audiencesSelection} id={this.state.id}/>
+        <AudienceForm id={this.props.match.params.id} />
 
         <ContentMenu id={this.state.id} addNewTextContent={this.addNewTextContent} addNewMap={this.addNewMap}/>
 
@@ -98,16 +163,21 @@ class ArticleForm extends Component {
           <input type="text" placeholder="Enter your article title" value={this.state.title} onChange={this.handleTitleChange}/>
         </header>
 
-        <div id="mapReceiver">
-          {this.state.maps.map((map) =>
-            <ArticleFormMap key={map.id} map={map}/>
-          )}
-        </div>
-
-        <div id="articleTextContents">
-        {this.state.textContents.map((textContent) =>
-          <TextContent key={textContent.id} textContent={textContent.text} id={textContent.id}/>
-        )}
+        <div className="articleContent">
+          {this.state.articleElements.map(element => {
+            if (element.class_name == "TextContent") {
+              return <TextContentForm key={element.id} textContent={element}
+                articleId={this.state.id} position={element.position} id={element.id}
+                onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
+                onDragLeave={this.onDragLeave} onDrop={this.onDrop} />
+            }
+            else if (element.class_name == "Map") {
+              return <MapForm key={element.id} map={element}
+              articleId={this.state.id} position={element.position} id={element.id}
+              onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
+              onDragLeave={this.onDragLeave} onDrop={this.onDrop} />
+            }
+          })}
         </div>
 
       </div>

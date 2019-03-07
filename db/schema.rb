@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 2019_03_04_084417) do
     t.string "name"
     t.float "lat"
     t.float "lng"
+    t.integer "position"
     t.bigint "article_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -58,6 +59,7 @@ ActiveRecord::Schema.define(version: 2019_03_04_084417) do
 
   create_table "text_contents", force: :cascade do |t|
     t.text "text"
+    t.integer "position"
     t.bigint "article_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

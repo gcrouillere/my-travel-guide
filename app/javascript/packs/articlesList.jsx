@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import update from 'immutability-helper'
-import Article from './article'
 
 class ArticlesList extends Component {
   constructor(props) {

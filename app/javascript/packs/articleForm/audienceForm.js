@@ -2,47 +2,48 @@ import React, { Component } from 'react'
 import update from 'immutability-helper'
 import $ from 'jquery'
 
-class ArticleFormStepOne extends Component {
+class AudienceForm extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      allowedAudienceSelections:[],
-      audiencesSelection: this.props.audiencesSelection
+      allowedAudienceSelections: [],
+      audiencesSelection: []
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.audiencesSelection) this.setState({audiencesSelection: nextProps.audiencesSelection})
-  }
-
   componentDidMount() {
+    $.ajax({
+      method: 'GET',
+      url: `/articles/${this.props.id}`,
+      dataType: "JSON"
+    }).done((data) => {
+      this.setState({audiencesSelection: data.audience_selections})
+    })
     $.ajax({
       method: 'GET',
       url: "/audience_selections",
       dataType: "JSON"
     }).then(response => {
       this.setState({allowedAudienceSelections: response});
-    }).fail( response => {
-      console.log(response)
     })
   }
 
   manageAudience = (event) => {
-    let clickedAudienceName = event.target.value
-    let newSelectionNames = this.state.audiencesSelection.map(x => x.audience)
+    let clickedAudienceID = parseInt(event.target.id)
+    let newSelectionIDS = this.state.audiencesSelection.map(x => x.id)
 
-    if ( newSelectionNames.indexOf(clickedAudienceName) == -1 ) {
-      newSelectionNames.push(clickedAudienceName)
+    if ( newSelectionIDS.indexOf(clickedAudienceID) == -1 ) {
+      newSelectionIDS.push(clickedAudienceID)
     } else {
-      newSelectionNames.splice(newSelectionNames.indexOf(clickedAudienceName), 1)
+      newSelectionIDS.splice(newSelectionIDS.indexOf(clickedAudienceID), 1)
     }
 
     $.ajax({
       method: "PUT",
       beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
       url: `/articles/${this.props.id}`,
-      data: {article: {audience_selections: newSelectionNames.length == 0 ? [""] : newSelectionNames }}
+      data: {article: {audience_selection_ids: newSelectionIDS.length == 0 ? [""] : newSelectionIDS }}
     }).done((data) => {
       this.setState({audiencesSelection: data.audience_selections})
     }).fail((data) => {
@@ -61,9 +62,9 @@ class ArticleFormStepOne extends Component {
         <div className="form-check">
         {this.state.allowedAudienceSelections.map((category) =>
           <div key={`${category.audience}0`}>
-            <input key={`${category.audience}1`} className="form-check-input" type="checkbox" value={`${category.audience}`} id={`${category.audience}Check`}
+            <input key={`${category.audience}1`} className="form-check-input" type="checkbox" value={`${category.audience}`} id={`${category.id}`}
             onChange={this.manageAudience} checked={this.checkBox(category.audience)}/>
-            <label key={`${category.audience}2`} className="form-check-label" htmlFor={`${category.audience}Check`}>{`${category.audience}`}</label>
+            <label key={`${category.audience}2`} className="form-check-label" htmlFor={`${category.id}`}>{`${category.audience}`}</label>
           </div>
         )}
         </div>
@@ -72,5 +73,5 @@ class ArticleFormStepOne extends Component {
   }
 }
 
-export default ArticleFormStepOne
+export default AudienceForm
 
