@@ -1,11 +1,15 @@
 .dropZone-before, .dropZone-after {
   width: 100%;
-  padding: 20px;
   border: 1px dashed #ccc;
   opacity: 0;
   display: none;
   margin: 30px 0;
   transition: all 0.3s ease-in-out;
+  padding: 10px;
+  p {
+    padding: 20px;
+    margin: 0;
+  }
 }
 
 .dropZone-before.active, .dropZone-after.active {
@@ -13,4 +17,24 @@
   visibility: visible;
   display: block;
   transition: all 0.3s ease-in-out;
+  p {
+    animation: dropHighlight 1.5s ease-in-out infinite alternate;
+  }
+}
+
+#drag-ghost {
+  width: 60%;
+  height: 100px;
+  background-color: #F7F7F7;
+  border-radius: 2px;
+}
+
+@keyframes dropHighlight {
+  from {
+    background: #fff;
+  }
+
+  to {
+    background: #F7F7F7;
+  }
 }

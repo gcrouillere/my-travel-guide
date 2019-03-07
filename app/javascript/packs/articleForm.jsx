@@ -5,6 +5,7 @@ import AudienceForm from './articleForm/audienceForm'
 import TextContentForm from './articleForm/textContentForm'
 import MapForm from './articleForm/mapForm'
 import ContentMenu from './articleForm/contentMenu'
+import DraggingImage from 'images/draggingImage.svg'
 import $ from 'jquery'
 import update from 'immutability-helper'
 import 'react-quill/dist/quill.snow.css';
@@ -32,7 +33,6 @@ class ArticleForm extends Component {
       }).done((data) => {
         this.setState({title: data.title, id: data.id,
         articleElements: data.text_contents.concat(data.maps).sort((x, y) => x.position - y.position)});
-        console.log(this.state)
       })
     } else {
       $.ajax({
@@ -94,24 +94,27 @@ class ArticleForm extends Component {
     })
   }
 
-  onDragStart = (event, id, className, position) => {
+  onDragStart = (event, id, position) => {
     this.setState({
       initialPosition: position,
       draggedElementId: id,
       draggedElementPosition: position,
       previousHoveredElementPosition: position
     })
-    console.log(this.state.initialPosition)
+
+    let elem = document.createElement("div");
+    elem.id = "drag-ghost";
+    elem.textNode = "Dragging";
+    elem.style.position = "absolute";
+    elem.style.top = "-200px";
+    elem.innerText = "ff"
+    document.body.appendChild(elem);
+    event.dataTransfer.setDragImage(elem, 0, 0);
+   return false
   }
 
   onDragOver = (event, id, position) => {
     event.preventDefault();
-  }
-
-  onDragLeave = (event, id, position) => {
-    if (position == this.state.draggedElementPosition || position != this.state.previousHoveredElementPosition) {
-      document.querySelectorAll(".dropZone-before, .dropZone-after").forEach(x => x.classList.remove("active"))
-    }
   }
 
   onDragEnter = (event, id, position) => {
@@ -123,16 +126,19 @@ class ArticleForm extends Component {
         document.querySelector(`#content-${position} .dropZone-after`).classList.add("active")
       }
     } else {
-      document.querySelectorAll(".dropZone-before").forEach(x => x.classList.remove("active"))
+      document.querySelectorAll(".dropZone-before, .dropZone-after").forEach(x => x.classList.remove("active"))
       this.setState({previousHoveredElementPosition: position})
+    }
+  }
+
+  onDragLeave = (event, id, position) => {
+    if (position == this.state.draggedElementPosition || position != this.state.previousHoveredElementPosition) {
+      document.querySelectorAll(".dropZone-before, .dropZone-after").forEach(x => x.classList.remove("active"))
     }
   }
 
   onDrop = (event, id, position) => {
     document.querySelectorAll(".dropZone-before , .dropZone-after").forEach(x => x.classList.remove("active"))
-    console.log(`draged id ${this.state.draggedElementId}`)
-    console.log(`target position ${position}`)
-    console.log(`init position ${this.state.initialPosition}`)
     $.ajax({
       method: 'POST',
       beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
@@ -143,11 +149,10 @@ class ArticleForm extends Component {
         target: {id: id, position: position}
       }}
     }).done((data) => {
-      console.log(data)
       const sortedElements = data.text_contents.concat(data.maps).sort((x, y) => x.position - y.position)
-      console.log(this.state.articleElements)
       this.setState({articleElements: sortedElements})
-      console.log(this.state.articleElements)
+      let ghost = document.getElementById("drag-ghost");
+      if (ghost.parentNode) ghost.parentNode.removeChild(ghost)
     })
   }
 

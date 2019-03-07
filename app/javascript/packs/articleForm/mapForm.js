@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import $ from 'jquery'
 import update from 'immutability-helper'
+import DropZone from './dropZone'
 
 class MapForm extends Component {
 
@@ -99,33 +100,37 @@ class MapForm extends Component {
     })
   }
 
-  onDragStart = (event) => {this.props.onDragStart(event, this.state.id, "TextContent", this.state.position)}
+  onDragStart = (event) => {this.props.onDragStart(event, this.props.id, this.props.position)}
 
-  onDragOver = (event) => {this.props.onDragOver(event, this.state.id, this.state.position)}
+  onDragOver = (event) => {this.props.onDragOver(event, this.props.id, this.props.position)}
 
-  onDragEnter = (event) => {this.props.onDragEnter(event, this.state.id, this.state.position)}
+  onDragEnter = (event) => {this.props.onDragEnter(event, this.props.id, this.props.position)}
 
-  onDragLeave = (event) => {this.props.onDragLeave(event, this.state.id, this.state.position)}
+  onDragLeave = (event) => {this.props.onDragLeave(event, this.props.id, this.props.position)}
 
-  onDrop = (event) => {this.props.onDrop(event, this.state.id, this.state.position)}
+  onDrop = (event) => {this.props.onDrop(event, this.props.id, this.props.position)}
 
   render() {
     return (
-      <div className="mapBloc" draggable id={`content-${this.state.position}`}
-      onDragStart={this.onDragStart}
-      onDragOver={this.onDragOver}
-      onDragEnter={this.onDragEnter}
-      onDragLeave={this.onDragLeave}
-      onDrop={this.onDrop}>
-        <div className="mapLocation">
-          <div className="input-group mb-3">
-            <div className="input-group-prepend">
-              <span className="input-group-text" id="inputGroup-sizing-default">Map's center</span>
+      <div draggable id={`content-${this.props.position}`}
+        onDragStart={this.onDragStart}
+        onDragOver={this.onDragOver}
+        onDragEnter={this.onDragEnter}
+        onDragLeave={this.onDragLeave}
+        onDrop={this.onDrop}>
+        <DropZone draggable area={"before"} onDrop={this.onDrop}/>
+        <div className="mapBloc">
+          <div className="mapLocation">
+            <div className="input-group mb-3">
+              <div className="input-group-prepend">
+                <span className="input-group-text" id="inputGroup-sizing-default">Map's center</span>
+              </div>
+              <input type="text" className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id={`mapLocation${this.props.map.id}`}/>
             </div>
-            <input type="text" className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id={`mapLocation${this.props.map.id}`}/>
           </div>
+          <div id={`map${this.props.map.id}`} style={{ width: '100%', height: 150 }}></div>
         </div>
-        <div id={`map${this.props.map.id}`} style={{ width: '100%', height: 500 }}></div>
+        <DropZone draggable area={"after"} onDrop={this.onDrop}/>
       </div>
     );
   }

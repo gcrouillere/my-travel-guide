@@ -31,7 +31,7 @@ class TextContentForm extends Component {
     });
   }
 
-  onDragStart = (event) => {this.props.onDragStart(event, this.props.id, "TextContent", this.props.position)}
+  onDragStart = (event) => {this.props.onDragStart(event, this.props.id, this.props.position)}
 
   onDragOver = (event) => {this.props.onDragOver(event, this.props.id, this.props.position)}
 
@@ -49,9 +49,9 @@ class TextContentForm extends Component {
       onDragEnter={this.onDragEnter}
       onDragLeave={this.onDragLeave}
       onDrop={this.onDrop}>
-        <DropZone area={"before"} onDrop={(event) => this.onDrop(event, this.props.id, this.props.position)}/>
+        <DropZone area={"before"} onDrop={this.onDrop}/>
         <ReactQuill value={this.state.textContent} onBlur={this.saveOnBlur} onChange={this.handleChange} />
-        <DropZone area={"after"} onDrop={(event) => this.onDrop(event, this.props.id, this.props.position)}/>
+        <DropZone area={"after"} onDrop={this.onDrop}/>
       </div>
     )
   }
