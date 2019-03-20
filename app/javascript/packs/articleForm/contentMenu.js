@@ -1,4 +1,7 @@
 import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
+import MapInitialCenterOverlay from './mapInitialCenterOverlay'
 
 class ContentMenu extends Component {
 
@@ -9,26 +12,34 @@ class ContentMenu extends Component {
     }
   }
 
- initAutoComplete = () => {
-  document.querySelector(".mapInitialCenterOverlay").classList.add("active")
-  var mapLocation = document.getElementById('initialMapLocation')
-  this.autocomplete = new google.maps.places.Autocomplete((mapLocation), {types: ['geocode']});
-  google.maps.event.addDomListener(mapLocation, 'keydown', function(e) {
-    if (e.key === "Enter") e.preventDefault(); // Do not submit the form on Enter.
-  });
-  this.autocomplete.addListener('place_changed', this.addNewMap);
- }
+  initAutoComplete = ({initPosition = undefined} = {}) => {
+    document.querySelector(".mapInitialCenterOverlay").classList.add("active")
+    document.getElementById('initialMapLocation').value = ""
+    let mapLocation = document.getElementById('initialMapLocation')
+    let userInput = ""
+    this.autocomplete = new google.maps.places.Autocomplete((mapLocation), {types: ['geocode']});
+    google.maps.event.addDomListener(mapLocation, 'keydown', function(e) {
+      if (e.key === "Enter") e.preventDefault(); // Do not submit the form on Enter.
+    });
+    google.maps.event.addDomListener(mapLocation, 'keyup', function(event) {
+      userInput = event.target.value
+    });
+    this.autocomplete.addListener('place_changed', event => this.addNewMap(event, userInput, initPosition));
+  }
 
-  addNewTextContent = () => {this.props.addNewTextContent(this.props.id)}
+  addNewTextContent = () => {this.props.addNewTextContent(this.props.id, {initPosition: undefined})}
 
-  addNewMap = () => {
+  addNewMap = (event, mapLocation, initPosition) => {
     let place = this.autocomplete.getPlace();
+    let name = ""
     if (place.address_components) {
       const mapCenter = {lat: place.geometry.location.lat(), lng: place.geometry.location.lng()}
-      this.props.addNewMap(this.props.id, mapCenter)
+      const name = place.formatted_address
+      this.props.addNewMap(this.props.id, mapCenter, name, initPosition)
     } else {
       const mapCenter = {lat: 0, lng: 0}
-      this.props.addNewMap(this.props.id, mapCenter)
+      const name = mapLocation
+      this.props.addNewMap(this.props.id, mapCenter, name, initPosition)
     }
   }
 
@@ -43,32 +54,29 @@ class ContentMenu extends Component {
     }
   }
 
-  abandonMapCreation = () => {
-    document.querySelector(".mapInitialCenterOverlay").classList.remove("active")
-  }
+  addNewTextOnDrag = (event) => {this.props.addNewTextOnDrag()}
+
+  addNewMapOnDrag = (event) => {this.props.addNewMapOnDrag()}
 
   render() {
     return(
       <div className="contentMenu">
         <div className="buttons">
-          <div className="blocAddition"><button className="btn btn-dark" onClick={this.addNewTextContent}>Add new text bloc</button></div>
-          <div className="blocAddition"><button className="btn btn-dark" onClick={this.initAutoComplete}>Add new map</button></div>
+          <div className="blocAddition">
+            <button draggable className="btn btn-dark" onClick={this.addNewTextContent}
+            onDragStart={this.addNewTextOnDrag}>
+              Add new text bloc
+            </button></div>
+          <div className="blocAddition">
+            <button draggable className="btn btn-dark" onClick={this.initAutoComplete}
+             onDragStart={this.addNewMapOnDrag}>
+              Add new map
+            </button>
+          </div>
         </div>
         <div className="expand" onClick={this.expandMenu}><span>{this.state.chevron}</span></div>
 
-        <div className="mapInitialCenterOverlay">
-          <button onClick={this.abandonMapCreation} className="close" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <p className="mapOverlayTitle">Which area do you want to show ?</p>
-          <p className="mapOverlaydescription">If no suggestion is given, try a near match. You 'll be able to fine tune the map in the article editor.</p>
-          <div className="input-group input-group-lg">
-            <div className="input-group-prepend">
-              <span className="input-group-text" id="inputGroup-sizing-large">Map's center</span>
-            </div>
-            <input type="text" className="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-large" id="initialMapLocation"/>
-          </div>
-        </div>
+        <MapInitialCenterOverlay />
       </div>
     )
   }

@@ -21,14 +21,14 @@ class Article extends Component {
       url: `/articles/${this.props.match.params.id}`,
       dataType: "JSON"
     }).done((data) => {
-      this.setState({title: data.title, textContents: data.text_contents});
+      this.setState({title: data.title, textContents: data.text_contents})
     });
   }
 
   createTextContentsHTML(textContents) {
-    var textContentsReceiver = document.getElementById('articleTextContents');
+    var textContentsReceiver = document.getElementById('articleTextContents')
     textContents.forEach((textContent) => {
-      textContentsReceiver.insertAdjacentHTML('beforeend', textContent.text);
+      textContentsReceiver.insertAdjacentHTML('beforeend', textContent.text)
     })
   }
 

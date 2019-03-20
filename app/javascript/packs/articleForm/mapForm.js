@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import $ from 'jquery'
 import update from 'immutability-helper'
 import DropZone from './dropZone'
+import DragVisualElements from './dragVisualElements'
+import MapLocationInput from './mapLocationInput'
 
 class MapForm extends Component {
 
@@ -11,7 +13,8 @@ class MapForm extends Component {
       markers: this.props.map.markers || [],
       map: this.props.map,
       position: this.props.position,
-      id: this.props.id
+      id: this.props.id,
+      name: this.props.name
     }
   }
 
@@ -23,10 +26,14 @@ class MapForm extends Component {
   initAutoComplete = () => {
     var mapLocation = document.getElementById(`mapLocation${this.props.map.id}`)
     this.autocomplete = new google.maps.places.Autocomplete((mapLocation), {types: ['geocode']});
+    let userInput = ""
     google.maps.event.addDomListener(mapLocation, 'keydown', function(event) {
       if (event.key === "Enter") event.preventDefault(); // Do not submit the form on Enter.
     });
-    this.autocomplete.addListener('place_changed', this.handlePlaceSelect);
+    google.maps.event.addDomListener(mapLocation, 'keyup', function(event) {
+      userInput = event.target.value
+    });
+    this.autocomplete.addListener('place_changed', event => this.handlePlaceSelect(event, userInput));
   }
 
   initMap = () => {
@@ -44,20 +51,23 @@ class MapForm extends Component {
     this.map.addListener('zoom_changed', event => {this.handleZoom(event, this.map)})
   }
 
-  handlePlaceSelect = () => {
+  handlePlaceSelect = (event, userInput) => {
     let place = this.autocomplete.getPlace();
     let map = {}
+    let name = ""
     if (place.address_components) {
       map = {lat: place.geometry.location.lat(), lng: place.geometry.location.lng(), zoom: this.state.map.zoom}
+      name = place.formatted_address
     } else {
       map = {lat: 0, lng: 0, zoom: this.state.map.zoom}
+      name = userInput
     }
     $.ajax({
       method: 'PUT',
       beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
       url: `/maps/${this.state.map.id}`,
       dataType: "JSON",
-      data: {map: {lat: map.lat, lng: map.lng}}
+      data: {map: {lat: map.lat, lng: map.lng, name: name}}
     }).done((data) => {
       this.setState({map: data})
       this.initMap();
@@ -100,7 +110,9 @@ class MapForm extends Component {
     })
   }
 
-  onDragStart = (event) => {this.props.onDragStart(event, this.props.id, this.props.position)}
+  deleteElement = (event) => {this.props.deleteElement(event, this.props.id, this.props.position, "maps")}
+
+  onDragStart = (event) => {this.props.onDragStart(event, this.props.id, this.props.position, this.props.map)}
 
   onDragOver = (event) => {this.props.onDragOver(event, this.props.id, this.props.position)}
 
@@ -110,27 +122,29 @@ class MapForm extends Component {
 
   onDrop = (event) => {this.props.onDrop(event, this.props.id, this.props.position)}
 
+  onMapDragStart = (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+  }
+
   render() {
     return (
-      <div draggable id={`content-${this.props.position}`}
+      <div id={`content-${this.props.position}`} className="mapInput" draggable
         onDragStart={this.onDragStart}
         onDragOver={this.onDragOver}
         onDragEnter={this.onDragEnter}
         onDragLeave={this.onDragLeave}
         onDrop={this.onDrop}>
-        <DropZone draggable area={"before"} onDrop={this.onDrop}/>
+        <button onClick={this.deleteElement} className="contentDelete">
+          <div>&times;</div>
+        </button>
+        <DropZone area={"before"} onDrop={this.onDrop}/>
         <div className="mapBloc">
-          <div className="mapLocation">
-            <div className="input-group mb-3">
-              <div className="input-group-prepend">
-                <span className="input-group-text" id="inputGroup-sizing-default">Map's center</span>
-              </div>
-              <input type="text" className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id={`mapLocation${this.props.map.id}`}/>
-            </div>
-          </div>
-          <div id={`map${this.props.map.id}`} style={{ width: '100%', height: 150 }}></div>
+          <MapLocationInput id={this.props.map.id} location={this.state.name}/>
+          <div onMouseDown={this.onMapDragStart} id={`map${this.props.map.id}`} style={{ width: '100%', height: 150 }}></div>
         </div>
-        <DropZone draggable area={"after"} onDrop={this.onDrop}/>
+        <DragVisualElements />
+        <DropZone area={"after"} onDrop={this.onDrop}/>
       </div>
     );
   }

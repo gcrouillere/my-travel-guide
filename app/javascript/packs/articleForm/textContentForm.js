@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import ReactQuill from 'react-quill'; // ES6
 import DropZone from './dropZone'
 import $ from 'jquery'
+import DragVisualElements from './dragVisualElements'
 
 class TextContentForm extends Component {
   constructor(props) {
@@ -31,7 +32,9 @@ class TextContentForm extends Component {
     });
   }
 
-  onDragStart = (event) => {this.props.onDragStart(event, this.props.id, this.props.position)}
+  deleteElement = (event) => {this.props.deleteElement(event, this.props.id, this.props.position, "text_contents")}
+
+  onDragStart = (event) => {this.props.onDragStart(event, this.props.id, this.props.position, this.props.textContent)}
 
   onDragOver = (event) => {this.props.onDragOver(event, this.props.id, this.props.position)}
 
@@ -43,14 +46,18 @@ class TextContentForm extends Component {
 
   render() {
     return (
-      <div className="textContentInput" id={`content-${this.props.position}`} draggable
+      <div id={`content-${this.props.position}`} className="textContentInput" draggable
       onDragStart={this.onDragStart}
       onDragOver={this.onDragOver}
       onDragEnter={this.onDragEnter}
       onDragLeave={this.onDragLeave}
       onDrop={this.onDrop}>
         <DropZone area={"before"} onDrop={this.onDrop}/>
+        <button onClick={this.deleteElement} className="contentDelete">
+          <div>&times;</div>
+        </button>
         <ReactQuill value={this.state.textContent} onBlur={this.saveOnBlur} onChange={this.handleChange} />
+        <DragVisualElements />
         <DropZone area={"after"} onDrop={this.onDrop}/>
       </div>
     )

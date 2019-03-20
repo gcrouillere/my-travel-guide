@@ -17,18 +17,27 @@ class MapsController < ApplicationController
     end
   end
 
+  def destroy
+    @map = Map.find(params[:id])
+    @deleted_map = @map.as_json(methods: :class_name)
+    if @map.destroy
+      render json: @deleted_map, status: :ok
+    else
+      render json: @map.errors, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def map_params_at_create
-    params.require(:map).permit(:lat, :lng, :zoom, :article_id).merge(position: define_position_initial_position)
+    params.require(:map).permit(:lat, :lng, :zoom, :name, :article_id).merge(position: define_position_initial_position)
   end
 
   def map_params
-    params.require(:map).permit(:lat, :lng, :zoom, :position, :article_id)
+    params.require(:map).permit(:lat, :lng, :zoom, :position, :name, :article_id)
   end
 
   def define_position_initial_position
-    article_content_mapping = Article.find(params[:map][:article_id]).elements_position_mapping
-    article_content_mapping.size
+    params[:map][:position].present? ? params[:map][:position].to_i : Article.find(params[:map][:article_id]).elements_position_mapping.size
   end
 end

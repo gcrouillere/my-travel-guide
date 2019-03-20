@@ -17,6 +17,16 @@ class TextContentsController < ApplicationController
     end
   end
 
+  def destroy
+    @text_content = TextContent.find(params[:id])
+    @deleted_text_content = @text_content.as_json(methods: :class_name)
+    if @text_content.destroy
+      render json: @deleted_text_content, status: :ok
+    else
+      render json: @text_content.errors, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def text_content_params_at_create
@@ -28,7 +38,6 @@ class TextContentsController < ApplicationController
   end
 
   def define_position_initial_position
-    article_content_mapping = Article.find(params[:text_content][:article_id]).elements_position_mapping
-    article_content_mapping.size
+    params[:text_content][:position].present? ? params[:text_content][:position].to_i : Article.find(params[:text_content][:article_id]).elements_position_mapping.size
   end
 end
