@@ -9,8 +9,8 @@ class DropZone extends Component {
 
   render() {
     return (
-      <div className={`dropZone-${this.props.area}`}>
-        <p>Drop your content here</p>
+      <div className={`dropZone-${this.props.area} drop-${this.props.area}`}>
+        <p className={`drop-${this.props.area}`}>Drop your content here</p>
       </div>
     )
   }

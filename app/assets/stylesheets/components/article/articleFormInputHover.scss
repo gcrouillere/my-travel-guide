@@ -1,0 +1,53 @@
+.textContentInput, .mapInput {
+  position: relative;
+  .contentDelete, .dragLogo, .resizeLogo {
+    position: absolute;
+    background: #343a40;
+    color: white;
+    box-shadow: 0px 0px 0px 3px #343a40;
+    padding: 1px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    opacity: 0;
+    img {
+      display: block;
+      width: 100%;
+    }
+  }
+  .contentDelete {
+    top: -24px;
+    right: 0px;
+    cursor: pointer;
+  }
+  .dragLogo {
+    top: -24px;
+    left: 0px;
+    cursor: move;
+  }
+  .resizeLogo {
+    bottom: -24px;
+    left: calc(50% - 12px);
+    cursor: ns-resize;
+  }
+}
+
+.textContentInput:not(.dragging) , .mapInput:not(.dragging) {
+  &:hover {
+    box-shadow: 0px 0px 0px 3px #343a40;
+    border-radius: 0 0 1px 1px;
+    cursor: move;
+    .dragLogo, .contentDelete, .resizeLogo {
+      opacity: 1;
+    }
+    .mapBloc {
+      border-radius: 0px;
+    }
+    .ql-toolbar {
+      border-radius: 0px;
+    }
+    .ql-container {
+      border-radius: 0px;
+    }
+  }
+}

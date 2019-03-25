@@ -62,13 +62,15 @@ class ArticlesController < ApplicationController
     article_elements_json_mapped_sorted = article.elements_position_mapping.sort{|a,b| a[2] <=> b[2]}
     moving_element = article_elements_json_mapped_sorted[params[:positions][:init][:position].to_i]
 
-    # Delete moving element
-    article_elements_json_mapped_sorted.delete_at(params[:positions][:init][:position].to_i)
-    # Insert moving element in new position
-    article_elements_json_mapped_sorted.insert(params[:positions][:target][:position].to_i, moving_element)
-    # Update all positions in DB
-    article_elements_json_mapped_sorted.each_with_index do |element, index|
-      article_elements_json_mapped_sorted[index][0].constantize.find(article_elements_json_mapped_sorted[index][1]).update(position: index)
+    unless article_elements_json_mapped_sorted.blank?
+      # Delete moving element
+      article_elements_json_mapped_sorted.delete_at(params[:positions][:init][:position].to_i)
+      # Insert moving element in new position
+      article_elements_json_mapped_sorted.insert(params[:positions][:target][:position].to_i, moving_element)
+      # Update all positions in DB
+      article_elements_json_mapped_sorted.each_with_index do |element, index|
+        article_elements_json_mapped_sorted[index][0].constantize.find(article_elements_json_mapped_sorted[index][1]).update(position: index)
+      end
     end
 
     render json: Article.find(params[:article]).as_json(include: {

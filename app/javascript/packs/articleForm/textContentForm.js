@@ -5,6 +5,7 @@ import ReactQuill from 'react-quill'; // ES6
 import DropZone from './dropZone'
 import $ from 'jquery'
 import DragVisualElements from './dragVisualElements'
+import DeleteButton from './deleteButton'
 
 class TextContentForm extends Component {
   constructor(props) {
@@ -52,12 +53,10 @@ class TextContentForm extends Component {
       onDragEnter={this.onDragEnter}
       onDragLeave={this.onDragLeave}
       onDrop={this.onDrop}>
-        <DropZone area={"before"} onDrop={this.onDrop}/>
-        <button onClick={this.deleteElement} className="contentDelete">
-          <div>&times;</div>
-        </button>
-        <ReactQuill value={this.state.textContent} onBlur={this.saveOnBlur} onChange={this.handleChange} />
         <DragVisualElements />
+        <DeleteButton deleteElement={this.deleteElement}/>
+        <DropZone area={"before"} onDrop={this.onDrop}/>
+        <ReactQuill value={this.state.textContent} onBlur={this.saveOnBlur} onChange={this.handleChange} />
         <DropZone area={"after"} onDrop={this.onDrop}/>
       </div>
     )

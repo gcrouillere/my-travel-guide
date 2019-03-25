@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(version: 2019_03_04_084417) do
     t.float "lat"
     t.float "lng"
     t.integer "position"
+    t.integer "height"
     t.bigint "article_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -51,6 +52,7 @@ ActiveRecord::Schema.define(version: 2019_03_04_084417) do
   create_table "markers", force: :cascade do |t|
     t.float "lat"
     t.float "lng"
+    t.text "description"
     t.bigint "map_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

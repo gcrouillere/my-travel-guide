@@ -6,6 +6,7 @@ class CreateMaps < ActiveRecord::Migration[5.2]
       t.float :lat
       t.float :lng
       t.integer :position
+      t.integer :height
       t.references :article, foreign_key: true
 
       t.timestamps
