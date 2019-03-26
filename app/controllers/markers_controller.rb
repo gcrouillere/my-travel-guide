@@ -17,6 +17,16 @@ class MarkersController < ApplicationController
     end
   end
 
+  def destroy
+    @marker = Marker.find(params[:id])
+    @deleted_marker = @marker.as_json
+    if @marker.destroy
+      render json: @deleted_marker, status: :ok
+    else
+      render json: @marker.errors, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def marker_params

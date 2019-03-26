@@ -52,7 +52,7 @@ class ContentMenu extends Component {
         <div className="buttons">
 
           <div className="blocAddition">
-            <div draggable className="btn btn-dark addNewTextContent" onClick={this.addNewTextContent}
+            <div draggable className="btn btn-dark addNew" onClick={this.addNewTextContent}
             onDragStart={this.addNewTextOnDrag}>
               <div className="addIcone"><img src={textLogo}/></div>
               <div className="addExplain">
@@ -63,7 +63,7 @@ class ContentMenu extends Component {
           </div>
 
           <div className="blocAddition">
-            <div draggable className="btn btn-dark addNewTextContent" onClick={this.initAutoComplete}
+            <div draggable className="btn btn-dark addNew" onClick={this.initAutoComplete}
             onDragStart={this.addNewMapOnDrag}>
               <div className="addIcone"><img src={mapLogo}/></div>
               <div className="addExplain">

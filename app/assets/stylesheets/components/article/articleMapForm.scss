@@ -4,6 +4,9 @@
     padding: 15px;
     border: 1px solid #ccc;
     border-radius: 2px;
+    .googleMap {
+      z-index: 1;
+    }
   }
   input {
     height: 28px;
@@ -15,10 +18,11 @@
   }
 }
 
-.mapCustomization {
+.mapCustomization, .markerCustomization {
   padding: 20px;
   position: absolute;
   opacity: 0;
+  z-index: 1;
   background: linear-gradient(to right, #fefefe, #F7F7F7);
   border: 1px solid #ccc;
   top: 0;
@@ -28,20 +32,35 @@
   cursor: pointer;
   box-shadow: -2px 0px 5px -1px rgba(0,0,0,0.2);
   transition: all 0.3s ease-in-out;
+  h3, button {
+    display: none;
+  }
   button.close {
     position: absolute;
     top: 6px;
     right: 10px;
     font-size: 1.5rem;
   }
+  button.btn {
+    border-radius: 2px;
+    margin: 10px auto;
+    width: 100%;
+  }
   h3 {
     margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: #495057;
+    text-shadow: 0px 2px 0px rgba(0, 0, 0, 0.15)
   }
   .infoWindowContent {
     position: absolute;
     opacity: 0;
     display: flex;
+    display: none;
     right: 0%;
+    top: 50%;
+    width: 100%;
     box-shadow: 1px 1px 4px rgba(0,0,0,0.4);
     background: rgba(0,0,0,0.2);
     padding: 10px;
@@ -50,20 +69,41 @@
       border-radius: 2px;
       margin-right: 10px;
       border: 1px solid #ccc;
+      width: 300px;
     }
     button {
      border-radius: 2px;
+     width: 50%;
+     margin: 0 10px;
     }
   }
   .infoWindowContent.active {
     opacity: 1;
+    display: flex;
+    width: auto;
     right: 170%;
   }
 }
 
-.mapCustomization.active {
+.mapCustomization.active, .markerCustomization.active {
   opacity: 1;
-  z-index: 1;
   width: 30%;
-  transition: all 0.3s ease-in-out;
+  z-index: 2;
+  h3, button {
+    display: block;
+  }
+}
+
+.markerCustomization {
+
+  .descriptionUpdate {
+    margin: 30px 0;
+  }
+  textarea {
+    width: 100%;
+    border-radius: 2px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin-bottom: -10px;
+  }
 }

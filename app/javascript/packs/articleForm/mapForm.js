@@ -8,6 +8,7 @@ import DeleteButton from './deleteButton'
 import ElementResize from './elementResize'
 import Marker from './marker'
 import MapCustomization from './mapCustomization'
+import MarkerCustomization from './markerCustomization'
 
 class MapForm extends Component {
 
@@ -41,16 +42,6 @@ class MapForm extends Component {
     this.autocomplete.addListener('place_changed', event => this.handlePlaceSelect(event, userInput));
   }
 
-  initMap = () => {
-    this.map = new google.maps.Map(document.getElementById(`map${this.state.map.id}`), {
-      center: { lat: this.state.map.lat, lng: this.state.map.lng},
-      zoom: this.state.map.zoom
-    });
-    this.setState({googleMap: this.map})
-    this.map.addListener('click', event => {this.displayMapCustomizationMenu(event, this.map)});
-    this.map.addListener('zoom_changed', event => {this.handleZoom(event, this.map)})
-  }
-
   handlePlaceSelect = (event, userInput) => {
     let place = this.autocomplete.getPlace();
     let map = {}
@@ -65,13 +56,28 @@ class MapForm extends Component {
     this.updateMap({lat: map.lat, lng: map.lng, name: name})
   }
 
-  displayMapCustomizationMenu = (event) => {
-    document.querySelector(".mapCustomization").classList.add("active")
+  initMap = () => {
+    this.map = new google.maps.Map(document.getElementById(`map${this.state.map.id}`), {
+      center: { lat: this.state.map.lat, lng: this.state.map.lng},
+      zoom: this.state.map.zoom
+    });
+    this.setState({googleMap: this.map})
+    this.map.addListener('zoom_changed', event => {this.handleZoom(event, this.map)})
+    this.map.addListener('mousedown', event => {this.displayMapCustomizationMenu(event, this.map)});
+    this.map.addListener('dragend', event => {this.handleCenter(event, this.map)})
   }
 
   handleZoom = (event, map) => {
     let zoom = map.getZoom()
     this.updateMap({zoom: zoom})
+  }
+
+  displayMapCustomizationMenu = (event) => {
+    document.getElementById(`mapCustomization-${this.state.map.id}`).classList.add("active")
+  }
+
+  handleCenter = (event, map) => {
+    this.updateMap({lat: map.getCenter().lat(), lng: map.getCenter().lng()})
   }
 
   initResize = (event) => {
@@ -87,40 +93,23 @@ class MapForm extends Component {
     onmouseup = () => {
       onmousemove = null;
       this.updateMap({height: validHeight})
+      onmouseup = null;
     }
   }
 
-  initAddSimpleMarker = (event) => {
-    this.state.googleMap.addListener('click', event => {
-      this.addMarker(event,
-        {lat: event.latLng.lat(), lng: event.latLng.lng(), map_id: this.state.map.id}
-    )});
-  }
-
-  initAddMarkerWithIW = (event, content) => {
-    console.log(event.target)
-    this.state.googleMap.addListener('click', event => {
-      this.addMarker(event,
-        {lat: event.latLng.lat(), lng: event.latLng.lng(), description: content, map_id: this.state.map.id}
-    )});
-    document.querySelector(".infoWindowContent").classList.remove("active")
-  }
-
-  addMarker = (event, markerCharacteristics) => {
-    console.log(markerCharacteristics)
-    $.ajax({
-      method: 'POST',
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/markers/`,
-      dataType: "JSON",
-      data: {marker: markerCharacteristics}
-    }).done((data) => {
-      const markers = update(this.state.markers, {$splice: [[0, 0, data]]})
-      this.setState({markers: markers})
-      this.initMap();
-    }).fail((data) => {
-      console.log(data)
-    })
+  updateMarkersList = (marker, action) => {
+    let markers = {}
+    if (action == "add") {
+      markers = update(this.state.markers, {$splice: [[0, 0, marker]]})
+    } else if (action == "delete") {
+      let markerIndex = this.state.markers.findIndex(x => x.id == marker.id)
+      markers = update(this.state.markers, {$splice: [[markerIndex, 1]]})
+    } else if (action == "change") {
+      let markerIndex = this.state.markers.findIndex(x => x.id == marker.id)
+      markers = update(this.state.markers, {$splice: [[markerIndex, 1, marker]]})
+    }
+    this.setState({markers: markers})
+    this.initMap();
   }
 
   deleteElement = (event) => {this.props.deleteElement(event, this.props.id, this.props.position, "maps")}
@@ -141,6 +130,8 @@ class MapForm extends Component {
     })
   }
 
+  manageMarker = (event, googleMarker, marker) => { this.refs.markerCustomization.initMarkerCustomization(event, googleMarker, marker) }
+
   onDragStart = (event) => {this.props.onDragStart(event, this.props.id, this.props.position, this.props.map)}
 
   onDragOver = (event) => {this.props.onDragOver(event, this.props.id, this.props.position)}
@@ -151,7 +142,7 @@ class MapForm extends Component {
 
   onDrop = (event) => {this.props.onDrop(event, this.props.id, this.props.position)}
 
-  onMapDragStart = (event) => {
+  onMouseDown = (event) => {
     event.preventDefault()
     event.stopPropagation()
   }
@@ -169,13 +160,16 @@ class MapForm extends Component {
         <DragVisualElements />
         <ElementResize initResize={this.initResize}/>
         <DropZone area={"before"} onDrop={this.onDrop}/>
-        <MapCustomization initAddSimpleMarker={this.initAddSimpleMarker} initAddMarkerWithIW={this.initAddMarkerWithIW}/>
+        <MapCustomization googleMap={this.state.googleMap} map={this.state.map} updateMarkersList= {this.updateMarkersList}
+        initAddSimpleMarker={this.initAddSimpleMarker} initAddMarkerWithIW={this.initAddMarkerWithIW}/>
+        <MarkerCustomization googleMap={this.state.googleMap} map={this.state.map} ref="markerCustomization"
+        updateMarkersList={this.updateMarkersList}/>
         <div className="mapBloc">
           <MapLocationInput id={this.props.map.id} location={this.state.name}/>
-          <div id={`map${this.props.map.id}`} style={{ width: '100%', height: `${this.state.map.height}px` }}
-          onMouseDown={this.onMapDragStart}>
+          <div id={`map${this.props.map.id}`} className="googleMap" style={{ width: '100%', height: `${this.state.map.height}px` }} onMouseDown={this.onMouseDown}>
             {this.state.markers.map(marker =>
-              <Marker key={marker.id} googleMap={this.state.googleMap} marker={marker}/>
+              <Marker key={marker.id} googleMap={this.state.googleMap} map={this.state.map} marker={marker}
+              manageMarker={this.manageMarker}/>
             )}
           </div>
         </div>
