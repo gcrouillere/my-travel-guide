@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import deleteLogo from './../../../assets/images/delete-white.svg'
+import deleteLogo from './../../../../assets/images/delete-white.svg'
 
 class DeleteButton extends Component {
 

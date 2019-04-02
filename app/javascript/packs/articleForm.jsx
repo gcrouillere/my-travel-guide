@@ -51,15 +51,17 @@ class ArticleForm extends Component {
   }
 
   handleTitleChange = (event) => {
-    const title = event.target.value
-    $.ajax({
+    this.setState({title: event.target.value})
+  }
+
+  saveTitleOnBlur = () => {
+     $.ajax({
       method: "PUT",
       beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
       url: `/articles/${this.state.id}`,
-      data: {article: {title: title}}
-    }).done((data) => {
-      this.setState({title: title})
-    }).fail((data) => {console.log(data)})
+      data: {article: {title: this.state.title}}
+    }).done((data) => {console.log(data)})
+     .fail((data) => {console.log(data)})
   }
 
   addNewTextContent = (id, {initPositionAtCreation = undefined} = {}) => {
@@ -224,11 +226,14 @@ class ArticleForm extends Component {
         addNewTextOnDrag={this.addNewTextOnDrag} addNewMapOnDrag={this.addNewMapOnDrag} ref="contentMenu"
         elementsCount={this.state.articleElements.length}/>
 
-        <header className="text-center">
-          <input type="text" placeholder="Enter your article title" value={this.state.title} onChange={this.handleTitleChange}/>
+        <header>
+          <h2 className="sectionLabel">Main title</h2>
+          <input type="text" placeholder="Enter your article title" value={this.state.title} onChange={this.handleTitleChange}
+          onBlur={this.saveTitleOnBlur}/>
         </header>
 
         <div className="articleContent" >
+        <h2 className="sectionLabel">Article content</h2>
           {this.state.articleElements.map(element => {
             if (element.class_name == "TextContent") {
               return <TextContentForm key={`text${element.id}`} textContent={element}

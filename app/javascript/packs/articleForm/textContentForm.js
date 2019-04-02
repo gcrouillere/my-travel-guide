@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import ReactQuill from 'react-quill'; // ES6
-import DropZone from './dropZone'
 import $ from 'jquery'
-import DragVisualElements from './dragVisualElements'
-import DeleteButton from './deleteButton'
+import ReactQuill from 'react-quill'
+import DropZone from './formElementManagement/dropZone'
+import DragVisualElements from './formElementManagement/dragVisualElements'
+import DeleteButton from './formElementManagement/deleteButton'
 
 class TextContentForm extends Component {
   constructor(props) {

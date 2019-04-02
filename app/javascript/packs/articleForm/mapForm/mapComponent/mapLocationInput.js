@@ -14,7 +14,7 @@ class MapLocationInput extends Component {
           <div className="input-group-prepend">
             <span className="input-group-text" id="inputGroup-sizing-default">Map's center</span>
           </div>
-          <input type="text" className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id={`mapLocation${this.props.id}`} defaultValue={this.props.location}/>
+          <input type="text" className="form-control mapLocationInput" aria-label="Default" aria-describedby="inputGroup-sizing-default" id={`mapLocation${this.props.id}`} defaultValue={this.props.location}/>
         </div>
       </div>
     )

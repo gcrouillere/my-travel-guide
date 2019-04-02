@@ -30,6 +30,6 @@ class MarkersController < ApplicationController
   private
 
   def marker_params
-    params.require(:marker).permit(:lat, :lng, :description, :map_id)
+    params.require(:marker).permit(:lat, :lng, :description, :logo, :map_id, :polyline_id)
   end
 end

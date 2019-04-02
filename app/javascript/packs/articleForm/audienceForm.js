@@ -58,7 +58,8 @@ class AudienceForm extends Component {
   render() {
     return(
       <div className="audienceSelection">
-        <h2>For whom is the trip intended ? (select all that apply)</h2>
+        <h2 className="sectionLabel">For whom is the trip intended ?</h2>
+        <p className="mainTitleSub">(select all that apply)</p>
         <div className="form-check">
         {this.state.allowedAudienceSelections.map((category) =>
           <div key={`${category.audience}0`}>

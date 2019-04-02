@@ -2,22 +2,47 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import $ from 'jquery'
+import markerLogo from './../../../../../assets/images/place-black.svg'
+import restaurantLogo from './../../../../../assets/images/restaurant-black.svg'
+import hotelLogo from './../../../../../assets/images/hotel-black.svg'
+import barLogo from './../../../../../assets/images/bar-black.svg'
+import cafeLogo from './../../../../../assets/images/cafe-black.svg'
+import busLogo from './../../../../../assets/images/bus-black.svg'
+import boatLogo from './../../../../../assets/images/boat-black.svg'
+import trainLogo from './../../../../../assets/images/train-black.svg'
+import parkingLogo from './../../../../../assets/images/parking-black.svg'
+import seeLogo from './../../../../../assets/images/see-black.svg'
 
 class Marker extends Component {
 
   constructor(props) {
     super(props)
+    this.state = {
+      logos: {
+        markerLogo: {url: markerLogo, active: false},
+        restaurantLogo: {url: restaurantLogo, active: false},
+        hotelLogo: {url: hotelLogo, active: false},
+        barLogo: {url: barLogo, active: false},
+        cafeLogo: {url: cafeLogo, active: false},
+        busLogo: {url: busLogo, active: false},
+        boatLogo: {url: boatLogo, active: false},
+        trainLogo: {url: trainLogo, active: false},
+        parkingLogo: {url: parkingLogo, active: false},
+        seeLogo: {url: seeLogo, active: false}
+      }
+    }
   }
 
  componentDidUpdate(prevProps) {
-    if (prevProps.googleMap != this.props.googleMap ) { this.renderMarker() }
+    if (prevProps.googleMap != this.props.googleMap) { this.renderMarker() }
   }
 
   renderMarker() {
     this.googleMarker = new google.maps.Marker({
       position: {lat: this.props.marker.lat, lng: this.props.marker.lng},
       map: this.props.googleMap,
-      draggable: true
+      draggable: true,
+      icon: this.state.logos[this.props.marker.logo].url
     })
 
     if (this.props.marker.description) {
@@ -45,7 +70,7 @@ class Marker extends Component {
       dataType: "JSON",
       data: {marker: markerCharacteristics}
     }).done((data) => {
-      console.log(data)
+      this.props.updateMapDataList(data, "markers", "change")
     }).fail((data) => {
       console.log(data)
     })

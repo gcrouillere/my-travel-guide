@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import MapInitialCenterOverlay from './mapInitialCenterOverlay'
+import MapInitialCenterOverlay from './contentMenu/mapInitialCenterOverlay'
 import mapLogo from './../../../assets/images/map-white.svg'
 import textLogo from './../../../assets/images/write-white.svg'
 

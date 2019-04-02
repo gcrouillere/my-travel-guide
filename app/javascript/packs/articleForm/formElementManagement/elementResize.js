@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import resizeLogo from './../../../assets/images/resize-white.svg'
+import resizeLogo from './../../../../assets/images/resize-white.svg'
 
 class ElementResize extends Component {
 
