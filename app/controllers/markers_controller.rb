@@ -21,6 +21,7 @@ class MarkersController < ApplicationController
     @marker = Marker.find(params[:id])
     @deleted_marker = @marker.as_json
     if @marker.destroy
+      update_positions_in_polyline(@marker)
       render json: @deleted_marker, status: :ok
     else
       render json: @marker.errors, status: :unprocessable_entity
@@ -30,6 +31,12 @@ class MarkersController < ApplicationController
   private
 
   def marker_params
-    params.require(:marker).permit(:lat, :lng, :description, :logo, :map_id, :polyline_id)
+    params.require(:marker).permit(:lat, :lng, :description, :logo, :position, :map_id, :polyline_id)
+  end
+
+  def update_positions_in_polyline(marker)
+    Marker.where(polyline: marker.polyline)
+    .order(position: :asc)
+    .each_with_index {|marker, index| marker.update(position: index)} if marker.polyline
   end
 end

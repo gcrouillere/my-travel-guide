@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
+import $ from 'jquery'
+import update from 'immutability-helper'
 import MapLocationInput from './mapComponent/mapLocationInput'
 import Marker from './mapComponent/marker'
 import Polyline from './mapComponent/polyline'
 import ElementResize from './../formElementManagement/elementResize'
-import $ from 'jquery'
-import update from 'immutability-helper'
 
 class MapComponent extends Component {
 
@@ -28,7 +28,15 @@ class MapComponent extends Component {
   initMap = () => {
     this.map = new google.maps.Map(document.getElementById(`map${this.props.map.id}`), {
       center: { lat: this.state.map.lat, lng: this.state.map.lng},
-      zoom: this.state.map.zoom
+      zoom: this.state.map.zoom,
+      mapTypeControl: true,
+      zoomControl: true,
+      zoomControlOptions: {
+          position: google.maps.ControlPosition.LEFT_CENTER
+      },
+      scaleControl: false,
+      streetViewControl: false,
+      fullscreenControl: false,
     });
 
     this.setState({googleMap: this.map})
@@ -92,7 +100,11 @@ class MapComponent extends Component {
   }
 
   displayMapCustomizationMenu = (event) => {
-    document.getElementById(`mapCustomization-${this.state.map.id}`).classList.add("active")
+    if (!this.props.customizationOnGoing.status) {
+      document.getElementById(`mapCustomization-${this.state.map.id}`).classList.add("active")
+      document.getElementById(`markerCustomization-${this.props.map.id}`).classList.remove("active")
+      document.getElementById(`polylineCustomization-${this.props.map.id}`).classList.remove("active")
+    }
   }
 
   updateMap(mapCharacteristics) {
@@ -133,6 +145,10 @@ class MapComponent extends Component {
 
   managePolyline = (event, googlePolyline, polyline) => {this.props.managePolyline(event, googlePolyline, polyline)}
 
+  managePolylinePoint = (event, googlePolyline, polyline, googleMarker) => {
+    this.props.managePolylinePoint(event, googlePolyline, polyline, googleMarker)
+  }
+
   onMouseDown = (event) => {
     event.preventDefault()
     event.stopPropagation()
@@ -151,7 +167,8 @@ class MapComponent extends Component {
           )}
           {this.state.polylines.map(polyline =>
             <Polyline key={`polyline${polyline.id}`} googleMap={this.state.googleMap} map={this.state.map} polyline={polyline}
-            managePolyline={this.managePolyline}/>
+            managePolyline={this.managePolyline} updateMapDataList={this.updateMapDataList}
+            managePolylinePoint={this.managePolylinePoint}/>
           )}
         </div>
       </div>

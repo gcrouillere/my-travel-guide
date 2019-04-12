@@ -20,24 +20,42 @@
     width: 14px;
     margin-right: 2px !important;
   }
+  button {
+    position: relative;
+    .actionCancelInfo {
+      position: absolute;
+      font-size: 10px;
+      left: 0;
+      bottom: -33px;
+      width: 100%;
+    }
+  }
 }
 
 .mapCustomization, .markerCustomization, .polylineCustomization {
-  padding: 20px;
+  overflow: hidden;
   position: absolute;
   opacity: 0;
   z-index: 1;
-  background: linear-gradient(to right, #fefefe, #F7F7F7);
-  border: 1px solid #ccc;
   top: 0;
   right: 0;
-  width: 10%;
+  width: 30%;
   height: 100%;
-  cursor: pointer;
-  box-shadow: -2px 0px 5px -1px rgba(0,0,0,0.2);
+  cursor: default;
   transition: all 0.3s ease-in-out;
-  h3, button {
-    display: none;
+  .overflowContainer {
+    position: absolute;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background: linear-gradient(to right, #fefefe, #F7F7F7);
+    box-shadow: -2px 0px 5px -1px rgba(0,0,0,0.2);
+    height: 100%;
+    right: -100%;
+    width: 100%;
+    transition: all 0.3s ease-in-out;
+  }
+  .mapCustomizationBlock, h3, button {
+    display: block;
   }
   button.close {
     position: absolute;
@@ -49,6 +67,9 @@
     border-radius: 2px;
     margin: 10px auto;
     width: 100%;
+  }
+  button[disabled], input[disabled] {
+    cursor: not-allowed;
   }
   h3 {
     margin-bottom: 1.5rem;
@@ -62,53 +83,28 @@
     color: #343a40;
     transition: all 0.3s ease-in-out;
     animation: finishPathBlink 1.3s ease-in-out infinite alternate;
-  }
-  .infoWindowContent {
-    position: absolute;
-    opacity: 0;
-    display: flex;
-    display: none;
-    right: 0%;
-    top: 50%;
-    width: 100%;
-    box-shadow: 1px 1px 4px rgba(0,0,0,0.4);
-    background: rgba(0,0,0,0.2);
-    padding: 10px;
-    border-radius: 2px;
-    textarea {
-      border-radius: 2px;
-      margin-right: 10px;
-      border: 1px solid #ccc;
-      width: 300px;
+    .actionCancelInfo {
+       animation: actionCancelInfoBlink 1.3s ease-in-out infinite alternate;;
     }
-    button {
-     border-radius: 2px;
-     width: 50%;
-     margin: 0 10px;
-    }
-  }
-  .infoWindowContent.active {
-    opacity: 1;
-    display: flex;
-    width: auto;
-    right: 170%;
   }
 }
 
 .mapCustomization.active, .markerCustomization.active, .polylineCustomization.active {
   opacity: 1;
-  width: 30%;
   z-index: 2;
-  h3, button {
-    display: block;
+  transition: all 0.3s ease-in-out;
+  .overflowContainer {
+    right: 0;
+    width: 100%;
+    transition: all 0.3s ease-in-out;
   }
 }
 
-.markerCustomization {
+.mapCustomizationBlock {
+    margin: 30px 0 !important;
+}
 
-  .descriptionUpdate {
-    margin: 30px 0;
-  }
+.markerCustomization {
   textarea {
     width: 100%;
     border-radius: 2px;
@@ -118,14 +114,33 @@
   }
 }
 
+.polylineCustomization {
+  .distanceDisplayRadios {
+    p {
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+  }
+}
+
 @keyframes finishPathBlink {
   from {
+    background: #343a40;
+    color: #FFF;
+  }
+
+  to {
     background: #FFF;
+    color: #343a40;
+  }
+}
+
+@keyframes actionCancelInfoBlink {
+  from {
     color: #343a40;
   }
 
   to {
-    background: #343a40;
-    color: #FFF;
+    color: #343a40;
   }
 }

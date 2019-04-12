@@ -14,7 +14,8 @@ class MapForm extends Component {
     this.state = {
       position: this.props.position,
       map: this.props.map,
-      googleMap: null
+      googleMap: null,
+      customizationOnGoing: {status: false, trigger: null}
     }
   }
 
@@ -22,15 +23,25 @@ class MapForm extends Component {
 
   setMap = (map) => {this.setState({map: map})}
 
-  updateMapDataList = (data, dataType, action) => {this.refs.mapComponent.updateMapDataList(data, dataType, action)}
+  preventCustomizationMix = (trigger) => {
+    this.props.preventDraggingOnOtherElements(trigger)
+    this.setState({customizationOnGoing: {status: !this.state.customizationOnGoing.status, trigger: trigger}})
+  }
 
-  deleteElement = (event) => {this.props.deleteElement(event, this.props.id, this.props.position, "maps")}
+  updateMapDataList = (data, dataType, action) => { this.refs.mapComponent.updateMapDataList(data, dataType, action) }
 
   manageMarker = (event, googleMarker, marker) => { this.refs.markerCustomization.initMarkerCustomization(event, googleMarker, marker) }
 
   managePolyline = (event, googlePolyline, polyline) => { this.refs.polylineCustomization.initPolylineCustomization(event, googlePolyline, polyline) }
 
-  onDragStart = (event) => {this.props.onDragStart(event, this.props.id, this.props.position, this.props.map)}
+  managePolylinePoint = (event, googlePolyline, polyline, googleMarker) => { this.refs.polylineCustomization.initPolylineCustomization(event, googlePolyline, polyline, googleMarker) }
+
+  deleteElement = (event) => {this.props.deleteElement(event, this.props.id, this.props.position, "maps")}
+
+  onDragStart = (event) => {
+    document.querySelectorAll(".mapCustomization, .markerCustomization, .polylineCustomization").forEach(x => {x.classList.remove("active")})
+    this.props.onDragStart(event, this.props.id, this.props.position, this.props.map)
+  }
 
   onDragOver = (event) => {this.props.onDragOver(event, this.props.id, this.props.position)}
 
@@ -43,7 +54,7 @@ class MapForm extends Component {
   render() {
 
     return (
-      <div id={`content-${this.props.position}`} className="mapInput" draggable
+      <div id={`content-${this.props.position}`} className="mapInput" draggable={!this.state.customizationOnGoing.status}
         onDragStart={this.onDragStart}
         onDragOver={this.onDragOver}
         onDragEnter={this.onDragEnter}
@@ -52,17 +63,19 @@ class MapForm extends Component {
         <DeleteButton deleteElement={this.deleteElement}/>
         <DragVisualElements />
         <DropZone area={"before"} onDrop={this.onDrop}/>
-        <MapCustomization googleMap={this.state.googleMap} map={this.state.map} updateMapDataList= {this.updateMapDataList}
-        initAddSimpleMarker={this.initAddSimpleMarker} initAddMarkerWithIW={this.initAddMarkerWithIW}
-        updateMapDataList={this.updateMapDataList}/>
-        <MarkerCustomization googleMap={this.state.googleMap} map={this.state.map} ref="markerCustomization"
-        updateMapDataList={this.updateMapDataList}/>
+        <MapCustomization googleMap={this.state.googleMap} map={this.state.map} customizationOnGoing={this.state.customizationOnGoing}
+        updateMapDataList= {this.updateMapDataList} initAddSimpleMarker={this.initAddSimpleMarker}
+        initAddMarkerWithIW={this.initAddMarkerWithIW} updateMapDataList={this.updateMapDataList}
+        preventCustomizationMix={this.preventCustomizationMix}/>
+        <MarkerCustomization googleMap={this.state.googleMap} map={this.state.map} customizationOnGoing={this.state.customizationOnGoing}
+        updateMapDataList={this.updateMapDataList} ref="markerCustomization"/>
         <PolylineCustomization googleMap={this.state.googleMap} map={this.state.map} ref="polylineCustomization"
-        updateMapDataList={this.updateMapDataList}/>
-       <MapComponent map={this.props.map} polylines={this.props.map.polylines}
-        markers={this.props.map.markers} manageMarker={this.manageMarker} managePolyline={this.managePolyline}
+        customizationOnGoing={this.state.customizationOnGoing} updateMapDataList={this.updateMapDataList}
+        preventCustomizationMix={this.preventCustomizationMix}/>
+       <MapComponent map={this.props.map} polylines={this.props.map.polylines} customizationOnGoing={this.state.customizationOnGoing}
+        markers={this.props.map.markers} manageMarker={this.manageMarker} managePolyline={this.managePolyline} managePolylinePoint={this.managePolylinePoint}
         handleZoom={this.handleZoom} handleCenter={this.handleCenter} setGoogleMap={this.setGoogleMap} setMap={this.setMap}
-        ref="mapComponent"/>
+        preventCustomizationMix={this.preventCustomizationMix} ref="mapComponent"/>
         <DropZone area={"after"} onDrop={this.onDrop}/>
       </div>
     );

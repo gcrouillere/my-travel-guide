@@ -12,24 +12,32 @@ class MapCustomization extends Component {
       polylineOnConstruction: false,
       polyline: null,
       polylineFilled: false,
+      markerOnConstruction: false,
     }
   }
 
   abandonMapCustomization = () => { document.getElementById(`mapCustomization-${this.props.map.id}`).classList.remove("active") }
 
-  showInfoWindowForm = () => { document.getElementById(`infoWindowContent-${this.props.map.id}`).classList.add("active") }
-
   handleInput = (event) => {
     this.setState({content: event.target.value})
   }
 
-  initAddMarkerWithIW = (event) => {
-    document.querySelectorAll(".infoWindowContent").forEach(x => x.classList.remove("active"))
-    this.props.googleMap.addListener('click', event => {
-      this.addMarker(event,
-        {lat: event.latLng.lat(), lng: event.latLng.lng(), description: this.state.content, map_id: this.props.map.id, logo: "markerLogo"},
-        'click'
-    )});
+  initAddMarker = (event) => {
+    if (!this.state.markerOnConstruction) {
+      this.setState({markerOnConstruction: true})
+      this.props.preventCustomizationMix("initAddMarker")
+      this.props.googleMap.addListener('click', event => {
+        this.addMarker(
+          event,
+          {lat: event.latLng.lat(), lng: event.latLng.lng(), description: this.state.content, map_id: this.props.map.id, logo: "markerLogo"},
+          'click'
+        )
+      })
+    } else {
+      this.props.preventCustomizationMix()
+      google.maps.event.clearListeners(this.props.googleMap, 'click')
+      this.setState({markerOnConstruction: false})
+    }
   }
 
   addMarker = (event, markerCharacteristics, eventType) => {
@@ -41,6 +49,8 @@ class MapCustomization extends Component {
       data: {marker: markerCharacteristics}
     }).done((data) => {
       google.maps.event.clearListeners(this.props.googleMap, eventType);
+      this.setState({markerOnConstruction: false})
+      this.props.preventCustomizationMix()
       this.props.updateMapDataList(data, "markers", "add")
     }).fail((data) => {
       console.log(data)
@@ -56,10 +66,12 @@ class MapCustomization extends Component {
         strokeWeight: 2,
         geodesic: true
       });
+      this.props.preventCustomizationMix("initPolyLine")
       this.props.googleMap.addListener('click', event => {this.addPolylinePoint(event, this.polyline)})
       this.setState({polylineOnConstruction: true, polyline: null})
       this.createPolyline()
     } else {
+      this.props.preventCustomizationMix()
       google.maps.event.clearListeners(this.props.googleMap, 'click');
       this.setState({polylineOnConstruction: false})
       if (this.state.polylineFilled) {
@@ -72,7 +84,8 @@ class MapCustomization extends Component {
   }
 
   addPolylinePoint = (event, polyline) => {
-    var path = polyline.getPath();
+    var path = polyline.getPath()
+    var polylineMarkerCount = polyline.getPath().getLength()
     var tempMarker = new google.maps.Marker({
       position: event.latLng,
       map: this.props.googleMap,
@@ -89,7 +102,7 @@ class MapCustomization extends Component {
       beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
       url: `/markers/`,
       dataType: "JSON",
-      data: {marker: {lat: event.latLng.lat(), lng: event.latLng.lng(), polyline_id: this.state.polyline.id}}
+      data: {marker: {lat: event.latLng.lat(), lng: event.latLng.lng(), position: polylineMarkerCount, polyline_id: this.state.polyline.id}}
     }).done((data) => { this.setState({polylineFilled: true}) })
     .fail((data) => { console.log(data) })
   }
@@ -134,17 +147,23 @@ class MapCustomization extends Component {
 
     return (
       <div id={`mapCustomization-${this.props.map.id}`} className="mapCustomization">
-        <button onClick={this.abandonMapCustomization} className="close" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h3>Map Customization:</h3>
-        <button className="btn btn-dark" onClick={this.showInfoWindowForm}>Add a Marker with info</button>
-        <button className={`btn btn-dark ${this.state.polylineOnConstruction ? "finishPath" : "startPath"}`} onClick={this.initPolyLine}>
-          {this.state.polylineOnConstruction ? "Finish Path" : "Add a Path"}
-        </button>
-        <div id={`infoWindowContent-${this.props.map.id}`} className="infoWindowContent">
-          <textarea value={this.state.content} onChange={this.handleInput}/>
-          <button className="btn btn-dark" onClick={this.initAddMarkerWithIW}>Place marker</button>
+        <div className="overflowContainer">
+          {!this.props.customizationOnGoing.status &&
+          <button onClick={this.abandonMapCustomization} className="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          }
+          <h3>Map Customization:</h3>
+          <button className={`btn btn-dark mapCustomizationBlock ${this.state.markerOnConstruction ? "finishPath" : "startPath"}`}
+            onClick={this.initAddMarker} disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "initAddMarker" : false}>
+            {this.state.markerOnConstruction ? "Click on Map to place Marker" : "Add a Marker"}
+            {this.state.markerOnConstruction && <p className="actionCancelInfo">Click button again to cancel action</p>}
+          </button>
+          <button className={`btn btn-dark mapCustomizationBlock ${this.state.polylineOnConstruction ? "finishPath" : "startPath"}`}
+            onClick={this.initPolyLine} disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "initPolyLine" : false}>
+            {this.state.polylineOnConstruction ? (this.state.polylineFilled ? "Finish Path" : "Click on Map to draw Path") : "Add a Path"}
+            {this.state.polylineOnConstruction && !this.state.polylineFilled && <p className="actionCancelInfo">Click button again to cancel action</p>}
+          </button>
         </div>
       </div>
     )

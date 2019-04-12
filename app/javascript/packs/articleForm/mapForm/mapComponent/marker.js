@@ -19,16 +19,16 @@ class Marker extends Component {
     super(props)
     this.state = {
       logos: {
-        markerLogo: {url: markerLogo, active: false},
-        restaurantLogo: {url: restaurantLogo, active: false},
-        hotelLogo: {url: hotelLogo, active: false},
-        barLogo: {url: barLogo, active: false},
-        cafeLogo: {url: cafeLogo, active: false},
-        busLogo: {url: busLogo, active: false},
-        boatLogo: {url: boatLogo, active: false},
-        trainLogo: {url: trainLogo, active: false},
-        parkingLogo: {url: parkingLogo, active: false},
-        seeLogo: {url: seeLogo, active: false}
+        markerLogo: {url: markerLogo},
+        restaurantLogo: {url: restaurantLogo},
+        hotelLogo: {url: hotelLogo},
+        barLogo: {url: barLogo},
+        cafeLogo: {url: cafeLogo},
+        busLogo: {url: busLogo},
+        boatLogo: {url: boatLogo},
+        trainLogo: {url: trainLogo},
+        parkingLogo: {url: parkingLogo},
+        seeLogo: {url: seeLogo}
       }
     }
   }

@@ -35,7 +35,10 @@ class TextContentForm extends Component {
 
   deleteElement = (event) => {this.props.deleteElement(event, this.props.id, this.props.position, "text_contents")}
 
-  onDragStart = (event) => {this.props.onDragStart(event, this.props.id, this.props.position, this.props.textContent)}
+  onDragStart = (event) => {
+    document.querySelectorAll(".mapCustomization, .markerCustomization, .polylineCustomization").forEach(x => {x.classList.remove("active")})
+    this.props.onDragStart(event, this.props.id, this.props.position, this.props.textContent)
+  }
 
   onDragOver = (event) => {this.props.onDragOver(event, this.props.id, this.props.position)}
 
@@ -47,7 +50,7 @@ class TextContentForm extends Component {
 
   render() {
     return (
-      <div id={`content-${this.props.position}`} className="textContentInput" draggable
+      <div id={`content-${this.props.position}`} className="textContentInput" draggable={!this.props.mapCustomizationOnGoing.status}
       onDragStart={this.onDragStart}
       onDragOver={this.onDragOver}
       onDragEnter={this.onDragEnter}

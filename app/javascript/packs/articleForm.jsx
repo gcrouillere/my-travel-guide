@@ -22,7 +22,8 @@ class ArticleForm extends Component {
       previousHoveredElementPosition: null,
       activeDragImage: false,
       dragContent: {},
-      id: null
+      id: null,
+      customizationOnGoing: {status: false, trigger: null}
     }
   }
 
@@ -126,6 +127,7 @@ class ArticleForm extends Component {
   }
 
   onDragEnter = (event, id, position) => {
+    document.querySelector(".contentMenu").classList.add("disable-hover")
     event.preventDefault();
     if (position !== this.state.initialPosition && position == this.state.previousHoveredElementPosition) {
       if (this.state.initialPosition > position) {
@@ -149,6 +151,7 @@ class ArticleForm extends Component {
   }
 
   onDrop = (event, id, position) => {
+    document.querySelector(".contentMenu").classList.remove("disable-hover")
     this.clearDraggingExtraClasses()
     this.setDropzoneClass(event)
     if (event.dataTransfer.getData("type") == "positionUpdate") {
@@ -172,6 +175,10 @@ class ArticleForm extends Component {
   addNewMapOnDrag = () => {
     event.dataTransfer.setData("type", "mapCreation")
     this.setState({initialPosition: -1})
+  }
+
+  preventDraggingOnOtherElements = (trigger) => {
+    this.setState({customizationOnGoing: {status: !this.state.customizationOnGoing.status, trigger: trigger}})
   }
 
   updateElementPosition(id, initPosition, targetPosition) {
@@ -239,13 +246,15 @@ class ArticleForm extends Component {
               return <TextContentForm key={`text${element.id}`} textContent={element}
                 articleId={this.state.id} position={element.position} id={element.id}
                 onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
-                onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement} />
+                onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
+                mapCustomizationOnGoing={this.state.customizationOnGoing}/>
             }
             else if (element.class_name == "Map") {
               return <MapForm key={`map${element.id}`} map={element} name={element.name}
               articleId={this.state.id} position={element.position} id={element.id}
               onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
-              onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement} />
+              onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
+              preventDraggingOnOtherElements={this.preventDraggingOnOtherElements} />
             }
           })}
           <DragImage dragContent={this.state.dragContent} activeDragImage={this.state.activeDragImage}/>

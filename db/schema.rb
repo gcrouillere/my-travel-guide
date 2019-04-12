@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 2019_03_27_123449) do
     t.float "lng"
     t.text "description"
     t.string "logo"
+    t.integer "position"
     t.bigint "map_id"
     t.bigint "polyline_id"
     t.datetime "created_at", null: false

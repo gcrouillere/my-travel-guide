@@ -20,25 +20,29 @@ class MarkerCustomization extends Component {
     this.state = {
       googleMarker: null,
       marker: null,
+      logo: null,
       description: "",
       logos: {
-        markerLogo: {url: markerLogo, active: false},
-        restaurantLogo: {url: restaurantLogo, active: false},
-        hotelLogo: {url: hotelLogo, active: false},
-        barLogo: {url: barLogo, active: false},
-        cafeLogo: {url: cafeLogo, active: false},
-        busLogo: {url: busLogo, active: false},
-        boatLogo: {url: boatLogo, active: false},
-        trainLogo: {url: trainLogo, active: false},
-        parkingLogo: {url: parkingLogo, active: false},
-        seeLogo: {url: seeLogo, active: false}
+        markerLogo: {url: markerLogo},
+        restaurantLogo: {url: restaurantLogo},
+        hotelLogo: {url: hotelLogo},
+        barLogo: {url: barLogo},
+        cafeLogo: {url: cafeLogo},
+        busLogo: {url: busLogo},
+        boatLogo: {url: boatLogo},
+        trainLogo: {url: trainLogo},
+        parkingLogo: {url: parkingLogo},
+        seeLogo: {url: seeLogo}
       }
     }
   }
 
   initMarkerCustomization = (event, googleMarker, marker) => {
-    this.setState({googleMarker: googleMarker, marker: marker, description: marker.description || ""})
-    document.getElementById(`markerCustomization-${this.props.map.id}`).classList.add("active")
+    if (!this.props.customizationOnGoing.status) {
+      this.setState({googleMarker: googleMarker, marker: marker, description: marker.description || "", logo: marker.logo})
+      document.getElementById(`markerCustomization-${this.props.map.id}`).classList.add("active")
+      document.getElementById(`polylineCustomization-${this.props.map.id}`).classList.remove("active")
+    }
   }
 
   abandonMarkerCustomization = () => { document.getElementById(`markerCustomization-${this.props.map.id}`).classList.remove("active") }
@@ -50,6 +54,7 @@ class MarkerCustomization extends Component {
   }
 
   logoChange = (event) => {
+    this.setState({logo: event.target.value})
     this.updateMarker({logo: event.target.value})
   }
 
@@ -62,6 +67,7 @@ class MarkerCustomization extends Component {
       data: {marker: markerCharacteristic}
     }).done((data) => {
       document.getElementById(`markerCustomization-${this.props.map.id}`).classList.remove("active")
+      this.setState({googleMarker: null, marker: null, logo: null})
       this.props.updateMapDataList(data, "markers", "change")
     }).fail((data) => {
       console.log(data)
@@ -76,7 +82,7 @@ class MarkerCustomization extends Component {
       dataType: "JSON"
     }).done((data) => {
       document.getElementById(`markerCustomization-${this.props.map.id}`).classList.remove("active")
-      this.setState({googleMarker: null, marker: null})
+      this.setState({googleMarker: null, marker: null, logo: null})
       this.props.updateMapDataList(data, "markers", "delete")
     }).fail((data) => {console.log(data)})
   }
@@ -84,23 +90,33 @@ class MarkerCustomization extends Component {
   render() {
     return (
       <div id={`markerCustomization-${this.props.map.id}`} className="markerCustomization">
-        <button onClick={this.abandonMarkerCustomization} className="close" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h3>Marker Customization:</h3>
-        <div className="descriptionUpdate">
-          <textarea value={this.state.description} onChange={this.handleDescription}/>
-          <button className="btn btn-dark" onClick={this.saveDescription}>Update description</button>
-        </div>
-        <div className="descriptionUpdate">
-        {Object.keys(this.state.logos).map(logosKey =>
-          <div key={`${logosKey}`} className="form-check form-check-inline" onChange={this.logoChange}>
-            <input className="form-check-input markerLogoInput" type="radio" id={`radio-${logosKey}`} name="inlineRadioOptions" value={logosKey}/>
-            <label className="form-check-label" htmlFor={`radio-${logosKey}`}><img src={this.state.logos[logosKey].url}/></label>
+        <div className="overflowContainer">
+          <button onClick={this.abandonMarkerCustomization} className="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h3>Marker Customization:</h3>
+          <div className="mapCustomizationBlock">
+            <textarea value={this.state.description} onChange={this.handleDescription}/>
+            <button className="btn btn-dark" onClick={this.saveDescription}
+            disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "saveDescription" : false}>
+              Update description
+            </button>
           </div>
-        )}
+          <div className="mapCustomizationBlock">
+          {Object.keys(this.state.logos).map(logosKey =>
+            <div key={`${logosKey}`} className="form-check form-check-inline">
+              <input className="form-check-input markerLogoInput" type="radio" id={`radio-${logosKey}`} name="inlineRadioOptions"
+              value={logosKey} checked={this.state.logo == null ? false : this.state.logo == logosKey} onChange={this.logoChange}
+              disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "logoChange" : false}/>
+              <label className="form-check-label" htmlFor={`radio-${logosKey}`}><img src={this.state.logos[logosKey].url}/></label>
+            </div>
+          )}
+          </div>
+          <button className="btn btn-dark mapCustomizationBlock" onClick={this.deleteMarker}
+          disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "deleteMarker" : false}>
+            Delete Marker
+          </button>
         </div>
-        <button className="btn btn-dark" onClick={this.deleteMarker}>Delete Marker</button>
       </div>
     )
   }
