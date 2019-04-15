@@ -30,14 +30,16 @@ class MapsController < ApplicationController
   private
 
   def map_params_at_create
-    params.require(:map).permit(:lat, :lng, :zoom, :name, :height, :article_id).merge(position: define_initial_position)
+    params.require(:map).permit(:lat, :lng, :zoom, :name, :height, :show_map_center_as_marker, :article_id)
+    .merge(position: define_initial_position)
   end
 
   def map_params
-    params.require(:map).permit(:lat, :lng, :zoom, :position, :name, :height, :article_id)
+    params.require(:map).permit(:lat, :lng, :zoom, :position, :name, :height, :show_map_center_as_marker, :article_id)
   end
 
   def define_initial_position
-    params[:map][:position].present? ? params[:map][:position].to_i : Article.find(params[:map][:article_id]).elements_position_mapping.size
+    params[:map][:position].present? ? params[:map][:position].to_i : Article.find(params[:map][:article_id])
+    .elements_position_mapping.size
   end
 end

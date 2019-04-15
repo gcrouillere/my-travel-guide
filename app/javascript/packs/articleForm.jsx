@@ -16,6 +16,8 @@ class ArticleForm extends Component {
     this.state = {
       articleElements: [],
       title: "",
+      titleValid: false,
+      audienceForm: false,
       dropZone: "",
       draggedElementId: null,
       initialPosition: null,
@@ -34,7 +36,7 @@ class ArticleForm extends Component {
         url: `/articles/${this.props.match.params.id}`,
         dataType: "JSON"
       }).done((data) => {
-        this.setState({title: data.title, id: data.id,
+        this.setState({title: data.title, titleValid: data.title.length > 10, id: data.id,
         articleElements: data.text_contents.concat(data.maps).sort((x, y) => x.position - y.position)});
       })
     } else {
@@ -52,7 +54,7 @@ class ArticleForm extends Component {
   }
 
   handleTitleChange = (event) => {
-    this.setState({title: event.target.value})
+    this.setState({title: event.target.value, titleValid: event.target.value.length > 10})
   }
 
   saveTitleOnBlur = () => {
@@ -87,7 +89,7 @@ class ArticleForm extends Component {
       url: `/maps/`,
       dataType: "JSON",
       data: {map: {lat: mapCenter.lat, lng: mapCenter.lng, zoom: zoom, name: mapLocation,
-        position: this.state.articleElements.length, height: 150, article_id: id}}
+        position: this.state.articleElements.length, height: 250, show_map_center_as_marker: true, article_id: id}}
     }).done((data) => {
       let finalPositionAtCreation = this.definePositionAtCreation(initPositionAtCreation)
       this.updateElementPosition(id, -1, finalPositionAtCreation)
@@ -181,6 +183,10 @@ class ArticleForm extends Component {
     this.setState({customizationOnGoing: {status: !this.state.customizationOnGoing.status, trigger: trigger}})
   }
 
+  updateArticleCompletion = (module) => {
+    this.setState(module)
+  }
+
   updateElementPosition(id, initPosition, targetPosition) {
     $.ajax({
       method: 'POST',
@@ -227,38 +233,45 @@ class ArticleForm extends Component {
     return (
       <div className="container article-container" onDrop={this.onDropOnContainer} onDragOver={this.onDragOver}>
 
-        <AudienceForm id={this.props.match.params.id} />
+        <AudienceForm id={this.props.match.params.id} updateArticleCompletion={this.updateArticleCompletion}/>
 
-        <ContentMenu id={this.state.id} addNewTextContent={this.addNewTextContent} addNewMap={this.addNewMap}
-        addNewTextOnDrag={this.addNewTextOnDrag} addNewMapOnDrag={this.addNewMapOnDrag} ref="contentMenu"
-        elementsCount={this.state.articleElements.length}/>
+        {this.state.audienceForm &&
+          <header className={`maintTitle ${this.state.titleValid ? "complete" : "incomplete"}`}>
+            <h2 className="sectionLabel">{this.state.titleValid ? "Article title" : "Write Your Article Title"}</h2>
+            {!this.state.titleValid && <p className="mainTitleSub">(10 characters long minimum)</p>}
+            <input type="text" placeholder="Type here your article title" value={this.state.title} onChange={this.handleTitleChange}
+            onBlur={this.saveTitleOnBlur}/>
+          </header>
+        }
 
-        <header>
-          <h2 className="sectionLabel">Main title</h2>
-          <input type="text" placeholder="Enter your article title" value={this.state.title} onChange={this.handleTitleChange}
-          onBlur={this.saveTitleOnBlur}/>
-        </header>
+        {this.state.audienceForm && this.state.titleValid &&
+          <ContentMenu id={this.state.id} addNewTextContent={this.addNewTextContent} addNewMap={this.addNewMap}
+          addNewTextOnDrag={this.addNewTextOnDrag} addNewMapOnDrag={this.addNewMapOnDrag} ref="contentMenu"
+          elementsCount={this.state.articleElements.length}/>
+        }
 
-        <div className="articleContent" >
-        <h2 className="sectionLabel">Article content</h2>
-          {this.state.articleElements.map(element => {
-            if (element.class_name == "TextContent") {
-              return <TextContentForm key={`text${element.id}`} textContent={element}
+        {this.state.audienceForm && this.state.titleValid &&
+          <div className="articleContent" >
+          <h2 className="sectionLabel">Article content</h2>
+            {this.state.articleElements.map(element => {
+              if (element.class_name == "TextContent") {
+                return <TextContentForm key={`text${element.id}`} textContent={element}
+                  articleId={this.state.id} position={element.position} id={element.id}
+                  onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
+                  onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
+                  mapCustomizationOnGoing={this.state.customizationOnGoing}/>
+              }
+              else if (element.class_name == "Map") {
+                return <MapForm key={`map${element.id}`} map={element} name={element.name}
                 articleId={this.state.id} position={element.position} id={element.id}
                 onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                 onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
-                mapCustomizationOnGoing={this.state.customizationOnGoing}/>
-            }
-            else if (element.class_name == "Map") {
-              return <MapForm key={`map${element.id}`} map={element} name={element.name}
-              articleId={this.state.id} position={element.position} id={element.id}
-              onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
-              onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
-              preventDraggingOnOtherElements={this.preventDraggingOnOtherElements} />
-            }
-          })}
-          <DragImage dragContent={this.state.dragContent} activeDragImage={this.state.activeDragImage}/>
-        </div>
+                preventDraggingOnOtherElements={this.preventDraggingOnOtherElements} />
+              }
+            })}
+             <DragImage dragContent={this.state.dragContent} activeDragImage={this.state.activeDragImage}/>
+          </div>
+        }
 
       </div>
     )

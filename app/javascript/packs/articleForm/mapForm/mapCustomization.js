@@ -143,6 +143,10 @@ class MapCustomization extends Component {
     }).fail((data) => {console.log(data)})
   }
 
+  showCenterAsMarker = (event) => {
+    this.props.updateMap({show_map_center_as_marker: event.target.value == "true"})
+  }
+
   render() {
 
     return (
@@ -154,6 +158,17 @@ class MapCustomization extends Component {
           </button>
           }
           <h3>Map Customization:</h3>
+          <div className="mapCenterShow mapCustomizationBlock">
+            <p>Display Map Center ?</p>
+            {[true, false].map(x =>
+            <div key={x} className="form-check form-check-inline">
+              <input className="form-check-input mapCenterShowinput" type="radio" id={`radio-${x}`} name="inlineRadioOptions" value={x}
+              checked={this.props.map.show_map_center_as_marker == x}
+              onChange={this.showCenterAsMarker} disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "showCenterAsMarker" : false}/>
+              <label className="form-check-label" htmlFor={`radio-${x}`}>{x ? "Yes" : "No"}</label>
+            </div>
+            )}
+          </div>
           <button className={`btn btn-dark mapCustomizationBlock ${this.state.markerOnConstruction ? "finishPath" : "startPath"}`}
             onClick={this.initAddMarker} disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "initAddMarker" : false}>
             {this.state.markerOnConstruction ? "Click on Map to place Marker" : "Add a Marker"}

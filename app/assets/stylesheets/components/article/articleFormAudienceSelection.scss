@@ -1,0 +1,74 @@
+.audienceSelection {
+    transition: all 0.3s ease-in-out;
+    margin: 30px 0;
+
+    .form-check {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px auto 30px auto;
+      input {
+        display: none;
+      }
+      label {
+        cursor: pointer;
+        margin: 0 10px;
+        border-radius: 30px;
+        padding: 10px;
+        width: 130px;
+        text-align: center;
+        border: 1px solid #ccc;
+        text-shadow: 0px 1px 0px rgba(0,0,0,0.2);
+        background: white;
+        position: relative;
+      }
+      label.ticked:after {
+        position: absolute;
+        top: -4px; bottom: -4px;
+        left: -4px; right: -4px;
+        background: linear-gradient(to right, #343a40, #00bf8f);
+        opacity: 1;
+        content: '';
+        z-index: -1;
+        border-radius: 30px;
+        transition: all 0.3s ease-in-out;
+      }
+      label.blank:after {
+        position: absolute;
+        top: -4px; bottom: -4px;
+        left: -4px; right: -4px;
+        background: linear-gradient(to right, #343a40, #00bf8f);
+        opacity: 0;
+        content: '';
+        z-index: -1;
+        border-radius: 30px;
+        transition: all 0.3s ease-in-out;
+      }
+    }
+
+    .AudienceSubmitComplete {
+      opacity: 1;
+      transition: all 0.3s ease-in-out;
+    }
+    .AudienceSubmit{
+      opacity: 0;
+    }
+    .AudienceSubmitContinueAndComplete {
+      display: none;
+    }
+  }
+
+  .audienceSelection.incomplete {
+    overflow-y: auto;
+    position: fixed;
+    top: 0;
+    height: 100vh;
+    left: 0;
+    width: 100%;
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: #fafafa;
+  }

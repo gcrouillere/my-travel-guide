@@ -16,7 +16,8 @@ class MapComponent extends Component {
       googleMap: null,
       map: this.props.map,
       polylines: this.props.map.polylines || [],
-      markers: this.props.map.markers || []
+      markers: this.props.map.markers || [],
+      showCenterAsMarker: this.props.map.show_map_center_as_marker
     }
   }
 
@@ -37,6 +38,7 @@ class MapComponent extends Component {
       scaleControl: false,
       streetViewControl: false,
       fullscreenControl: false,
+      styles: [ { "featureType": "poi.business", "stylers": [{ "visibility": "off" }] } ]
     });
 
     this.setState({googleMap: this.map})
@@ -48,7 +50,7 @@ class MapComponent extends Component {
 
   initAutoComplete = () => {
     var mapLocation = document.getElementById(`mapLocation${this.props.map.id}`)
-    this.autocomplete = new google.maps.places.Autocomplete((mapLocation), {types: ['geocode']});
+    this.autocomplete = new google.maps.places.Autocomplete((mapLocation), {});
     let userInput = ""
     google.maps.event.addDomListener(mapLocation, 'keydown', function(event) {
       if (event.key === "Enter") event.preventDefault(); // Do not submit the form on Enter.
@@ -89,7 +91,7 @@ class MapComponent extends Component {
     let newHeight, validHeight = null
     onmousemove = (event) => {
        newHeight = (initialMapHeight + (event.screenY - originalcursorPosition))
-       validHeight = newHeight < 150 ? 150 : newHeight
+       validHeight = newHeight < 250 ? 250 : newHeight
        map.style.height = `${validHeight}px`
     }
     onmouseup = () => {
@@ -116,7 +118,7 @@ class MapComponent extends Component {
       data: {map: mapCharacteristics}
     }).done((data) => {
       this.props.setMap(data)
-      this.setState({map: data})
+      this.setState({map: data, showCenterAsMarker: data.show_map_center_as_marker})
       this.initMap()
       this.initAutoComplete()
     }).fail((data) => {
@@ -160,7 +162,13 @@ class MapComponent extends Component {
       <div className="mapBloc">
         <ElementResize initResize={this.initResize}/>
         <MapLocationInput id={this.props.map.id} location={this.state.map.name}/>
-        <div id={`map${this.state.map.id}`} className="googleMap" style={{ width: '100%', height: `${this.state.map.height}px` }} onMouseDown={this.onMouseDown}>
+        <div id={`map${this.state.map.id}`} className="googleMap" style={{ width: '100%', height: `${this.state.map.height}px` }}
+        onMouseDown={this.onMouseDown}>
+          {this.state.showCenterAsMarker &&
+            <Marker googleMap={this.state.googleMap} map={this.state.map}
+            marker={{lat: this.state.map.lat, lng: this.state.map.lng, description: this.state.map.name, logo: "markerLogo", mapCenter: true}}
+            manageMarker={this.manageMarker} updateMapDataList={this.updateMapDataList}/>
+          }
           {this.state.markers.map(marker =>
             <Marker key={`marker${marker.id}`} googleMap={this.state.googleMap} map={this.state.map} marker={marker}
             manageMarker={this.manageMarker} updateMapDataList={this.updateMapDataList}/>

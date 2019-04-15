@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2019_03_27_123449) do
 
   create_table "articles", force: :cascade do |t|
     t.string "title"
+    t.boolean "audience_valid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -43,6 +44,7 @@ ActiveRecord::Schema.define(version: 2019_03_27_123449) do
     t.float "lng"
     t.integer "position"
     t.integer "height"
+    t.boolean "show_map_center_as_marker"
     t.bigint "article_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

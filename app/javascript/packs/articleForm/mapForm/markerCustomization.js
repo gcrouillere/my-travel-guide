@@ -41,6 +41,7 @@ class MarkerCustomization extends Component {
     if (!this.props.customizationOnGoing.status) {
       this.setState({googleMarker: googleMarker, marker: marker, description: marker.description || "", logo: marker.logo})
       document.getElementById(`markerCustomization-${this.props.map.id}`).classList.add("active")
+      document.getElementById(`description-${this.props.map.id}`).focus()
       document.getElementById(`polylineCustomization-${this.props.map.id}`).classList.remove("active")
     }
   }
@@ -50,7 +51,11 @@ class MarkerCustomization extends Component {
   handleDescription = (event) => {this.setState({description: event.target.value})}
 
   saveDescription = (event) => {
-    this.updateMarker({description: this.state.description})
+    if (this.state.googleMarker.mapCenter) {
+      this.props.updateMap({name: this.state.description})
+    } else {
+      this.updateMarker({description: this.state.description})
+    }
   }
 
   logoChange = (event) => {
@@ -87,6 +92,11 @@ class MarkerCustomization extends Component {
     }).fail((data) => {console.log(data)})
   }
 
+  onDragStart = (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+  }
+
   render() {
     return (
       <div id={`markerCustomization-${this.props.map.id}`} className="markerCustomization">
@@ -96,26 +106,30 @@ class MarkerCustomization extends Component {
           </button>
           <h3>Marker Customization:</h3>
           <div className="mapCustomizationBlock">
-            <textarea value={this.state.description} onChange={this.handleDescription}/>
+            <textarea id={`description-${this.props.map.id}`} value={this.state.description} onChange={this.handleDescription} onDragStart={this.onDragStart}/>
             <button className="btn btn-dark" onClick={this.saveDescription}
             disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "saveDescription" : false}>
-              Update description
+              Save description
             </button>
           </div>
-          <div className="mapCustomizationBlock">
-          {Object.keys(this.state.logos).map(logosKey =>
-            <div key={`${logosKey}`} className="form-check form-check-inline">
-              <input className="form-check-input markerLogoInput" type="radio" id={`radio-${logosKey}`} name="inlineRadioOptions"
-              value={logosKey} checked={this.state.logo == null ? false : this.state.logo == logosKey} onChange={this.logoChange}
-              disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "logoChange" : false}/>
-              <label className="form-check-label" htmlFor={`radio-${logosKey}`}><img src={this.state.logos[logosKey].url}/></label>
-            </div>
-          )}
-          </div>
-          <button className="btn btn-dark mapCustomizationBlock" onClick={this.deleteMarker}
-          disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "deleteMarker" : false}>
-            Delete Marker
-          </button>
+          {this.state.googleMarker ? !this.state.googleMarker.mapCenter &&
+            <div>
+              <div className="mapCustomizationBlock">
+              {Object.keys(this.state.logos).map(logosKey =>
+                <div key={`${logosKey}`} className="form-check form-check-inline">
+                  <input className="form-check-input markerLogoInput" type="radio" id={`radio-${logosKey}`} name="inlineRadioOptions"
+                  value={logosKey} checked={this.state.logo == null ? false : this.state.logo == logosKey} onChange={this.logoChange}
+                  disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "logoChange" : false}/>
+                  <label className="form-check-label" htmlFor={`radio-${logosKey}`}><img src={this.state.logos[logosKey].url}/></label>
+                </div>
+              )}
+              </div>
+              <button className="btn btn-dark mapCustomizationBlock" onClick={this.deleteMarker}
+              disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "deleteMarker" : false}>
+                Delete Marker
+              </button>
+            </div> : false
+          }
         </div>
       </div>
     )

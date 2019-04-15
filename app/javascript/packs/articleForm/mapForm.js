@@ -28,6 +28,8 @@ class MapForm extends Component {
     this.setState({customizationOnGoing: {status: !this.state.customizationOnGoing.status, trigger: trigger}})
   }
 
+  updateMap = (mapCharacteristics) => {this.refs.mapComponent.updateMap(mapCharacteristics)}
+
   updateMapDataList = (data, dataType, action) => { this.refs.mapComponent.updateMapDataList(data, dataType, action) }
 
   manageMarker = (event, googleMarker, marker) => { this.refs.markerCustomization.initMarkerCustomization(event, googleMarker, marker) }
@@ -65,17 +67,17 @@ class MapForm extends Component {
         <DropZone area={"before"} onDrop={this.onDrop}/>
         <MapCustomization googleMap={this.state.googleMap} map={this.state.map} customizationOnGoing={this.state.customizationOnGoing}
         updateMapDataList= {this.updateMapDataList} initAddSimpleMarker={this.initAddSimpleMarker}
-        initAddMarkerWithIW={this.initAddMarkerWithIW} updateMapDataList={this.updateMapDataList}
+        initAddMarkerWithIW={this.initAddMarkerWithIW} updateMapDataList={this.updateMapDataList} updateMap={this.updateMap}
         preventCustomizationMix={this.preventCustomizationMix}/>
         <MarkerCustomization googleMap={this.state.googleMap} map={this.state.map} customizationOnGoing={this.state.customizationOnGoing}
-        updateMapDataList={this.updateMapDataList} ref="markerCustomization"/>
-        <PolylineCustomization googleMap={this.state.googleMap} map={this.state.map} ref="polylineCustomization"
-        customizationOnGoing={this.state.customizationOnGoing} updateMapDataList={this.updateMapDataList}
-        preventCustomizationMix={this.preventCustomizationMix}/>
+        updateMapDataList={this.updateMapDataList} updateMap={this.updateMap} ref="markerCustomization" />
+        <PolylineCustomization googleMap={this.state.googleMap} map={this.state.map} customizationOnGoing={this.state.customizationOnGoing}
+        updateMapDataList={this.updateMapDataList} preventCustomizationMix={this.preventCustomizationMix}
+        ref="polylineCustomization"/>
        <MapComponent map={this.props.map} polylines={this.props.map.polylines} customizationOnGoing={this.state.customizationOnGoing}
         markers={this.props.map.markers} manageMarker={this.manageMarker} managePolyline={this.managePolyline} managePolylinePoint={this.managePolylinePoint}
         handleZoom={this.handleZoom} handleCenter={this.handleCenter} setGoogleMap={this.setGoogleMap} setMap={this.setMap}
-        preventCustomizationMix={this.preventCustomizationMix} ref="mapComponent"/>
+        preventCustomizationMix={this.preventCustomizationMix} updateMap={this.updateMap} ref="mapComponent"/>
         <DropZone area={"after"} onDrop={this.onDrop}/>
       </div>
     );

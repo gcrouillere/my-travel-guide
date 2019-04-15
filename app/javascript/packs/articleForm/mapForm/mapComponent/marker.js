@@ -41,8 +41,9 @@ class Marker extends Component {
     this.googleMarker = new google.maps.Marker({
       position: {lat: this.props.marker.lat, lng: this.props.marker.lng},
       map: this.props.googleMap,
-      draggable: true,
-      icon: this.state.logos[this.props.marker.logo].url
+      draggable: !this.props.marker.mapCenter,
+      icon: this.state.logos[this.props.marker.logo].url,
+      mapCenter: this.props.marker.mapCenter
     })
 
     if (this.props.marker.description) {

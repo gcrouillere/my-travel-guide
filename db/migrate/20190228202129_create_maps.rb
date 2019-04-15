@@ -7,6 +7,7 @@ class CreateMaps < ActiveRecord::Migration[5.2]
       t.float :lng
       t.integer :position
       t.integer :height
+      t.boolean :show_map_center_as_marker
       t.references :article, foreign_key: true
 
       t.timestamps

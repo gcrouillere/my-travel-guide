@@ -16,7 +16,7 @@ class ContentMenu extends Component {
     document.getElementById('initialMapLocation').value = ""
     let mapLocation = document.getElementById('initialMapLocation')
     let userInput = ""
-    this.autocomplete = new google.maps.places.Autocomplete((mapLocation), {types: ['geocode']});
+    this.autocomplete = new google.maps.places.Autocomplete((mapLocation), {});
     google.maps.event.addDomListener(mapLocation, 'keydown', function(e) {
       if (e.key === "Enter") e.preventDefault(); // Do not submit the form on Enter.
     });
