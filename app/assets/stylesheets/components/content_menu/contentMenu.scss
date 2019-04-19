@@ -4,7 +4,7 @@
   position: fixed;
   border: 1px solid rgba(0,0,0,.05);
   box-shadow: 1px 0px 6px 1px rgba(0,0,0,0.1);
-  left: -246px;
+  left: -256px;
   .chevron-open {
     display: block;
   }
@@ -96,7 +96,7 @@
   transition: all 0.3s ease-in-out;
 }
 
-.mapInitialCenterOverlay {
+.mapInitialCenterOverlay, .photoInitialFileOverlay {
   background: #fafafa;
   opacity: 0;
   visibility: hidden;
@@ -134,7 +134,7 @@
   }
 }
 
-.mapInitialCenterOverlay.active {
+.mapInitialCenterOverlay.active, .photoInitialFileOverlay.active {
   opacity: 1;
   visibility: visible;
   transition: all 0.3s ease-in-out;

@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :maps
   resources :polylines
   resources :markers
+  resources :photos
 
   post '/articles/element_position_update', to: "articles#element_position_update"
 end

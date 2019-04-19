@@ -2,13 +2,18 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import MapInitialCenterOverlay from './contentMenu/mapInitialCenterOverlay'
+import PhotoInitialFileOverlay from './contentMenu/photoInitialFileOverlay'
 import mapLogo from './../../../assets/images/map-white.svg'
 import textLogo from './../../../assets/images/write-white.svg'
+import photoLogo from './../../../assets/images/see-white.svg'
 
 class ContentMenu extends Component {
 
   constructor(props) {
     super(props)
+    this.state = {
+      initPositionAtCreation: null
+    }
   }
 
   initAutoComplete = ({initPositionAtCreation = undefined} = {}) => {
@@ -42,9 +47,18 @@ class ContentMenu extends Component {
     }
   }
 
-  addNewTextOnDrag = (event) => {this.props.addNewTextOnDrag()}
+  initAddNewPhotoBloc = ({initPositionAtCreation = undefined}) => {
+    document.querySelector(".photoInitialFileOverlay").classList.add("active")
+    this.setState({initPositionAtCreation: initPositionAtCreation})
+  }
 
-  addNewMapOnDrag = (event) => {this.props.addNewMapOnDrag()}
+  addNewPhotoBloc = (data) => { this.props.addNewPhotoBloc(data, this.state.initPositionAtCreation) }
+
+  addNewTextOnDrag = (event) => { this.props.addNewTextOnDrag() }
+
+  addNewMapOnDrag = (event) => { this.props.addNewMapOnDrag() }
+
+  addNewPhotoBlocOnDrag = (event) => { this.props.addNewPhotoBlocOnDrag() }
 
   render() {
     return(
@@ -73,6 +87,17 @@ class ContentMenu extends Component {
             </div>
           </div>
 
+          <div className="blocAddition">
+            <div draggable className="btn btn-dark addNew" onClick={this.initAddNewPhotoBloc}
+            onDragStart={this.addNewPhotoBlocOnDrag}>
+              <div className="addIcone"><img src={photoLogo}/></div>
+              <div className="addExplain">
+                <div>Click to add photo in queue</div>
+                <div>Drag to add photo to a specific location</div>
+              </div>
+            </div>
+          </div>
+
         </div>
         <div className="expand">
           <div className="menu">
@@ -86,6 +111,8 @@ class ContentMenu extends Component {
         </div>
 
         <MapInitialCenterOverlay />
+        <PhotoInitialFileOverlay onPhotoSelected={this.onPhotoSelected} addNewPhotoBloc={this.addNewPhotoBloc}
+        initPositionAtCreation={this.state.initPositionAtCreation} initPositionAtCreation={this.state.initPositionAtCreation}/>
       </div>
     )
   }

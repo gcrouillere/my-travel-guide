@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_27_123449) do
+ActiveRecord::Schema.define(version: 2019_04_17_151222) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,6 +65,23 @@ ActiveRecord::Schema.define(version: 2019_03_27_123449) do
     t.index ["polyline_id"], name: "index_markers_on_polyline_id"
   end
 
+  create_table "photos", force: :cascade do |t|
+    t.integer "position"
+    t.string "public_id"
+    t.string "version"
+    t.string "signature"
+    t.integer "width"
+    t.integer "height"
+    t.string "format"
+    t.string "resource_type"
+    t.string "url"
+    t.string "original_filename"
+    t.bigint "article_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["article_id"], name: "index_photos_on_article_id"
+  end
+
   create_table "polylines", force: :cascade do |t|
     t.boolean "distance_displayed"
     t.bigint "map_id"
@@ -87,6 +104,7 @@ ActiveRecord::Schema.define(version: 2019_03_27_123449) do
   add_foreign_key "maps", "articles"
   add_foreign_key "markers", "maps"
   add_foreign_key "markers", "polylines"
+  add_foreign_key "photos", "articles"
   add_foreign_key "polylines", "maps"
   add_foreign_key "text_contents", "articles"
 end

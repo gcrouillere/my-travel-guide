@@ -27,6 +27,11 @@ class DragImage extends Component {
               <p>Map : {this.props.dragContent[dragContentKey]}</p>
             </div>
           )}
+          else if (dragContentKey == "url") { return (
+            <div key={"dragImageContentMap"} className="dragImageContent">
+              <img src={this.props.dragContent[dragContentKey]} alt=""/>
+            </div>
+          )}
         })}
       </div>
     )

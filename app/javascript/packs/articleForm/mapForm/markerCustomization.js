@@ -99,14 +99,14 @@ class MarkerCustomization extends Component {
 
   render() {
     return (
-      <div id={`markerCustomization-${this.props.map.id}`} className="markerCustomization">
+      <div id={`markerCustomization-${this.props.map.id}`} className="markerCustomization" draggable onDragStart={this.onDragStart}>
         <div className="overflowContainer">
           <button onClick={this.abandonMarkerCustomization} className="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
           <h3>Marker Customization:</h3>
           <div className="mapCustomizationBlock">
-            <textarea id={`description-${this.props.map.id}`} value={this.state.description} onChange={this.handleDescription} onDragStart={this.onDragStart}/>
+            <textarea id={`description-${this.props.map.id}`} value={this.state.description} onChange={this.handleDescription}/>
             <button className="btn btn-dark" onClick={this.saveDescription}
             disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "saveDescription" : false}>
               Save description

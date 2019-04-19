@@ -74,7 +74,7 @@ class MapForm extends Component {
         <PolylineCustomization googleMap={this.state.googleMap} map={this.state.map} customizationOnGoing={this.state.customizationOnGoing}
         updateMapDataList={this.updateMapDataList} preventCustomizationMix={this.preventCustomizationMix}
         ref="polylineCustomization"/>
-       <MapComponent map={this.props.map} polylines={this.props.map.polylines} customizationOnGoing={this.state.customizationOnGoing}
+        <MapComponent map={this.props.map} polylines={this.props.map.polylines} customizationOnGoing={this.state.customizationOnGoing}
         markers={this.props.map.markers} manageMarker={this.manageMarker} managePolyline={this.managePolyline} managePolylinePoint={this.managePolylinePoint}
         handleZoom={this.handleZoom} handleCenter={this.handleCenter} setGoogleMap={this.setGoogleMap} setMap={this.setMap}
         preventCustomizationMix={this.preventCustomizationMix} updateMap={this.updateMap} ref="mapComponent"/>

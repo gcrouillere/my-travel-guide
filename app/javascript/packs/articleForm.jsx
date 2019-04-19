@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import AudienceForm from './articleForm/audienceForm'
 import TextContentForm from './articleForm/textContentForm'
 import MapForm from './articleForm/mapForm'
+import PhotoForm from './articleForm/photoForm'
 import ContentMenu from './articleForm/contentMenu'
 import DragImage from './articleForm/dragImage'
 import $ from 'jquery'
@@ -37,7 +38,7 @@ class ArticleForm extends Component {
         dataType: "JSON"
       }).done((data) => {
         this.setState({title: data.title, titleValid: data.title.length > 10, id: data.id,
-        articleElements: data.text_contents.concat(data.maps).sort((x, y) => x.position - y.position)});
+        articleElements: data.text_contents.concat(data.maps).concat(data.photos).sort((x, y) => x.position - y.position)});
       })
     } else {
       $.ajax({
@@ -96,6 +97,23 @@ class ArticleForm extends Component {
     }).fail((data) => {console.log(data)})
   }
 
+  addNewPhotoBloc  = (data, initPositionAtCreation) => {
+    console.log(data)
+    console.log(initPositionAtCreation)
+    $.ajax({
+      method: 'POST',
+      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+      url: `/photos/`,
+      dataType: "JSON",
+      data: {photo: { public_id: data.public_id, version: data.version, signature: data.signature, width: data.width,
+        height: data.height, format: data.format, resource_type: data.resource_type, url: data.url, original_filename: data.original_filename,
+        article_id: this.state.id, position: this.state.articleElements.length }}
+    }).done((data) => {
+      let finalPositionAtCreation = this.definePositionAtCreation(initPositionAtCreation)
+      this.updateElementPosition(this.state.id, -1, finalPositionAtCreation)
+    }).fail((data) => {console.log(data)})
+  }
+
   deleteElement = (event, id, position, controller) => {
     $.ajax({
       method: 'DELETE',
@@ -109,7 +127,7 @@ class ArticleForm extends Component {
 
   onDragStart = (event, id, position, articleContent) => {
     document.getElementById(`content-${position}`).classList.add("draggingElement")
-    document.querySelectorAll(".textContentInput, .mapInput").forEach(x => x.classList.add("dragging"))
+    document.querySelectorAll(".textContentInput, .mapInput, .photoInput").forEach(x => x.classList.add("dragging"))
     event.dataTransfer.setData("type", "positionUpdate")
     this.setState({
       initialPosition: position,
@@ -162,6 +180,8 @@ class ArticleForm extends Component {
       this.refs.contentMenu.initAutoComplete({initPositionAtCreation: position})
     } else if (event.dataTransfer.getData("type") == "textCreation") {
       this.addNewTextContent(this.state.id, {initPositionAtCreation: position})
+    } else if (event.dataTransfer.getData("type") == "photoCreation") {
+      this.refs.contentMenu.initAddNewPhotoBloc({initPositionAtCreation: position})
     }
   }
 
@@ -176,6 +196,11 @@ class ArticleForm extends Component {
 
   addNewMapOnDrag = () => {
     event.dataTransfer.setData("type", "mapCreation")
+    this.setState({initialPosition: -1})
+  }
+
+  addNewPhotoBlocOnDrag = () => {
+    event.dataTransfer.setData("type", "photoCreation")
     this.setState({initialPosition: -1})
   }
 
@@ -198,7 +223,7 @@ class ArticleForm extends Component {
         target: {id: id, position: targetPosition}
       }}
     }).done((data) => {
-      const sortedElements = data.text_contents.concat(data.maps).sort((x, y) => x.position - y.position)
+      const sortedElements = data.text_contents.concat(data.maps).concat(data.photos).sort((x, y) => x.position - y.position)
       this.setState({articleElements: sortedElements, activeDragImage: false, initialPosition: null, dropZone: ""})
     }).fail((data) => {console.log(data)})
   }
@@ -225,7 +250,7 @@ class ArticleForm extends Component {
 
   clearDraggingExtraClasses() {
     document.querySelectorAll(".dropZone-before , .dropZone-after").forEach(x => x.classList.remove("active"))
-    document.querySelectorAll(".textContentInput, .mapInput").forEach(x => x.classList.remove("dragging"))
+    document.querySelectorAll(".textContentInput, .mapInput, .photoInput").forEach(x => x.classList.remove("dragging"))
     document.querySelectorAll(".draggingElement").forEach(x => x.classList.remove("draggingElement"))
   }
 
@@ -246,6 +271,7 @@ class ArticleForm extends Component {
 
         {this.state.audienceForm && this.state.titleValid &&
           <ContentMenu id={this.state.id} addNewTextContent={this.addNewTextContent} addNewMap={this.addNewMap}
+          addNewPhotoBloc={this.addNewPhotoBloc} addNewPhotoBlocOnDrag={this.addNewPhotoBlocOnDrag}
           addNewTextOnDrag={this.addNewTextOnDrag} addNewMapOnDrag={this.addNewMapOnDrag} ref="contentMenu"
           elementsCount={this.state.articleElements.length}/>
         }
@@ -256,10 +282,10 @@ class ArticleForm extends Component {
             {this.state.articleElements.map(element => {
               if (element.class_name == "TextContent") {
                 return <TextContentForm key={`text${element.id}`} textContent={element}
-                  articleId={this.state.id} position={element.position} id={element.id}
-                  onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
-                  onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
-                  mapCustomizationOnGoing={this.state.customizationOnGoing}/>
+                articleId={this.state.id} position={element.position} id={element.id}
+                onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
+                onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
+                mapCustomizationOnGoing={this.state.customizationOnGoing}/>
               }
               else if (element.class_name == "Map") {
                 return <MapForm key={`map${element.id}`} map={element} name={element.name}
@@ -267,6 +293,13 @@ class ArticleForm extends Component {
                 onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                 onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
                 preventDraggingOnOtherElements={this.preventDraggingOnOtherElements} />
+              }
+              else if (element.class_name == "Photo") {
+                return <PhotoForm key={`photo${element.id}`} photo={element}
+                articleId={this.state.id} position={element.position} id={element.id}
+                onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
+                onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
+                mapCustomizationOnGoing={this.state.customizationOnGoing}/>
               }
             })}
              <DragImage dragContent={this.state.dragContent} activeDragImage={this.state.activeDragImage}/>

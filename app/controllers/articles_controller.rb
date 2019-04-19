@@ -15,7 +15,8 @@ class ArticlesController < ApplicationController
       format.json { render json: @article.as_json(include: {
         text_contents: { methods: :class_name },
         audience_selections: {},
-        maps:{ methods: :class_name, include: { markers: {}, polylines: { include: { markers: {} } } } }
+        maps:{ methods: :class_name, include: { markers: {}, polylines: { include: { markers: {} } } } },
+        photos:{ methods: :class_name }
       })}
     end
   end
@@ -76,7 +77,8 @@ class ArticlesController < ApplicationController
     render json: Article.find(params[:article]).as_json(include: {
       text_contents: { methods: :class_name },
       audience_selections: {},
-      maps:{ methods: :class_name, include: { markers: {}, polylines: {} } }
+      maps:{ methods: :class_name, include: { markers: {}, polylines: {} } },
+      photos: { methods: :class_name },
     })
   end
 
