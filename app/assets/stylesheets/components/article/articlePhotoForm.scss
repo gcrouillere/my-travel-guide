@@ -1,0 +1,27 @@
+.photoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  img {
+    max-width: 100%;
+  }
+
+  .cropTop, .cropRight, .cropBottom, .cropLeft {
+    position: absolute;
+  }
+  .cropRight, .cropLeft {
+    background: red;
+    width: 30px;
+    height: 100%;
+  }
+  .cropRight {
+    top: 0;
+    right: 0;
+  }
+  .cropLeft {
+    top: 0;
+    left: 0;
+  }
+}

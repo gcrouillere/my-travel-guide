@@ -91,9 +91,11 @@
   }
 }
 
-.contentMenu.expanded {
-  left: 0;
-  transition: all 0.3s ease-in-out;
+.contentMenu.disable-hover {
+  left: -256px;
+  &:hover {
+    left: -256px;
+  }
 }
 
 .mapInitialCenterOverlay, .photoInitialFileOverlay {
@@ -138,4 +140,8 @@
   opacity: 1;
   visibility: visible;
   transition: all 0.3s ease-in-out;
+}
+
+.progress {
+  width: 80%;
 }

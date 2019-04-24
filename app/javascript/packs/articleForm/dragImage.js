@@ -18,17 +18,17 @@ class DragImage extends Component {
       <div id="dragImage" className={`dragImage-${this.props.activeDragImage ? "active" : ""}`}>
         {Object.keys(this.props.dragContent).map(dragContentKey => {
           if (dragContentKey == "text") { return (
-            <div key={"dragImageContentText"} className="dragImageContent">
+            <div key={"dragImageContentText"}>
               <p>{this.sanitizeHTML(this.props.dragContent[dragContentKey])}</p>
             </div>
           )}
           else if (dragContentKey == "name") { return (
-            <div key={"dragImageContentMap"} className="dragImageContent">
+            <div key={"dragImageContentMap"}>
               <p>Map : {this.props.dragContent[dragContentKey]}</p>
             </div>
           )}
           else if (dragContentKey == "url") { return (
-            <div key={"dragImageContentMap"} className="dragImageContent">
+            <div key={"dragImageContentMap"} className="imageDragging">
               <img src={this.props.dragContent[dragContentKey]} alt=""/>
             </div>
           )}

@@ -7,6 +7,9 @@ class CreatePhotos < ActiveRecord::Migration[5.2]
       t.string :signature
       t.integer :width
       t.integer :height
+      t.integer :css_width, default: 80
+      t.string :css_height, default: 'auto'
+      t.integer :bytes
       t.string :format
       t.string :resource_type
       t.string :url

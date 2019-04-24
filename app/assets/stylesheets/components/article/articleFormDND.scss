@@ -31,11 +31,19 @@
   border: 1px dashed #ccc;
   padding: 10px;
   position: absolute;
-  top: - 100px;
+  top: - 200px;
  p {
     padding: 20px;
     margin: 0;
     background-color: #F7F7F7;
+  }
+  .imageDragging {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    img {
+      width: 20%;
+    }
   }
 }
 

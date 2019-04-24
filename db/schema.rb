@@ -72,6 +72,9 @@ ActiveRecord::Schema.define(version: 2019_04_17_151222) do
     t.string "signature"
     t.integer "width"
     t.integer "height"
+    t.integer "css_width", default: 80
+    t.string "css_height", default: "auto"
+    t.integer "bytes"
     t.string "format"
     t.string "resource_type"
     t.string "url"

@@ -9,7 +9,7 @@ import ContentMenu from './articleForm/contentMenu'
 import DragImage from './articleForm/dragImage'
 import $ from 'jquery'
 import update from 'immutability-helper'
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill/dist/quill.snow.css'
 
 class ArticleForm extends Component {
   constructor(props) {
@@ -94,20 +94,19 @@ class ArticleForm extends Component {
     }).done((data) => {
       let finalPositionAtCreation = this.definePositionAtCreation(initPositionAtCreation)
       this.updateElementPosition(id, -1, finalPositionAtCreation)
-    }).fail((data) => {console.log(data)})
+    }).fail((data) => { console.log(data) })
   }
 
   addNewPhotoBloc  = (data, initPositionAtCreation) => {
-    console.log(data)
-    console.log(initPositionAtCreation)
+    console.log(data.bytes)
     $.ajax({
       method: 'POST',
       beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
       url: `/photos/`,
       dataType: "JSON",
       data: {photo: { public_id: data.public_id, version: data.version, signature: data.signature, width: data.width,
-        height: data.height, format: data.format, resource_type: data.resource_type, url: data.url, original_filename: data.original_filename,
-        article_id: this.state.id, position: this.state.articleElements.length }}
+        height: data.height, bytes: data.bytes, format: data.format, resource_type: data.resource_type, url: data.url,
+        original_filename: data.original_filename, article_id: this.state.id, position: this.state.articleElements.length }}
     }).done((data) => {
       let finalPositionAtCreation = this.definePositionAtCreation(initPositionAtCreation)
       this.updateElementPosition(this.state.id, -1, finalPositionAtCreation)
@@ -171,7 +170,6 @@ class ArticleForm extends Component {
   }
 
   onDrop = (event, id, position) => {
-    document.querySelector(".contentMenu").classList.remove("disable-hover")
     this.clearDraggingExtraClasses()
     this.setDropzoneClass(event)
     if (event.dataTransfer.getData("type") == "positionUpdate") {
@@ -186,6 +184,7 @@ class ArticleForm extends Component {
   }
 
   onDropOnContainer = () => {
+    console.log("container")
     this.clearDraggingExtraClasses()
   }
 
@@ -249,9 +248,11 @@ class ArticleForm extends Component {
   }
 
   clearDraggingExtraClasses() {
+    console.log("clear classes")
     document.querySelectorAll(".dropZone-before , .dropZone-after").forEach(x => x.classList.remove("active"))
     document.querySelectorAll(".textContentInput, .mapInput, .photoInput").forEach(x => x.classList.remove("dragging"))
     document.querySelectorAll(".draggingElement").forEach(x => x.classList.remove("draggingElement"))
+    document.querySelectorAll(".contentMenu").forEach(x => x.classList.remove("disable-hover"))
   }
 
   render() {
@@ -273,7 +274,7 @@ class ArticleForm extends Component {
           <ContentMenu id={this.state.id} addNewTextContent={this.addNewTextContent} addNewMap={this.addNewMap}
           addNewPhotoBloc={this.addNewPhotoBloc} addNewPhotoBlocOnDrag={this.addNewPhotoBlocOnDrag}
           addNewTextOnDrag={this.addNewTextOnDrag} addNewMapOnDrag={this.addNewMapOnDrag} ref="contentMenu"
-          elementsCount={this.state.articleElements.length}/>
+          elementsCount={this.state.articleElements.length} />
         }
 
         {this.state.audienceForm && this.state.titleValid &&

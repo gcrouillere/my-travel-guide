@@ -160,7 +160,7 @@ class MapComponent extends Component {
 
     return (
       <div className="mapBloc">
-        <ElementResize initResize={this.initResize}/>
+        <ElementResize initResize={this.initResize} direction="vertical"/>
         <MapLocationInput id={this.props.map.id} location={this.state.map.name}/>
         <div id={`map${this.state.map.id}`} className="googleMap" style={{ width: '100%', height: `${this.state.map.height}px` }}
         onMouseDown={this.onMouseDown}>

@@ -54,15 +54,24 @@ class ContentMenu extends Component {
 
   addNewPhotoBloc = (data) => { this.props.addNewPhotoBloc(data, this.state.initPositionAtCreation) }
 
-  addNewTextOnDrag = (event) => { this.props.addNewTextOnDrag() }
+  addNewTextOnDrag = (event) => {
+    document.querySelectorAll(".textContentInput, .mapInput, .photoInput").forEach(x => x.classList.add("dragging"))
+    this.props.addNewTextOnDrag()
+  }
 
-  addNewMapOnDrag = (event) => { this.props.addNewMapOnDrag() }
+  addNewMapOnDrag = (event) => {
+    document.querySelectorAll(".textContentInput, .mapInput, .photoInput").forEach(x => x.classList.add("dragging"))
+    this.props.addNewMapOnDrag()
+  }
 
-  addNewPhotoBlocOnDrag = (event) => { this.props.addNewPhotoBlocOnDrag() }
+  addNewPhotoBlocOnDrag = (event) => {
+    document.querySelectorAll(".textContentInput, .mapInput, .photoInput").forEach(x => x.classList.add("dragging"))
+    this.props.addNewPhotoBlocOnDrag()
+  }
 
   render() {
     return(
-      <div className="contentMenu">
+      <div id="contentMenu" className="contentMenu">
         <div className="buttons">
 
           <div className="blocAddition">

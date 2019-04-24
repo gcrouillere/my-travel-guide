@@ -28,7 +28,12 @@
   .resizeLogo {
     bottom: -24px;
     left: calc(50% - 12px);
+  }
+  .resizeLogo.vertical {
     cursor: ns-resize;
+  }
+  .resizeLogo.horizontal {
+    cursor: ew-resize;
   }
 }
 

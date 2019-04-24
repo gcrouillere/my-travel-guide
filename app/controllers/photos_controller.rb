@@ -22,6 +22,7 @@ class PhotosController < ApplicationController
     @photos = Photo.find(params[:id])
     @deleted_photo = @photos.as_json(methods: :class_name)
     if @photos.destroy
+      Cloudinary::Api.delete_resources([@deleted_photo["public_id"]])
       render json: @deleted_photo, status: :ok
     else
       render json: @photos.errors, status: :unprocessable_entity
@@ -32,11 +33,11 @@ class PhotosController < ApplicationController
 
   def photo_params_at_create
     params.require(:photo).permit(:public_id, :version, :signature, :width, :height, :format, :resource_type,
-      :url, :original_filename, :article_id).merge(position: define_initial_position)
+      :url, :original_filename, :bytes, :position, :article_id).merge(position: define_initial_position)
   end
 
   def photo_params
-    params.require(:photo).permit(:public_id, :version, :signature, :width, :height, :format, :resource_type,
+    params.require(:photo).permit(:public_id, :version, :signature, :width, :height, :css_width, :css_height, :format, :resource_type,
       :url, :original_filename, :position, :article_id)
   end
 
