@@ -15,6 +15,20 @@ class TextContentForm extends Component {
     }
   }
 
+  modules = {
+    toolbar: [
+      [{ 'header': [2, 3, false] }],
+      ['bold', 'italic', 'underline','strike', 'blockquote'],
+      [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}]
+    ],
+  }
+
+  formats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike', 'blockquote',
+    'list', 'bullet', 'indent',
+  ]
+
   handleChange = (value) => {
     this.setState({textContent: value})
   }
@@ -48,6 +62,11 @@ class TextContentForm extends Component {
 
   onDrop = (event) => {this.props.onDrop(event, this.props.id, this.props.position)}
 
+  preventTextAreaDragging = (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+  }
+
   render() {
     return (
       <div id={`content-${this.props.position}`} className="textContentInput" draggable={!this.props.mapCustomizationOnGoing.status}
@@ -59,7 +78,8 @@ class TextContentForm extends Component {
         <DragVisualElements />
         <DeleteButton deleteElement={this.deleteElement}/>
         <DropZone area={"before"} onDrop={this.onDrop}/>
-        <ReactQuill value={this.state.textContent} onBlur={this.saveOnBlur} onChange={this.handleChange} />
+        <ReactQuill value={this.state.textContent} onBlur={this.saveOnBlur} onChange={this.handleChange} modules={this.modules}
+        formats={this.formats} draggable={true} onDragStart={this.preventTextAreaDragging}/>
         <DropZone area={"after"} onDrop={this.onDrop}/>
       </div>
     )

@@ -98,14 +98,13 @@ class ArticleForm extends Component {
   }
 
   addNewPhotoBloc  = (data, initPositionAtCreation) => {
-    console.log(data.bytes)
     $.ajax({
       method: 'POST',
       beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
       url: `/photos/`,
       dataType: "JSON",
-      data: {photo: { public_id: data.public_id, version: data.version, signature: data.signature, width: data.width,
-        height: data.height, bytes: data.bytes, format: data.format, resource_type: data.resource_type, url: data.url,
+      data: {photo: { public_id: data.public_id, version: data.version, signature: data.signature, original_width: data.width,
+        original_height: data.height, bytes: data.bytes, format: data.format, resource_type: data.resource_type, url: data.url,
         original_filename: data.original_filename, article_id: this.state.id, position: this.state.articleElements.length }}
     }).done((data) => {
       let finalPositionAtCreation = this.definePositionAtCreation(initPositionAtCreation)
@@ -184,7 +183,6 @@ class ArticleForm extends Component {
   }
 
   onDropOnContainer = () => {
-    console.log("container")
     this.clearDraggingExtraClasses()
   }
 
@@ -248,7 +246,6 @@ class ArticleForm extends Component {
   }
 
   clearDraggingExtraClasses() {
-    console.log("clear classes")
     document.querySelectorAll(".dropZone-before , .dropZone-after").forEach(x => x.classList.remove("active"))
     document.querySelectorAll(".textContentInput, .mapInput, .photoInput").forEach(x => x.classList.remove("dragging"))
     document.querySelectorAll(".draggingElement").forEach(x => x.classList.remove("draggingElement"))

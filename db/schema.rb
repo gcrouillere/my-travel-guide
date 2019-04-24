@@ -70,6 +70,8 @@ ActiveRecord::Schema.define(version: 2019_04_17_151222) do
     t.string "public_id"
     t.string "version"
     t.string "signature"
+    t.integer "original_width"
+    t.integer "original_height"
     t.integer "width"
     t.integer "height"
     t.integer "css_width", default: 80
@@ -78,7 +80,9 @@ ActiveRecord::Schema.define(version: 2019_04_17_151222) do
     t.string "format"
     t.string "resource_type"
     t.string "url"
+    t.string "cropped_url"
     t.string "original_filename"
+    t.boolean "display_title"
     t.bigint "article_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

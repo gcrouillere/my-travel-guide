@@ -6,18 +6,28 @@ import DragVisualElements from './formElementManagement/dragVisualElements'
 import DeleteButton from './formElementManagement/deleteButton'
 import $ from 'jquery'
 import ElementResize from './formElementManagement/elementResize'
+import ReactCrop from 'react-image-crop'
+import 'react-image-crop/lib/ReactCrop.scss'
+import { CLOUDINARYKEYS } from './../../config/config'
+import PhotoCustomization from './photoForm/photoCustomization'
 
 class PhotoForm extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      photo: this.props.photo
+      photo: this.props.photo,
+      src: this.props.photo.cropped_url ? this.props.photo.cropped_url : this.props.photo.url,
+      cropped: this.props.photo.cropped_url ? (this.props.photo.cropped_url.length > 0 ? true : false) : false ,
+      crop: {
+        x: 0,
+        y: 0
+      }
     }
   }
 
   initResize = (event) => {
-    let photo = document.getElementById(`photo-${this.props.position}`)
+    let photo = document.querySelector(`.photo-${this.props.position}`)
     let maxWidth = document.getElementById(`content-${this.props.position}`).clientWidth
     let originalcursorPosition = event.screenX
     let initialPhotoWidth = this.state.photo.css_width
@@ -34,15 +44,16 @@ class PhotoForm extends Component {
     }
   }
 
-  updatePhoto(photoCharacteristics) {
+  updatePhoto = (photoCharacteristics) => {
     $.ajax({
       method: 'PUT',
       beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/photos/${this.props.photo.id}`,
+      url: `/photos/${this.state.photo.id}`,
       dataType: "JSON",
       data: {photo: photoCharacteristics}
     }).done((data) => {
-      this.setState({photo: data})
+      this.setState({photo: data, cropped: data.cropped_url,
+       src: data.cropped_url ? (data.cropped_url.length > 0 ? data.cropped_url : data.url) : data.url})
       console.log()
     }).fail((data) => {
       console.log(data)
@@ -50,6 +61,30 @@ class PhotoForm extends Component {
   }
 
   deleteElement = (event) => { this.props.deleteElement(event, this.props.id, this.props.position, "photos") }
+
+  onCropChange = crop => {
+    this.setState({ crop })
+  }
+
+  onCropComplete = crop => {
+    if (!this.state.cropped) {
+      let photo = document.querySelector(`.photo-${this.props.position}`)
+
+      let cssWidth = photo.clientWidth
+      let horizontalRatio = photo.clientWidth / this.props.photo.original_width > 1 ? 1 / (photo.clientWidth / this.props.photo.original_width) : photo.clientWidth / this.props.photo.original_width
+      let newX = Math.round(crop.x / horizontalRatio)
+      let newWidth =  Math.round(crop.width / horizontalRatio)
+
+      let cssHeight = photo.clientHeight
+      let verticalRatio = photo.clientHeight / this.props.photo.original_height > 1 ? 1 / (photo.clientHeight / this.props.photo.original_height) : photo.clientHeight / this.props.photo.original_height
+      let newY = Math.round(crop.y / verticalRatio)
+      let newHeight =  Math.round(crop.height / verticalRatio)
+
+      let cropRefs = `c_crop,h_${newHeight},w_${newWidth},x_${newX},y_${newY}`
+      let newUrl = `http://res.cloudinary.com/${CLOUDINARYKEYS.cloudName}/image/upload/${cropRefs}/${this.props.photo.public_id}`
+      this.setState({src: newUrl, cropped: true}, () => { this.updatePhoto({height: newHeight, width: newWidth, cropped_url: newUrl}) })
+    }
+  }
 
   onDragStart = (event) => {
     document
@@ -74,16 +109,15 @@ class PhotoForm extends Component {
       onDragEnter={this.onDragEnter}
       onDragLeave={this.onDragLeave}
       onDrop={this.onDrop}>
-        <DragVisualElements />
+        <DragVisualElements photo={this.state.photo}/>
         <DeleteButton deleteElement={this.deleteElement}/>
         <DropZone area={"before"} onDrop={this.onDrop}/>
         <div className="photoContainer">
+          <PhotoCustomization photo={this.state.photo} updatePhoto={this.updatePhoto} cropped={this.state.cropped}/>
           <ElementResize initResize={this.initResize} direction="horizontal"/>
-          <div className="cropTop"></div>
-          <div className="cropRight"></div>
-          <div className="cropBottom"></div>
-          <div className="cropLeft"></div>
-          <img id={`photo-${this.props.position}`} src={this.props.photo.url} alt="" style={{width: `${this.state.photo.css_width}%`}}/>
+          <ReactCrop
+          className={`photo-${this.props.position} ${this.state.cropped ? "cropped" : "original"}`} src={this.state.src} alt="" style={{width: `${this.state.photo.css_width}%`}}
+          crop={this.state.crop} onComplete={this.onCropComplete} onChange={this.onCropChange}/>
         </div>
         <DropZone area={"after"} onDrop={this.onDrop}/>
       </div>

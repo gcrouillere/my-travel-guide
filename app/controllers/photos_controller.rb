@@ -32,13 +32,13 @@ class PhotosController < ApplicationController
   private
 
   def photo_params_at_create
-    params.require(:photo).permit(:public_id, :version, :signature, :width, :height, :format, :resource_type,
+    params.require(:photo).permit(:public_id, :version, :signature, :original_width, :original_height, :format, :resource_type,
       :url, :original_filename, :bytes, :position, :article_id).merge(position: define_initial_position)
   end
 
   def photo_params
-    params.require(:photo).permit(:public_id, :version, :signature, :width, :height, :css_width, :css_height, :format, :resource_type,
-      :url, :original_filename, :position, :article_id)
+    params.require(:photo).permit(:public_id, :version, :signature, :original_width, :original_height, :width, :height, :css_width, :css_height, :format, :resource_type,
+      :url, :cropped_url, :original_filename, :display_title, :position, :article_id)
   end
 
   def define_initial_position
