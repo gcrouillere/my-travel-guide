@@ -11,7 +11,8 @@ class DragVisualElements extends Component {
   }
 
   activeCustomization = () => {
-    document.getElementById(`photoCustomization-${this.props.photo.id}`).classList.add("active")
+    if (this.props.map) document.getElementById(`mapCustomization-${this.props.map.id}`).classList.add("active")
+    if (this.props.photo) document.getElementById(`photoCustomization-${this.props.photo.id}`).classList.add("active")
   }
 
   render() {
@@ -19,7 +20,7 @@ class DragVisualElements extends Component {
     return (
       <div className="DragVisualElements">
         <div className="dragLogo"><img src={dragLogo}/></div>
-        {this.props.photo && <div className="tuneLogo" onMouseDown={this.activeCustomization}><img src={tuneLogo}/></div>}
+        {(this.props.photo || this.props.map) && <div className="tuneLogo" onMouseDown={this.activeCustomization}><img src={tuneLogo}/></div>}
         <div className="dragOverlay"><p>Content being dragged</p></div>
       </div>
     )

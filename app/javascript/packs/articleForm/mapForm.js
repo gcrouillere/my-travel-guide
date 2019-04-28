@@ -63,7 +63,7 @@ class MapForm extends Component {
         onDragLeave={this.onDragLeave}
         onDrop={this.onDrop}>
         <DeleteButton deleteElement={this.deleteElement}/>
-        <DragVisualElements />
+        <DragVisualElements map={this.state.map}/>
         <DropZone area={"before"} onDrop={this.onDrop}/>
         <MapCustomization googleMap={this.state.googleMap} map={this.state.map} customizationOnGoing={this.state.customizationOnGoing}
         updateMapDataList= {this.updateMapDataList} initAddSimpleMarker={this.initAddSimpleMarker}

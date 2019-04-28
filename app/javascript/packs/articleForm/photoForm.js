@@ -9,6 +9,7 @@ import ElementResize from './formElementManagement/elementResize'
 import ReactCrop from 'react-image-crop'
 import 'react-image-crop/lib/ReactCrop.scss'
 import PhotoCustomization from './photoForm/photoCustomization'
+import ProcessingOverlay from './photoForm/processingOverlay'
 
 class PhotoForm extends Component {
 
@@ -18,6 +19,7 @@ class PhotoForm extends Component {
       photo: this.props.photo,
       src: this.props.photo.cropped_url ? this.props.photo.cropped_url : this.props.photo.url,
       cropped: this.props.photo.cropped_url ? (this.props.photo.cropped_url.length > 0 ? true : false) : false ,
+      processing: false,
       crop: {
         x: 0,
         y: 0
@@ -44,18 +46,20 @@ class PhotoForm extends Component {
   }
 
   updatePhoto = (photoCharacteristics) => {
-    $.ajax({
-      method: 'PUT',
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/photos/${this.state.photo.id}`,
-      dataType: "JSON",
-      data: {photo: photoCharacteristics}
-    }).done((data) => {
-      this.setState({photo: data, cropped: data.cropped_url ? (this.props.photo.cropped_url.length > 0 ? true : false) : false,
-       src: data.cropped_url ? (data.cropped_url.length > 0 ? data.cropped_url : data.url) : data.url})
-       document.getElementById(`photoCustomization-${this.props.photo.id}`).classList.remove("active")
-    }).fail((data) => {
-      console.log(data)
+    this.setState({processing: true}, () => {
+      $.ajax({
+        method: 'PUT',
+        beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+        url: `/photos/${this.state.photo.id}`,
+        dataType: "JSON",
+        data: {photo: photoCharacteristics}
+      }).done((data) => {
+        this.setState({photo: data, cropped: data.cropped_url ? (this.props.photo.cropped_url.length > 0 ? true : false) : false,
+         src: data.cropped_url ? (data.cropped_url.length > 0 ? data.cropped_url : data.url) : data.url, processing: false})
+         document.getElementById(`photoCustomization-${this.props.photo.id}`).classList.remove("active")
+      }).fail((data) => {
+        console.log(data)
+      })
     })
   }
 
@@ -93,6 +97,7 @@ class PhotoForm extends Component {
         <DeleteButton deleteElement={this.deleteElement}/>
         <DropZone area={"before"} onDrop={this.onDrop}/>
         <div className="photoContainer">
+          <ProcessingOverlay processing={this.state.processing}/>
           <PhotoCustomization photo={this.state.photo} cropped={this.state.cropped}
           crop={this.state.crop} updatePhoto={this.updatePhoto}/>
           <ElementResize initResize={this.initResize} direction="horizontal"/>

@@ -55,6 +55,9 @@ class PhotoCustomization extends Component {
   }
 
   render() {
+
+    let disableCrop = this.props.crop.height <= 0 || this.props.crop.width <= 0
+
     return (
       <div id={`photoCustomization-${this.props.photo.id}`} className="photoCustomization" draggable onDragStart={this.onDragStart}>
         <div className="overflowContainer">
@@ -62,8 +65,10 @@ class PhotoCustomization extends Component {
             <span aria-hidden="true">&times;</span>
           </button>
           <h3>Photo Customization:</h3>
-          <button className={`btn btn-dark photoCustomizationBlock ${this.props.cropped ? "cancelCrop" : ("crop")}`}
-          onClick={this.manageCrop} disabled={!this.props.cropped && (this.props.crop.height < 0 || this.props.crop.width < 0)}>
+          <button className={`btn btn-dark photoCustomizationBlock
+            ${this.props.cropped ? "cancelCrop" : (disableCrop ? "disableCrop" : "crop")}`
+          }
+          onClick={this.manageCrop} disabled={!this.props.cropped && disableCrop}>
             {this.props.cropped ? "Cancel Crop" : "Crop"}
           </button>
           <div className="photoCustomizationBlock">

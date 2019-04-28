@@ -44,7 +44,7 @@ class MapComponent extends Component {
     this.setState({googleMap: this.map})
     this.props.setGoogleMap(this.map)
     this.map.addListener('zoom_changed', event => {this.handleZoom(event, this.map)})
-    this.map.addListener('mousedown', event => {this.displayMapCustomizationMenu(event, this.map)});
+    // this.map.addListener('mousedown', event => {this.displayMapCustomizationMenu(event, this.map)})
     this.map.addListener('dragend', event => {this.handleCenter(event, this.map)})
   }
 
