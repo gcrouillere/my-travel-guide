@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import $ from 'jquery'
+import { CLOUDINARYKEYS } from './../../../config/config'
 
 class PhotoCustomization extends Component {
 
@@ -26,8 +27,26 @@ class PhotoCustomization extends Component {
     this.props.updatePhoto({display_title: event.target.value == "true"})
   }
 
-  cancelCrop = () => {
-    this.props.updatePhoto({cropped_url: ""})
+  manageCrop = () => {
+    if (!this.props.cropped) {
+      let photo = document.querySelector(`.photo-${this.props.photo.position}`)
+
+      let cssWidth = photo.clientWidth
+      let horizontalRatio = photo.clientWidth / this.props.photo.original_width > 1 ? 1 / (photo.clientWidth / this.props.photo.original_width) : photo.clientWidth / this.props.photo.original_width
+      let newX = Math.round(this.props.crop.x / horizontalRatio)
+      let newWidth =  Math.round(this.props.crop.width / horizontalRatio)
+
+      let cssHeight = photo.clientHeight
+      let verticalRatio = photo.clientHeight / this.props.photo.original_height > 1 ? 1 / (photo.clientHeight / this.props.photo.original_height) : photo.clientHeight / this.props.photo.original_height
+      let newY = Math.round(this.props.crop.y / verticalRatio)
+      let newHeight =  Math.round(this.props.crop.height / verticalRatio)
+
+      let cropRefs = `c_crop,h_${newHeight},w_${newWidth},x_${newX},y_${newY}`
+      let newUrl = `http://res.cloudinary.com/${CLOUDINARYKEYS.cloudName}/image/upload/${cropRefs}/${this.props.photo.public_id}`
+      this.props.updatePhoto({ height: newHeight, width: newWidth, cropped_url: newUrl })
+    } else {
+      this.props.updatePhoto({ height: 0, width: 0, cropped_url: "" })
+    }
   }
 
   onDragStart = (event) => {
@@ -43,6 +62,10 @@ class PhotoCustomization extends Component {
             <span aria-hidden="true">&times;</span>
           </button>
           <h3>Photo Customization:</h3>
+          <button className={`btn btn-dark photoCustomizationBlock ${this.props.cropped ? "cancelCrop" : ("crop")}`}
+          onClick={this.manageCrop} disabled={!this.props.cropped && (this.props.crop.height < 0 || this.props.crop.width < 0)}>
+            {this.props.cropped ? "Cancel Crop" : "Crop"}
+          </button>
           <div className="photoCustomizationBlock">
             <input type="text" className="titleInput" value={this.state.title} onChange={this.handleTitle}/>
             <button className="btn btn-dark" onClick={this.saveTitle}>
@@ -60,11 +83,6 @@ class PhotoCustomization extends Component {
             </div>
             )}
           </div>
-          {this.props.photo.cropped == null &&
-            <button className="btn btn-dark photoCustomizationBlock" onClick={this.cancelCrop}>
-              Cancel Crop
-            </button>
-        }
         </div>
       </div>
     )

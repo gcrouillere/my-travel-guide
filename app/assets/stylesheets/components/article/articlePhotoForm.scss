@@ -97,3 +97,26 @@
   }
 }
 
+.crop {
+  background: #FFF;
+  color: #343a40;
+  transition: all 0.3s ease-in-out;
+  animation: crop 1.3s ease-in-out infinite alternate;
+}
+
+.disableCrop {
+
+}
+
+
+@keyframes crop {
+  from {
+    background: #343a40;
+    color: #FFF;
+  }
+
+  to {
+    background: #FFF;
+    color: #343a40;
+  }
+}
