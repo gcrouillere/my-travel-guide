@@ -77,8 +77,8 @@ class ArticlesController < ApplicationController
     render json: Article.find(params[:article]).as_json(include: {
       text_contents: { methods: :class_name },
       audience_selections: {},
-      maps:{ methods: :class_name, include: { markers: {}, polylines: {} } },
-      photos: { methods: :class_name },
+      maps:{ methods: :class_name, include: { markers: {}, polylines: { include: { markers: {} } } } },
+      photos: { methods: :class_name }
     })
   end
 

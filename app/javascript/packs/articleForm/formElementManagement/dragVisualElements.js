@@ -11,8 +11,7 @@ class DragVisualElements extends Component {
   }
 
   activeCustomization = () => {
-    if (this.props.map) document.getElementById(`mapCustomization-${this.props.map.id}`).classList.add("active")
-    if (this.props.photo) document.getElementById(`photoCustomization-${this.props.photo.id}`).classList.add("active")
+    this.props.activeCustomization()
   }
 
   render() {

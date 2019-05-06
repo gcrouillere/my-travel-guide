@@ -33,16 +33,8 @@ class AudienceForm extends Component {
     })
   }
 
-  manageAudience = (event) => {
-    let clickedAudienceID = parseInt(event.target.id)
-    let newSelectionIDS = this.state.audiencesSelection.map(x => x.id)
-
-    if ( newSelectionIDS.indexOf(clickedAudienceID) == -1 ) {
-      newSelectionIDS.push(clickedAudienceID)
-    } else {
-      newSelectionIDS.splice(newSelectionIDS.indexOf(clickedAudienceID), 1)
-    }
-
+  updateAudienceSelection = (event) => {
+    let newSelectionIDS = this.manageAudience(event)
     $.ajax({
       method: "PUT",
       beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
@@ -58,6 +50,18 @@ class AudienceForm extends Component {
     }).fail((data) => {
       console.log(data)
     })
+  }
+
+  manageAudience = (event) => {
+    let clickedAudienceID = parseInt(event.target.id.split("-")[1])
+    let newSelectionIDS = this.state.audiencesSelection.map(x => x.id)
+
+    if ( newSelectionIDS.indexOf(clickedAudienceID) == -1 ) {
+      newSelectionIDS.push(clickedAudienceID)
+    } else {
+      newSelectionIDS.splice(newSelectionIDS.indexOf(clickedAudienceID), 1)
+    }
+    return newSelectionIDS
   }
 
   checkBoxTicked = (category) => {
@@ -85,16 +89,18 @@ class AudienceForm extends Component {
         <div className="form-check">
         {this.state.allowedAudienceSelections.map((category) =>
           <div key={`${category.audience}0`}>
-            <input key={`${category.audience}1`} className="form-check-input" type="checkbox" value={`${category.audience}`} id={`${category.id}`}
-            onChange={this.manageAudience} checked={this.checkBoxTicked(category.audience)}/>
-            <label key={`${category.audience}2`} className={`form-check-label ${this.checkBoxTicked(category.audience) ? "ticked" : "blank"}`} htmlFor={`${category.id}`}>{`${category.audience}`}</label>
+            <input key={`${category.audience}1`} className="form-check-input" type="checkbox" value={`${category.audience}`} id={`category-${category.id}`}
+            onChange={this.updateAudienceSelection} checked={this.checkBoxTicked(category.audience)}/>
+            <label key={`${category.audience}2`} className={`form-check-label ${this.checkBoxTicked(category.audience) ? "ticked" : "blank"}`} htmlFor={`category-${category.id}`}>{`${category.audience}`}</label>
           </div>
         )}
         </div>
-        <button className={`btn btn-dark ${this.state.audienceValid ? (this.state.continueWriting ? "AudienceSubmitContinueAndComplete" : "AudienceSubmitComplete") : "AudienceSubmit"}`}
-        onClick={this.continueWriting}>
-          Continue writing
-        </button>
+        {!this.state.continueWriting &&
+          <button className={`btn btn-dark ${this.state.audienceValid ? (this.state.continueWriting ? "AudienceSubmitContinueAndComplete" : "AudienceSubmitComplete") : "AudienceSubmit"}`}
+          onClick={this.continueWriting}>
+            Continue writing
+          </button>
+        }
       </div>
     )
   }

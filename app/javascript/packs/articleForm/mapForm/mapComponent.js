@@ -44,7 +44,6 @@ class MapComponent extends Component {
     this.setState({googleMap: this.map})
     this.props.setGoogleMap(this.map)
     this.map.addListener('zoom_changed', event => {this.handleZoom(event, this.map)})
-    // this.map.addListener('mousedown', event => {this.displayMapCustomizationMenu(event, this.map)})
     this.map.addListener('dragend', event => {this.handleCenter(event, this.map)})
   }
 
@@ -101,13 +100,13 @@ class MapComponent extends Component {
     }
   }
 
-  displayMapCustomizationMenu = (event) => {
-    if (!this.props.customizationOnGoing.status) {
-      document.getElementById(`mapCustomization-${this.state.map.id}`).classList.add("active")
-      document.getElementById(`markerCustomization-${this.props.map.id}`).classList.remove("active")
-      document.getElementById(`polylineCustomization-${this.props.map.id}`).classList.remove("active")
-    }
-  }
+  // displayMapCustomizationMenu = (event) => {
+  //   if (!this.props.customizationOnGoing.status) {
+  //     this.setState({customizationActive: true})
+  //     document.getElementById(`markerCustomization-${this.props.map.id}`).classList.remove("active")
+  //     document.getElementById(`polylineCustomization-${this.props.map.id}`).classList.remove("active")
+  //   }
+  // }
 
   updateMap(mapCharacteristics) {
     $.ajax({

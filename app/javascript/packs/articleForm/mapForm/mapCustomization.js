@@ -16,7 +16,7 @@ class MapCustomization extends Component {
     }
   }
 
-  abandonMapCustomization = () => { document.getElementById(`mapCustomization-${this.props.map.id}`).classList.remove("active") }
+  abandonCustomization = () => { this.props.abandonCustomization() }
 
   handleInput = (event) => {
     this.setState({content: event.target.value})
@@ -150,12 +150,13 @@ class MapCustomization extends Component {
   render() {
 
     return (
-      <div id={`mapCustomization-${this.props.map.id}`} className="mapCustomization">
+      <div id={`mapCustomization-${this.props.map.id}`}
+      className={`mapCustomization ${this.props.customizationActive ? "active" : ""}`}>
         <div className="overflowContainer">
           {!this.props.customizationOnGoing.status &&
-          <button onClick={this.abandonMapCustomization} className="close" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+            <button onClick={this.abandonCustomization} className="close" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
           }
           <h3>Map Customization:</h3>
           <div className="mapCenterShow mapCustomizationBlock">

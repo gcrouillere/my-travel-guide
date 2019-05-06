@@ -14,10 +14,6 @@ class PhotoCustomization extends Component {
     }
   }
 
-  abandonPhotoCustomization = () => {
-    document.getElementById(`photoCustomization-${this.props.photo.id}`).classList.remove("active")
-  }
-
   handleTitle = (event) => {this.setState({title: event.target.value})}
 
   saveTitle = () => { this.props.updatePhoto({original_filename: this.state.title}) }
@@ -29,7 +25,7 @@ class PhotoCustomization extends Component {
 
   manageCrop = () => {
     if (!this.props.cropped) {
-      let photo = document.querySelector(`.photo-${this.props.photo.position}`)
+      let photo = this.props.getPhotoNode()
 
       let cssWidth = photo.clientWidth
       let horizontalRatio = photo.clientWidth / this.props.photo.original_width > 1 ? 1 / (photo.clientWidth / this.props.photo.original_width) : photo.clientWidth / this.props.photo.original_width
@@ -54,14 +50,18 @@ class PhotoCustomization extends Component {
     event.stopPropagation()
   }
 
+  abandonCustomization = () => { this.props.abandonCustomization() }
+
   render() {
 
     let disableCrop = this.props.crop.height <= 0 || this.props.crop.width <= 0
 
     return (
-      <div id={`photoCustomization-${this.props.photo.id}`} className="photoCustomization" draggable onDragStart={this.onDragStart}>
+      <div id={`photoCustomization-${this.props.photo.id}`}
+      className={`photoCustomization ${this.props.customizationActive ? "active" : ""}`}
+      draggable onDragStart={this.onDragStart}>
         <div className="overflowContainer">
-          <button onClick={this.abandonPhotoCustomization} className="close" aria-label="Close">
+          <button onClick={this.abandonCustomization} className="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
           <h3>Photo Customization:</h3>

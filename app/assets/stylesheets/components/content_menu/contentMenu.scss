@@ -37,6 +37,10 @@
     flex-direction: column;
     padding: 50px 10px 0px 10px;
 
+    .blocAddition {
+      cursor: pointer;
+    }
+
     .addNew {
       display: flex;
       align-items: center;

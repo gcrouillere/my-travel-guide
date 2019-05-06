@@ -5,15 +5,28 @@ import PropTypes from 'prop-types'
 class MapInitialCenterOverlay extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      location: ""
+    }
+    this.locationInput = React.createRef();
+  }
+
+  getInputNode = () => {
+    return this.locationInput.current
+  }
+
+  printLocation = (event) => {
+    this.props.printLocation(event)
   }
 
   abandonMapCreation = () => {
-    document.querySelector(".mapInitialCenterOverlay").classList.remove("active")
+    this.props.abandonMapCreation()
   }
 
   render() {
+
     return (
-      <div className="mapInitialCenterOverlay">
+      <div className={`mapInitialCenterOverlay ${this.props.mapOverlayActive ? "active" : ""}`}>
         <button onClick={this.abandonMapCreation} className="close" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -23,7 +36,8 @@ class MapInitialCenterOverlay extends Component {
           <div className="input-group-prepend">
             <span className="input-group-text" id="inputGroup-sizing-large">Map's center</span>
           </div>
-          <input type="text" className="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-large" id="initialMapLocation" defaultValue=""/>
+          <input type="text" className="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-large" id="initialMapLocation"
+          value={this.props.location} onChange={this.printLocation} ref={this.locationInput}/>
         </div>
       </div>
     )

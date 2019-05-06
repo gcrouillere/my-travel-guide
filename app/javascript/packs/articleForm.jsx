@@ -21,6 +21,7 @@ class ArticleForm extends Component {
       audienceForm: false,
       dropZone: "",
       draggedElementId: null,
+      dragging: false,
       initialPosition: null,
       previousHoveredElementPosition: null,
       activeDragImage: false,
@@ -38,7 +39,7 @@ class ArticleForm extends Component {
         dataType: "JSON"
       }).done((data) => {
         this.setState({title: data.title, titleValid: data.title.length > 10, id: data.id,
-        articleElements: data.text_contents.concat(data.maps).concat(data.photos).sort((x, y) => x.position - y.position)});
+        articleElements: this.orderArticleElements(data)})
       })
     } else {
       $.ajax({
@@ -48,10 +49,14 @@ class ArticleForm extends Component {
         dataType: "JSON",
         data: {article: {title: "", audiencesSelection:[]}}
       }).done((data) => {
-        this.setState({title: data.title, articleElements: [], id: data.id});
+        this.setState({title: data.title, articleElements: [], id: data.id})
         this.props.history.push(`/articles/${data.id}/edit`)
       });
     }
+  }
+
+  orderArticleElements = (data) => {
+    return data.text_contents.concat(data.maps).concat(data.photos).sort((x, y) => x.position - y.position)
   }
 
   handleTitleChange = (event) => {
@@ -76,13 +81,12 @@ class ArticleForm extends Component {
       dataType: "JSON",
       data: {text_content: {text: "", article_id: id, position: this.state.articleElements.length}}
     }).done((data) => {
-      let finalPositionAtCreation = this.definePositionAtCreation(initPositionAtCreation)
-      this.updateElementPosition(id, -1, finalPositionAtCreation)
+      this.updatePositionAfterCreation(initPositionAtCreation, id)
     }).fail((data) => {console.log(data)})
   }
 
   addNewMap = (id, mapCenter, mapLocation, initPositionAtCreation) => {
-    document.querySelector(".mapInitialCenterOverlay").classList.remove("active")
+    this.refs.contentMenu.setState({mapOverlayActive: false})
     const zoom = (mapCenter.lat == 0 && mapCenter.lng == 0) ? 1 : 11
     $.ajax({
       method: 'POST',
@@ -92,8 +96,7 @@ class ArticleForm extends Component {
       data: {map: {lat: mapCenter.lat, lng: mapCenter.lng, zoom: zoom, name: mapLocation,
         position: this.state.articleElements.length, height: 250, show_map_center_as_marker: true, article_id: id}}
     }).done((data) => {
-      let finalPositionAtCreation = this.definePositionAtCreation(initPositionAtCreation)
-      this.updateElementPosition(id, -1, finalPositionAtCreation)
+      this.updatePositionAfterCreation(initPositionAtCreation, id)
     }).fail((data) => { console.log(data) })
   }
 
@@ -107,9 +110,13 @@ class ArticleForm extends Component {
         original_height: data.height, bytes: data.bytes, format: data.format, resource_type: data.resource_type, url: data.url,
         original_filename: data.original_filename, article_id: this.state.id, position: this.state.articleElements.length }}
     }).done((data) => {
-      let finalPositionAtCreation = this.definePositionAtCreation(initPositionAtCreation)
-      this.updateElementPosition(this.state.id, -1, finalPositionAtCreation)
+      this.updatePositionAfterCreation(initPositionAtCreation, this.state.id)
     }).fail((data) => {console.log(data)})
+  }
+
+  updatePositionAfterCreation = (initPositionAtCreation, id) => {
+    let finalPositionAtCreation = this.definePositionAtCreation(initPositionAtCreation)
+    this.updateElementPosition(id, -1, finalPositionAtCreation)
   }
 
   deleteElement = (event, id, position, controller) => {
@@ -125,7 +132,7 @@ class ArticleForm extends Component {
 
   onDragStart = (event, id, position, articleContent) => {
     document.getElementById(`content-${position}`).classList.add("draggingElement")
-    document.querySelectorAll(".textContentInput, .mapInput, .photoInput").forEach(x => x.classList.add("dragging"))
+    this.setState({dragging: true})
     event.dataTransfer.setData("type", "positionUpdate")
     this.setState({
       initialPosition: position,
@@ -170,6 +177,7 @@ class ArticleForm extends Component {
 
   onDrop = (event, id, position) => {
     this.clearDraggingExtraClasses()
+    this.setState({dragging: false})
     this.setDropzoneClass(event)
     if (event.dataTransfer.getData("type") == "positionUpdate") {
       this.updateElementPosition(id, this.state.initialPosition, position)
@@ -178,27 +186,18 @@ class ArticleForm extends Component {
     } else if (event.dataTransfer.getData("type") == "textCreation") {
       this.addNewTextContent(this.state.id, {initPositionAtCreation: position})
     } else if (event.dataTransfer.getData("type") == "photoCreation") {
-      this.refs.contentMenu.initAddNewPhotoBloc({initPositionAtCreation: position})
+      this.refs.contentMenu.initAddNewPhotoBloc(position)
     }
   }
 
   onDropOnContainer = () => {
+    this.setState({dragging: false})
     this.clearDraggingExtraClasses()
   }
 
-  addNewTextOnDrag = () => {
-    event.dataTransfer.setData("type", "textCreation")
-    this.setState({initialPosition: -1})
-  }
-
-  addNewMapOnDrag = () => {
-    event.dataTransfer.setData("type", "mapCreation")
-    this.setState({initialPosition: -1})
-  }
-
-  addNewPhotoBlocOnDrag = () => {
-    event.dataTransfer.setData("type", "photoCreation")
-    this.setState({initialPosition: -1})
+  addNewComponentOnDrag = (event, trigger) => {
+    event.dataTransfer.setData("type", trigger)
+    this.setState({initialPosition: -1, dragging: true})
   }
 
   preventDraggingOnOtherElements = (trigger) => {
@@ -220,14 +219,19 @@ class ArticleForm extends Component {
         target: {id: id, position: targetPosition}
       }}
     }).done((data) => {
-      const sortedElements = data.text_contents.concat(data.maps).concat(data.photos).sort((x, y) => x.position - y.position)
-      this.setState({articleElements: sortedElements, activeDragImage: false, initialPosition: null, dropZone: ""})
+      console.log(data)
+      this.updateElementsState(data)
     }).fail((data) => {console.log(data)})
+  }
+
+  updateElementsState = (data) => {
+    const sortedElements = data.text_contents.concat(data.maps).concat(data.photos).sort((x, y) => x.position - y.position)
+    this.setState({articleElements: sortedElements, activeDragImage: false, initialPosition: null, dropZone: ""})
   }
 
   definePositionAtCreation(position) {
     if (position == 0 && this.state.initialPosition == -1 && this.state.dropZone == "before") {
-     position = 0
+      position = 0
     } else if (position >= 0) {
       position += 1
     } else {
@@ -247,7 +251,6 @@ class ArticleForm extends Component {
 
   clearDraggingExtraClasses() {
     document.querySelectorAll(".dropZone-before , .dropZone-after").forEach(x => x.classList.remove("active"))
-    document.querySelectorAll(".textContentInput, .mapInput, .photoInput").forEach(x => x.classList.remove("dragging"))
     document.querySelectorAll(".draggingElement").forEach(x => x.classList.remove("draggingElement"))
     document.querySelectorAll(".contentMenu").forEach(x => x.classList.remove("disable-hover"))
   }
@@ -269,8 +272,7 @@ class ArticleForm extends Component {
 
         {this.state.audienceForm && this.state.titleValid &&
           <ContentMenu id={this.state.id} addNewTextContent={this.addNewTextContent} addNewMap={this.addNewMap}
-          addNewPhotoBloc={this.addNewPhotoBloc} addNewPhotoBlocOnDrag={this.addNewPhotoBlocOnDrag}
-          addNewTextOnDrag={this.addNewTextOnDrag} addNewMapOnDrag={this.addNewMapOnDrag} ref="contentMenu"
+          addNewPhotoBloc={this.addNewPhotoBloc} addNewComponentOnDrag={this.addNewComponentOnDrag} ref="contentMenu"
           elementsCount={this.state.articleElements.length} />
         }
 
@@ -279,21 +281,21 @@ class ArticleForm extends Component {
           <h2 className="sectionLabel">Article content</h2>
             {this.state.articleElements.map(element => {
               if (element.class_name == "TextContent") {
-                return <TextContentForm key={`text${element.id}`} textContent={element}
+                return <TextContentForm key={`text${element.id}`} textContent={element} dragging={this.state.dragging}
                 articleId={this.state.id} position={element.position} id={element.id}
                 onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                 onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
                 mapCustomizationOnGoing={this.state.customizationOnGoing}/>
               }
               else if (element.class_name == "Map") {
-                return <MapForm key={`map${element.id}`} map={element} name={element.name}
+                return <MapForm key={`map${element.id}`} map={element} name={element.name} dragging={this.state.dragging}
                 articleId={this.state.id} position={element.position} id={element.id}
                 onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                 onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
                 preventDraggingOnOtherElements={this.preventDraggingOnOtherElements} />
               }
               else if (element.class_name == "Photo") {
-                return <PhotoForm key={`photo${element.id}`} photo={element}
+                return <PhotoForm key={`photo${element.id}`} photo={element} dragging={this.state.dragging}
                 articleId={this.state.id} position={element.position} id={element.id}
                 onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                 onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
