@@ -5,9 +5,6 @@ import PropTypes from 'prop-types'
 class MapInitialCenterOverlay extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      location: ""
-    }
     this.locationInput = React.createRef();
   }
 

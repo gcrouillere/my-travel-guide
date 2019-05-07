@@ -1,0 +1,224 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[` 1`] = `
+<div
+  className="contentMenu"
+  id="contentMenu"
+>
+  <div
+    className="buttons"
+  >
+    <div
+      className="blocAddition text"
+    >
+      <div
+        className="btn btn-dark addNew"
+        draggable={true}
+        onClick={[Function]}
+        onDragStart={[Function]}
+        value="text"
+      >
+        <div
+          className="addIcone"
+          draggable={false}
+        >
+          <img
+            src="test-file-stub"
+          />
+        </div>
+        <div
+          className="addExplain"
+        >
+          <div>
+            Click to add text in queue
+          </div>
+          <div>
+            Drag to add text to a specific location
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="blocAddition map"
+    >
+      <div
+        className="btn btn-dark addNew"
+        draggable={true}
+        onClick={[Function]}
+        onDragStart={[Function]}
+        value="map"
+      >
+        <div
+          className="addIcone"
+          draggable={false}
+        >
+          <img
+            src="test-file-stub"
+          />
+        </div>
+        <div
+          className="addExplain"
+        >
+          <div>
+            Click to add map in queue
+          </div>
+          <div>
+            Drag to add map to a specific location
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="blocAddition photo"
+    >
+      <div
+        className="btn btn-dark addNew"
+        draggable={true}
+        onClick={[Function]}
+        onDragStart={[Function]}
+        value="photo"
+      >
+        <div
+          className="addIcone"
+          draggable={false}
+        >
+          <img
+            src="test-file-stub"
+          />
+        </div>
+        <div
+          className="addExplain"
+        >
+          <div>
+            Click to add photo in queue
+          </div>
+          <div>
+            Drag to add photo to a specific location
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="expand"
+  >
+    <div
+      className="menu"
+    >
+      <p>
+        M
+      </p>
+      <p>
+        E
+      </p>
+      <p>
+        N
+      </p>
+      <p>
+        U
+      </p>
+    </div>
+    <div
+      className="chevron-closed"
+    >
+      &lt;
+    </div>
+    <div
+      className="chevron-open"
+    >
+      &gt;
+    </div>
+  </div>
+  <div
+    className="mapInitialCenterOverlay "
+  >
+    <button
+      aria-label="Close"
+      className="close"
+      onClick={[Function]}
+    >
+      <span
+        aria-hidden="true"
+      >
+        ×
+      </span>
+    </button>
+    <p
+      className="mapOverlayTitle"
+    >
+      Which area do you want to show ?
+    </p>
+    <p
+      className="mapOverlaydescription"
+    >
+      If no suggestion is given, try a near match. You 'll be able to fine tune the map in the article editor.
+    </p>
+    <div
+      className="input-group input-group-lg"
+    >
+      <div
+        className="input-group-prepend"
+      >
+        <span
+          className="input-group-text"
+          id="inputGroup-sizing-large"
+        >
+          Map's center
+        </span>
+      </div>
+      <input
+        aria-describedby="inputGroup-sizing-large"
+        aria-label="Large"
+        className="form-control"
+        id="initialMapLocation"
+        onChange={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+  </div>
+  <div
+    className="photoInitialFileOverlay "
+  >
+    <button
+      aria-label="Close"
+      className="close"
+      onClick={[Function]}
+    >
+      <span
+        aria-hidden="true"
+      >
+        ×
+      </span>
+    </button>
+    <p
+      className="mapOverlayTitle"
+    >
+      Select a photo on your disk
+    </p>
+    <div
+      className="input-group mb-3"
+    >
+      <div
+        className="custom-file"
+      >
+        <input
+          accept="image/*"
+          aria-describedby="inputGroupFileAddon01"
+          className="custom-file-input"
+          id="fileupload"
+          multiple={false}
+          onChange={[Function]}
+          type="file"
+        />
+        <label
+          className="custom-file-label"
+          htmlFor="fileupload"
+        >
+          Click here to browse your files
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;

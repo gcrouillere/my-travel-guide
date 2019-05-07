@@ -18,6 +18,12 @@ describe('PhotoInitialFileOverlay test suite', () => {
   const wrapper = mount(<PhotoInitialFileOverlay abandonPhotoCreation={abandonPhotoCreation} printLocation={printLocation}
     addNewPhotoBloc={addNewPhotoBloc} />)
 
+  it('renders overlay', () => {
+    expect(wrapper.find(".photoInitialFileOverlay #fileupload").length).toEqual(1)
+    expect(wrapper.find(".photoInitialFileOverlay .custom-file-label").length).toEqual(1)
+    expect(wrapper.find(".mapInitialCenterOverlay .progress").length).toEqual(0)
+  })
+
   it('loads a photo on input change', async () => {
     const photo = photoHelpers.photo
     await wrapper.instance().onPhotoSelected({ target: { files: [{name: "my photo"}] }})
@@ -37,6 +43,7 @@ describe('PhotoInitialFileOverlay test suite', () => {
       context: 'photo=my photo'
     })
     expect(wrapper.state('fileName')).toEqual('my photo')
+    expect(wrapper.find(".custom-file-label").text()).toEqual('my photo')
   })
 
   it('passes overlay closing to upper component', () => {

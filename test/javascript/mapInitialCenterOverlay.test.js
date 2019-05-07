@@ -15,6 +15,12 @@ describe('MapInitialCenterOverlay test suite', () => {
 
   const wrapper = mount(<MapInitialCenterOverlay abandonMapCreation={abandonMapCreation} printLocation={printLocation}/>)
 
+  it('renders overlay', () => {
+    expect(wrapper.find(".mapInitialCenterOverlay #initialMapLocation").length).toEqual(1)
+    expect(wrapper.find(".mapInitialCenterOverlay .mapOverlayTitle").length).toEqual(1)
+    expect(wrapper.find(".mapInitialCenterOverlay .mapOverlaydescription").length).toEqual(1)
+  })
+
   it('passes location to upper component', () => {
     wrapper.find("#initialMapLocation").simulate('change', {target: {value: "foo"}})
     expect(printLocation).toHaveBeenCalled()

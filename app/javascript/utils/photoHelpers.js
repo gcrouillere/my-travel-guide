@@ -22,7 +22,7 @@ export default {
       data: formData,
       processData: false,
       contentType: false,
-      succes: function(data) { return data },
+      success: function(data) { return data },
       error: function(xhr, error) { console.log(error) }
     })
     return data

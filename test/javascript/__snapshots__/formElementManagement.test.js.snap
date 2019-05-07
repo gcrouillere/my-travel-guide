@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[` 1`] = `
+<div
+  className="contentDelete"
+  onClick={[Function]}
+>
+  <img
+    src="test-file-stub"
+  />
+</div>
+`;
+
+exports[` 2`] = `
+<div
+  className="DragVisualElements"
+>
+  <div
+    className="dragLogo"
+  >
+    <img
+      src="test-file-stub"
+    />
+  </div>
+  <div
+    className="tuneLogo"
+    onMouseDown={[Function]}
+  >
+    <img
+      src="test-file-stub"
+    />
+  </div>
+  <div
+    className="dragOverlay"
+  >
+    <p>
+      Content being dragged
+    </p>
+  </div>
+</div>
+`;
+
+exports[` 3`] = `
+<div
+  className="dropZone-after drop-after"
+>
+  <p
+    className="drop-after"
+  >
+    Drop your content here
+  </p>
+</div>
+`;
+
+exports[` 4`] = `
+<div
+  className="elementResize"
+  onDragStart={[Function]}
+  onMouseDown={[Function]}
+>
+  <div
+    className="resizeLogo horizontal"
+  >
+    <img
+      src="test-file-stub"
+    />
+  </div>
+</div>
+`;

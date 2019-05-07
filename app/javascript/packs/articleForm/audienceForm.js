@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import update from 'immutability-helper'
 import $ from 'jquery'
+import audienceFormHelpers from './../../utils/audienceFormHelpers'
 
 class AudienceForm extends Component {
 
@@ -14,42 +15,35 @@ class AudienceForm extends Component {
     }
   }
 
-  componentDidMount() {
-    $.ajax({
-      method: 'GET',
-      url: `/articles/${this.props.id}`,
-      dataType: "JSON"
-    }).done((data) => {
-      this.setState({audiencesSelection: data.audience_selections, audienceValid: data.audience_valid, continueWriting: data.audience_valid}, () => {
-        this.props.updateArticleCompletion({audienceForm: this.state.audienceValid})
-      })
-    })
-    $.ajax({
-      method: 'GET',
-      url: "/audience_selections",
-      dataType: "JSON"
-    }).then(response => {
-      this.setState({allowedAudienceSelections: response});
+  async componentDidMount() {
+
+    const audienceSelections = await audienceFormHelpers.getDataFromURL("/audience_selections")
+    const article = await audienceFormHelpers.getDataFromURL(`/articles/${this.props.id}`)
+
+    this.setState({
+      audiencesSelection: article.audience_selections,
+      audienceValid: article.audience_valid,
+      continueWriting: article.audience_valid,
+      allowedAudienceSelections: audienceSelections},
+      () => { this.props.updateArticleCompletion({audienceForm: this.state.audienceValid })
     })
   }
 
-  updateAudienceSelection = (event) => {
-    let newSelectionIDS = this.manageAudience(event)
-    $.ajax({
-      method: "PUT",
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/articles/${this.props.id}`,
-      data: {article: {audience_selection_ids: newSelectionIDS.length == 0 ? [""] : newSelectionIDS, audience_valid: newSelectionIDS.length > 0}}
-    }).done((data) => {
-      this.setState({
-        audiencesSelection: data.audience_selections,
-        audienceValid: data.audience_valid,
-        continueWriting: this.state.continueWriting && data.audience_valid }, () => {
+  updateAudienceSelection = async (event) => {
+    const newSelectionIDS = this.manageAudience(event)
+    const data = { article:
+      { audience_selection_ids: newSelectionIDS.length == 0 ? [""] : newSelectionIDS,
+      audience_valid: newSelectionIDS.length > 0 }
+    }
+    const article = await audienceFormHelpers.updateDataInURL(`/articles/${this.props.id}`, data, this.props.token)
+
+    this.setState({
+      audiencesSelection: article.audience_selections,
+      audienceValid: article.audience_valid,
+      continueWriting: this.state.continueWriting && article.audience_valid },
+      () => {
           this.props.updateArticleCompletion({audienceForm: this.state.audienceValid && this.state.continueWriting})
       })
-    }).fail((data) => {
-      console.log(data)
-    })
   }
 
   manageAudience = (event) => {
@@ -68,16 +62,12 @@ class AudienceForm extends Component {
     return this.state.audiencesSelection.findIndex(x => x.audience == category) > -1
   }
 
-  continueWriting = () => {
-    $.ajax({
-      method: "PUT",
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/articles/${this.props.id}`,
-      data: {article: {audience_valid: true}}
-    }).done((data) => {
-      this.setState({continueWriting: true}, () => {
-        this.props.updateArticleCompletion({audienceForm: this.state.audienceValid && this.state.continueWriting})
-      })
+  continueWriting = async () => {
+    const data = { article: { audience_valid: true } }
+    const article = await audienceFormHelpers.updateDataInURL(`/articles/${this.props.id}`, data, this.props.token)
+
+    this.setState({ continueWriting: true }, () => {
+      this.props.updateArticleCompletion({audienceForm: this.state.audienceValid && this.state.continueWriting})
     })
   }
 

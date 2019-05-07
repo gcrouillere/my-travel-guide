@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { shallow, configure, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { MemoryRouter } from 'react-router'
+import renderer from 'react-test-renderer';
 
 import ContentMenu from '../../app/javascript/packs/articleForm/contentMenu'
 import MapInitialCenterOverlay from '../../app/javascript/packs/articleForm/contentMenu/mapInitialCenterOverlay'
@@ -11,16 +12,18 @@ import PhotoInitialFileOverlay from '../../app/javascript/packs/articleForm/cont
 configure({ adapter: new Adapter() });
 
 describe('ContentMenu test suite', () => {
+
+  const contentMenuTree = renderer
+    .create(<ContentMenu addNewTextContent={addNewTextContent} addNewPhotoBloc={addNewPhotoBloc}
+      addNewMap={addNewMap} id={1} addNewComponentOnDrag={addNewComponentOnDrag}/>)
+    .toJSON()
+  expect(contentMenuTree).toMatchSnapshot();
+
   let addNewTextContent, addNewMap, addNewPhotoBloc, addNewComponentOnDrag = jest.fn()
   addNewTextContent = addNewMap = addNewPhotoBloc = addNewComponentOnDrag = jest.fn()
 
   const wrapper = mount(<ContentMenu addNewTextContent={addNewTextContent}
     addNewPhotoBloc={addNewPhotoBloc} addNewMap={addNewMap} id={1} addNewComponentOnDrag={addNewComponentOnDrag}/>)
-
-  it('displays Content Menu', () => {
-    expect(wrapper.find('.buttons .blocAddition').length).toEqual(3)
-    expect(wrapper.find('.expand').length).toEqual(1)
-  })
 
   it('displays photo overlay on click', () => {
     wrapper.find('.buttons .photo .addNew').simulate('click')

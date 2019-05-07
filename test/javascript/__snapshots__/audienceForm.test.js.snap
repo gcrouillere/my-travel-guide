@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[` 1`] = `
+<div
+  className="audienceSelection incomplete"
+>
+  <h2
+    className="sectionLabel"
+  >
+    For whom is the trip intended ?
+  </h2>
+  <p
+    className="mainTitleSub"
+  >
+    (select all that apply)
+  </p>
+  <div
+    className="form-check"
+  />
+  <button
+    className="btn btn-dark AudienceSubmit"
+    onClick={[Function]}
+  >
+    Continue writing
+  </button>
+</div>
+`;

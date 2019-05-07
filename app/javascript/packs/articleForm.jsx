@@ -27,7 +27,8 @@ class ArticleForm extends Component {
       activeDragImage: false,
       dragContent: {},
       id: null,
-      customizationOnGoing: {status: false, trigger: null}
+      customizationOnGoing: {status: false, trigger: null},
+      token: $('meta[name="csrf-token"]').attr('content')
     }
   }
 
@@ -259,7 +260,8 @@ class ArticleForm extends Component {
     return (
       <div className="container article-container" onDrop={this.onDropOnContainer} onDragOver={this.onDragOver}>
 
-        <AudienceForm id={this.props.match.params.id} updateArticleCompletion={this.updateArticleCompletion}/>
+        <AudienceForm id={this.props.match.params.id} updateArticleCompletion={this.updateArticleCompletion}
+        token={this.state.token}/>
 
         {this.state.audienceForm &&
           <header className={`maintTitle ${this.state.titleValid ? "complete" : "incomplete"}`}>
