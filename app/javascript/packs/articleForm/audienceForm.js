@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import update from 'immutability-helper'
 import $ from 'jquery'
-import audienceFormHelpers from './../../utils/audienceFormHelpers'
+import ajaxHelpers from './../../utils/ajaxHelpers'
 
 class AudienceForm extends Component {
 
@@ -17,8 +17,8 @@ class AudienceForm extends Component {
 
   async componentDidMount() {
 
-    const audienceSelections = await audienceFormHelpers.getDataFromURL("/audience_selections")
-    const article = await audienceFormHelpers.getDataFromURL(`/articles/${this.props.id}`)
+    const audienceSelections = await ajaxHelpers.getDataFromURL("/audience_selections")
+    const article = await ajaxHelpers.getDataFromURL(`/articles/${this.props.id}`)
 
     this.setState({
       audiencesSelection: article.audience_selections,
@@ -35,7 +35,7 @@ class AudienceForm extends Component {
       { audience_selection_ids: newSelectionIDS.length == 0 ? [""] : newSelectionIDS,
       audience_valid: newSelectionIDS.length > 0 }
     }
-    const article = await audienceFormHelpers.updateDataInURL(`/articles/${this.props.id}`, data, this.props.token)
+    const article = await ajaxHelpers.updateDataInURL(`/articles/${this.props.id}`, data, this.props.token)
 
     this.setState({
       audiencesSelection: article.audience_selections,
@@ -64,7 +64,7 @@ class AudienceForm extends Component {
 
   continueWriting = async () => {
     const data = { article: { audience_valid: true } }
-    const article = await audienceFormHelpers.updateDataInURL(`/articles/${this.props.id}`, data, this.props.token)
+    const article = await ajaxHelpers.updateDataInURL(`/articles/${this.props.id}`, data, this.props.token)
 
     this.setState({ continueWriting: true }, () => {
       this.props.updateArticleCompletion({audienceForm: this.state.audienceValid && this.state.continueWriting})

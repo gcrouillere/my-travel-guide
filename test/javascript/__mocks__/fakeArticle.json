@@ -20,7 +20,8 @@
     "created_at": "Mon, 29 Apr 2019 07:34:41 UTC +00:00",
     "updated_at": "Mon, 29 Apr 2019 07:34:41 UTC +00:00",
     "class_name": "Map",
-    "markers": [],
+    "markers": [{ "id": 12, "lat": 47.5636458377627, "lng": -0.459245093750042, "description": null, "logo": "markerLogo", "position": null, "map_id": 2,
+      "polyline_id": null, "created_at": "Thu, 09 May 2019 13:23:27 UTC +00:00", "updated_at": "Thu, 09 May 2019 13:23:27 UTC +00:00"}],
     "polylines": []}],
  "photos":
   [{"id": 8,

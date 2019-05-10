@@ -1,20 +1,21 @@
+.mapLocationInput {
+  height: 28px;
+  border-radius: 2px;
+  padding: 25px;
+  border: 1px solid #ccc;
+  transition: .3s;
+  box-shadow: 1px 1px 0 rgba(241,241,241,0.35);
+  .locationInput {
+    z-index: 1;
+  }
+}
+
 .mapInput {
   .mapBloc {
     padding: 15px;
     border: 1px solid #ccc;
     border-radius: 2px;
     .googleMap {
-      z-index: 1;
-    }
-  }
-  .mapLocationInput {
-    height: 28px;
-    border-radius: 2px;
-    padding: 25px;
-    border: 1px solid #ccc;
-    transition: .3s;
-    box-shadow: 1px 1px 0 rgba(241,241,241,0.35);
-    .locationInput {
       z-index: 1;
     }
   }

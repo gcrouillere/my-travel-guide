@@ -34,7 +34,6 @@ class PhotoInitialFileOverlay extends Component {
       let formData = this.buildFormData(event)
       let photo = await photoHelpers.photoUpload(event, formData, this)
 
-      let xx = $.ajax({method: 'POST', url: "fakeurl"})
       this.props.abandonPhotoCreation()
       this.setState({progress: 0, fileName: null})
       this.props.addNewPhotoBloc(photo)

@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
+import update from 'immutability-helper'
+
 import MapInitialCenterOverlay from './contentMenu/mapInitialCenterOverlay'
 import PhotoInitialFileOverlay from './contentMenu/photoInitialFileOverlay'
 import mapLogo from './../../../assets/images/map-white.svg'
@@ -20,50 +22,29 @@ class ContentMenu extends Component {
     this.mapLocationInputRef = React.createRef();
   }
 
-  initAutoComplete = ({initPositionAtCreation = undefined} = {}) => {
-    this.setState({mapOverlayActive: true, location: ""})
-    let mapLocation = this.mapLocationInputRef.current.getInputNode()
-    let userInput = ""
-    this.autocomplete = new google.maps.places.Autocomplete((mapLocation), {});
-    google.maps.event.addDomListener(mapLocation, 'keydown', function(e) {
-      if (e.key === "Enter") e.preventDefault(); // Do not submit the form on Enter.
-    });
-    google.maps.event.addDomListener(mapLocation, 'keyup', function(event) {
-      userInput = event.target.value
-    });
-    this.autocomplete.addListener('place_changed', event => this.addNewMap(userInput, initPositionAtCreation));
-  }
-
-  addNewTextContent = () => {
-    this.props.addNewTextContent(this.props.id, {initPositionAtCreation: undefined})
-  }
-
-  addNewMap = (mapLocation, initPositionAtCreation) => {
-    let place = this.autocomplete.getPlace();
-    if (place.address_components) {
-      const mapCenter = {lat: place.geometry.location.lat(), lng: place.geometry.location.lng()}
-      const name = place.formatted_address
-      this.props.addNewMap(this.props.id, mapCenter, name, initPositionAtCreation)
-    } else {
-      const mapCenter = {lat: 0, lng: 0}
-      const name = mapLocation
-      this.props.addNewMap(this.props.id, mapCenter, name, initPositionAtCreation)
-    }
+  initAddNewMap = (initPositionAtCreation = undefined) => {
+    this.setState({ mapOverlayActive: true, initPositionAtCreation: initPositionAtCreation})
   }
 
   initAddNewPhotoBloc = (initPositionAtCreation = undefined) => {
-    this.setState({initPositionAtCreation: initPositionAtCreation, photoOverlayActive: true})
+    this.setState({ photoOverlayActive: true, initPositionAtCreation: initPositionAtCreation })
+  }
+
+  addNewTextContent = () => {
+    this.props.addNewTextContent(this.props.id, { initPositionAtCreation: undefined })
+  }
+
+  addNewMap = (map) => {
+    this.props.addNewMap(this.props.id, map, this.state.initPositionAtCreation)
   }
 
   addNewPhotoBloc = (data) => { this.props.addNewPhotoBloc(data, this.state.initPositionAtCreation) }
 
   addNewComponentOnDrag = (event, trigger) => { this.props.addNewComponentOnDrag(event, trigger) }
 
-  abandonMapCreation = () => { this.setState({mapOverlayActive: false}) }
+  abandonMapCreation = () => { this.setState({ mapOverlayActive: false }) }
 
-  abandonPhotoCreation = () => { this.setState({photoOverlayActive: false}) }
-
-  printLocation = (event) => { this.setState({location: event.target.value}) }
+  abandonPhotoCreation = () => { this.setState({ photoOverlayActive: false }) }
 
   render() {
 
@@ -83,7 +64,7 @@ class ContentMenu extends Component {
           </div>
 
           <div className="blocAddition map">
-            <div draggable className="btn btn-dark addNew" onClick={this.initAutoComplete}
+            <div draggable className="btn btn-dark addNew" onClick={this.initAddNewMap}
             onDragStart={(event) => this.addNewComponentOnDrag(event, "mapCreation")} value="map">
               <div draggable={false} className="addIcone"><img src={mapLogo}/></div>
               <div className="addExplain">
@@ -116,8 +97,8 @@ class ContentMenu extends Component {
           <div className="chevron-open">></div>
         </div>
 
-        <MapInitialCenterOverlay mapOverlayActive={this.state.mapOverlayActive} location={this.state.location}
-        printLocation={this.printLocation} abandonMapCreation={this.abandonMapCreation} ref={this.mapLocationInputRef}/>
+        <MapInitialCenterOverlay mapOverlayActive={this.state.mapOverlayActive}
+        abandonMapCreation={this.abandonMapCreation} ref={this.mapLocationInputRef} addNewMap={this.addNewMap}/>
         <PhotoInitialFileOverlay photoOverlayActive={this.state.photoOverlayActive} onPhotoSelected={this.onPhotoSelected}
         addNewPhotoBloc={this.addNewPhotoBloc} abandonPhotoCreation={this.abandonPhotoCreation}
         initPositionAtCreation={this.state.initPositionAtCreation}/>

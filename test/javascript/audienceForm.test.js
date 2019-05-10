@@ -10,7 +10,7 @@ import AudienceForm from '../../app/javascript/packs/articleForm/audienceForm'
 
 configure({ adapter: new Adapter() });
 
-jest.mock('../../app/javascript/utils/audienceFormHelpers')
+jest.mock('../../app/javascript/utils/ajaxHelpers')
 
 describe('AudienceForm test suite', () => {
 

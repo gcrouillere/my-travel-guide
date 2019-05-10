@@ -134,9 +134,12 @@
     right: 35px;
     font-size: 2.5rem;
   }
-
-  .input-group {
-    width: 80%;
+  .mapLocation {
+    width: 100%;
+    .input-group {
+      margin: auto;
+      width: 80%;
+    }
   }
 }
 

@@ -5,9 +5,22 @@ global.React = React
 // GOOGLE
 global.google = {
   maps: {
-    Marker:class{},
-    Map:class{ setTilt(){} fitBounds(){}},
-    LatLngBounds:class{},
+    Marker: class {},
+    Map: class {
+      setTilt() {}
+      fitBounds(){}
+      addListener(){}
+      getZoom(){ return 1 }
+      getCenter() {return this}
+      lat() {return 36.7917802}
+      lng() {return 3.0445432}
+    },
+    InfoWindow: class { open(){} },
+    Marker: class { addListener(){} },
+    LatLngBounds: class {},
+    ControlPosition: {
+      LEFT_CENTER: 'LEFT_CENTER'
+    },
     event: {
       addDomListener: () => {}
     },
@@ -47,11 +60,6 @@ class FormData {
 }
 global.FormData = FormData
 
-// AJAX
-// global.$ = {
-//   ajax: (data) => {
-//     return data
-//   },
-//   done: () => { console.log("done called") }
-// }
-
+//JS raw event Listeners
+global.onmousemove = {fn: () => {}}
+global.onmouseup = {fn: () => {}}

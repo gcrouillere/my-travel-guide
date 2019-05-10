@@ -165,7 +165,8 @@ class MapCustomization extends Component {
             <div key={x} className="form-check form-check-inline">
               <input className="form-check-input mapCenterShowinput" type="radio" id={`radio-${x}`} name="inlineRadioOptions" value={x}
               checked={this.props.map.show_map_center_as_marker == x}
-              onChange={this.showCenterAsMarker} disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "showCenterAsMarker" : false}/>
+              onChange={this.showCenterAsMarker}
+              disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "showCenterAsMarker" : false}/>
               <label className="form-check-label" htmlFor={`radio-${x}`}>{x ? "Yes" : "No"}</label>
             </div>
             )}

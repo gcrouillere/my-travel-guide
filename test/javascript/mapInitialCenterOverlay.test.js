@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { shallow, configure, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { MemoryRouter } from 'react-router'
+import renderer from 'react-test-renderer';
 
 import MapInitialCenterOverlay from '../../app/javascript/packs/articleForm/contentMenu/mapInitialCenterOverlay'
 
@@ -13,13 +14,12 @@ describe('MapInitialCenterOverlay test suite', () => {
   let abandonMapCreation, printLocation
   abandonMapCreation = printLocation = jest.fn()
 
-  const wrapper = mount(<MapInitialCenterOverlay abandonMapCreation={abandonMapCreation} printLocation={printLocation}/>)
+  const mapInitialCenterOverlayTree = renderer
+    .create(<MapInitialCenterOverlay abandonMapCreation={abandonMapCreation} printLocation={printLocation}/>)
+    .toJSON()
+  expect(mapInitialCenterOverlayTree).toMatchSnapshot();
 
-  it('renders overlay', () => {
-    expect(wrapper.find(".mapInitialCenterOverlay #initialMapLocation").length).toEqual(1)
-    expect(wrapper.find(".mapInitialCenterOverlay .mapOverlayTitle").length).toEqual(1)
-    expect(wrapper.find(".mapInitialCenterOverlay .mapOverlaydescription").length).toEqual(1)
-  })
+  const wrapper = mount(<MapInitialCenterOverlay abandonMapCreation={abandonMapCreation} printLocation={printLocation}/>)
 
   it('passes location to upper component', () => {
     wrapper.find("#initialMapLocation").simulate('change', {target: {value: "foo"}})

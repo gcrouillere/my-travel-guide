@@ -3,10 +3,11 @@ import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import $ from 'jquery'
 import update from 'immutability-helper'
-import MapLocationInput from './mapComponent/mapLocationInput'
+import MapLocationInput from './../mapLocationInput'
 import Marker from './mapComponent/marker'
 import Polyline from './mapComponent/polyline'
 import ElementResize from './../formElementManagement/elementResize'
+import ajaxHelpers from './../../../utils/ajaxHelpers'
 
 class MapComponent extends Component {
 
@@ -17,14 +18,14 @@ class MapComponent extends Component {
       map: this.props.map,
       polylines: this.props.map.polylines || [],
       markers: this.props.map.markers || [],
-      showCenterAsMarker: this.props.map.show_map_center_as_marker
+      showCenterAsMarker: this.props.map.show_map_center_as_marker,
+      resizeOrigin: null,
+      initialMapHeight: null
     }
+    this.mapLocationInputRef = React.createRef()
   }
 
-  componentDidMount() {
-    this.initMap()
-    this.initAutoComplete()
-  }
+  componentDidMount() { this.initMap() }
 
   initMap = () => {
     this.map = new google.maps.Map(document.getElementById(`map${this.props.map.id}`), {
@@ -32,9 +33,7 @@ class MapComponent extends Component {
       zoom: this.state.map.zoom,
       mapTypeControl: true,
       zoomControl: true,
-      zoomControlOptions: {
-          position: google.maps.ControlPosition.LEFT_CENTER
-      },
+      zoomControlOptions: { position: google.maps.ControlPosition.LEFT_CENTER },
       scaleControl: false,
       streetViewControl: false,
       fullscreenControl: false,
@@ -47,32 +46,7 @@ class MapComponent extends Component {
     this.map.addListener('dragend', event => {this.handleCenter(event, this.map)})
   }
 
-  initAutoComplete = () => {
-    var mapLocation = document.getElementById(`mapLocation${this.props.map.id}`)
-    this.autocomplete = new google.maps.places.Autocomplete((mapLocation), {});
-    let userInput = ""
-    google.maps.event.addDomListener(mapLocation, 'keydown', function(event) {
-      if (event.key === "Enter") event.preventDefault(); // Do not submit the form on Enter.
-    });
-    google.maps.event.addDomListener(mapLocation, 'keyup', function(event) {
-      userInput = event.target.value
-    });
-    this.autocomplete.addListener('place_changed', event => this.handlePlaceSelect(event, userInput));
-  }
-
-  handlePlaceSelect = (event, userInput) => {
-    let place = this.autocomplete.getPlace();
-    let map = {}
-    let name = ""
-    if (place.address_components) {
-      map = {lat: place.geometry.location.lat(), lng: place.geometry.location.lng(), zoom: this.state.map.zoom}
-      name = place.formatted_address
-    } else {
-      map = {lat: 0, lng: 0, zoom: this.state.map.zoom}
-      name = userInput
-    }
-    this.updateMap({lat: map.lat, lng: map.lng, name: name})
-  }
+  handleMap = (map) => { this.updateMap(map) }
 
   handleZoom = (event, map) => {
     let zoom = map.getZoom()
@@ -84,45 +58,32 @@ class MapComponent extends Component {
   }
 
   initResize = (event) => {
-    let map = document.getElementById(`map${this.state.map.id}`)
-    let originalcursorPosition = event.screenY
-    let initialMapHeight = this.state.map.height
-    let newHeight, validHeight = null
-    onmousemove = (event) => {
-       newHeight = (initialMapHeight + (event.screenY - originalcursorPosition))
-       validHeight = newHeight < 250 ? 250 : newHeight
-       map.style.height = `${validHeight}px`
-    }
-    onmouseup = () => {
-      onmousemove = null;
-      this.updateMap({height: validHeight})
-      onmouseup = null;
-    }
+    this.setState({resizeOrigin: event.screenY, initialMapHeight: this.state.map.height});
+    onmousemove = (event) => { this.resizeOnMove(event) }
+    onmouseup = () => { this.stopResizing() }
   }
 
-  // displayMapCustomizationMenu = (event) => {
-  //   if (!this.props.customizationOnGoing.status) {
-  //     this.setState({customizationActive: true})
-  //     document.getElementById(`markerCustomization-${this.props.map.id}`).classList.remove("active")
-  //     document.getElementById(`polylineCustomization-${this.props.map.id}`).classList.remove("active")
-  //   }
-  // }
+  resizeOnMove(event) {
+      let newHeight, validHeight = null
+      newHeight = (this.state.initialMapHeight + (event.screenY - this.state.resizeOrigin))
+      validHeight = newHeight < 250 ? 250 : newHeight
+      let updatedMap = update(this.state.map, {height: {$set: validHeight}})
+      this.setState({map: updatedMap})
+  }
 
-  updateMap(mapCharacteristics) {
-    $.ajax({
-      method: 'PUT',
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/maps/${this.state.map.id}`,
-      dataType: "JSON",
-      data: {map: mapCharacteristics}
-    }).done((data) => {
-      this.props.setMap(data)
-      this.setState({map: data, showCenterAsMarker: data.show_map_center_as_marker})
-      this.initMap()
-      this.initAutoComplete()
-    }).fail((data) => {
-      console.log(data)
-    })
+  stopResizing() {
+    this.setState({ resizeOrigin: null, initialMapHeight: null })
+    onmousemove = null;
+    this.updateMap({height: this.state.map.height})
+    onmouseup = null;
+  }
+
+  async updateMap(mapCharacteristics) {
+    let updatedMap = await ajaxHelpers.updateDataInURL(`/maps/${this.state.map.id}`, {map: mapCharacteristics}, this.props.token)
+
+    this.props.setMap(updatedMap)
+    this.setState({map: updatedMap, showCenterAsMarker: updatedMap.show_map_center_as_marker, })
+    this.initMap()
   }
 
   updateMapDataList = (data, dataType, action) => {
@@ -160,12 +121,18 @@ class MapComponent extends Component {
     return (
       <div className="mapBloc">
         <ElementResize initResize={this.initResize} direction="vertical"/>
-        <MapLocationInput id={this.props.map.id} location={this.state.map.name}/>
+        <MapLocationInput id={this.props.map.id} location={this.state.map.name} handleMap={this.handleMap}/>
         <div id={`map${this.state.map.id}`} className="googleMap" style={{ width: '100%', height: `${this.state.map.height}px` }}
         onMouseDown={this.onMouseDown}>
           {this.state.showCenterAsMarker &&
             <Marker googleMap={this.state.googleMap} map={this.state.map}
-            marker={{lat: this.state.map.lat, lng: this.state.map.lng, description: this.state.map.name, logo: "markerLogo", mapCenter: true}}
+            marker={{
+              lat: this.state.map.lat,
+              lng: this.state.map.lng,
+              description: this.state.map.name,
+              logo: "markerLogo",
+              mapCenter: true
+            }}
             manageMarker={this.manageMarker} updateMapDataList={this.updateMapDataList}/>
           }
           {this.state.markers.map(marker =>

@@ -1,4 +1,5 @@
 import $ from 'jquery'
+import { GOOGLEKEY } from './../config/config'
 
 export default {
 
@@ -30,6 +31,23 @@ export default {
     .fail(data => console.log(data))
 
     return returnData
+  },
+
+  async geocodePlace(adress) {
+    const formattedAdress = adress.replace(/,/g, '').split(' ').join('+')
+    let map = null
+
+    await $.ajax({
+      method: "GET",
+      url: `https://maps.googleapis.com/maps/api/geocode/json?address=${formattedAdress}&key=${GOOGLEKEY.googleAPIBrowserKey}`
+    }).done(data => {
+      map = {
+        lat: data.results[0].geometry.location.lat,
+        lng: data.results[0].geometry.location.lng,
+        name: data.results[0].formatted_address
+    }})
+
+    return map
   }
 
 }

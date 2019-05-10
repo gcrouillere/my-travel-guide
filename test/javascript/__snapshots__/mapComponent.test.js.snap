@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MapComponent tests renders component 1`] = `
+<div
+  className="mapBloc"
+>
+  <div
+    className="elementResize"
+    onDragStart={[Function]}
+    onMouseDown={[Function]}
+  >
+    <div
+      className="resizeLogo vertical"
+    >
+      <img
+        src="test-file-stub"
+      />
+    </div>
+  </div>
+  <div
+    className="mapLocation"
+  >
+    <div
+      className="locationInput input-group mb-3"
+    >
+      <div
+        className="input-group-prepend"
+      >
+        <span
+          className="input-group-text"
+          id="inputGroup-sizing-default"
+        >
+          Map's center
+        </span>
+      </div>
+      <input
+        aria-describedby="inputGroup-sizing-default"
+        aria-label="Default"
+        className="form-control mapLocationInput"
+        draggable={true}
+        id="mapLocation2"
+        onChange={[Function]}
+        onDragStart={[Function]}
+        type="text"
+        value="44260 Savenay, France"
+      />
+    </div>
+  </div>
+  <div
+    className="googleMap"
+    id="map2"
+    onMouseDown={[Function]}
+    style={
+      Object {
+        "height": "250px",
+        "width": "100%",
+      }
+    }
+  />
+</div>
+`;

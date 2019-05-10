@@ -86,16 +86,23 @@ class ArticleForm extends Component {
     }).fail((data) => {console.log(data)})
   }
 
-  addNewMap = (id, mapCenter, mapLocation, initPositionAtCreation) => {
+  addNewMap = (id, map, initPositionAtCreation) => {
     this.refs.contentMenu.setState({mapOverlayActive: false})
-    const zoom = (mapCenter.lat == 0 && mapCenter.lng == 0) ? 1 : 11
+
+    const newMap = update(map, { $merge: {
+      position: this.state.articleElements.length,
+      article_id: id,
+      zoom: map.lat == 0 && map.lng == 0 ? 1 : 11,
+      height: 250,
+      show_map_center_as_marker: true
+    }})
+
     $.ajax({
       method: 'POST',
       beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
       url: `/maps/`,
       dataType: "JSON",
-      data: {map: {lat: mapCenter.lat, lng: mapCenter.lng, zoom: zoom, name: mapLocation,
-        position: this.state.articleElements.length, height: 250, show_map_center_as_marker: true, article_id: id}}
+      data: {map: newMap}
     }).done((data) => {
       this.updatePositionAfterCreation(initPositionAtCreation, id)
     }).fail((data) => { console.log(data) })
@@ -183,7 +190,7 @@ class ArticleForm extends Component {
     if (event.dataTransfer.getData("type") == "positionUpdate") {
       this.updateElementPosition(id, this.state.initialPosition, position)
     } else if (event.dataTransfer.getData("type") == "mapCreation") {
-      this.refs.contentMenu.initAutoComplete({initPositionAtCreation: position})
+      this.refs.contentMenu.initAddNewMap(position)
     } else if (event.dataTransfer.getData("type") == "textCreation") {
       this.addNewTextContent(this.state.id, {initPositionAtCreation: position})
     } else if (event.dataTransfer.getData("type") == "photoCreation") {
@@ -291,7 +298,7 @@ class ArticleForm extends Component {
               }
               else if (element.class_name == "Map") {
                 return <MapForm key={`map${element.id}`} map={element} name={element.name} dragging={this.state.dragging}
-                articleId={this.state.id} position={element.position} id={element.id}
+                articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
                 onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                 onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
                 preventDraggingOnOtherElements={this.preventDraggingOnOtherElements} />

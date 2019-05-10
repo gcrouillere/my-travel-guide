@@ -22,6 +22,7 @@ class PhotoForm extends Component {
       cropped: this.props.photo.cropped_url ? (this.props.photo.cropped_url.length > 0 ? true : false) : false ,
       processing: false,
       customizationActive: false,
+      resizeOrigin: null,
       crop: {
         x: 0,
         y: 0
@@ -32,22 +33,29 @@ class PhotoForm extends Component {
   }
 
   initResize = (event) => {
-    let photo = this.photoRef.current
-    let maxWidth = this.photoContentRef.current.clientWidth
-    let originalcursorPosition = event.screenX
-    let initialPhotoWidth = this.state.photo.css_width
+    this.setState({
+      resizeOrigin: event.screenX,
+      initialPhotoWidth: this.state.photo.css_width,
+      maxWidth: this.photoContentRef.current.clientWidth
+    })
+
+    onmousemove = (event) => { this.resizeOnMove(event) }
+    onmouseup = () => { this.stopResizing() }
+  }
+
+  resizeOnMove = (event) => {
     let newWidth, validWidth = null
-    onmousemove = (event) => {
-       newWidth = initialPhotoWidth + ((event.screenX - originalcursorPosition) / maxWidth) * 100
-       validWidth = newWidth > 100 ? 100 : (newWidth < 20 ? 20 : newWidth)
-       let newPhotoState = update(this.state.photo, {css_width: {$set: validWidth}})
-       this.setState({photo: newPhotoState})
-    }
-    onmouseup = () => {
-      onmousemove = null;
-      this.updatePhoto({css_width: validWidth})
-      onmouseup = null;
-    }
+    newWidth = this.state.initialPhotoWidth + ((event.screenX - this.state.resizeOrigin) / this.state.maxWidth) * 100
+    validWidth = newWidth > 100 ? 100 : (newWidth < 20 ? 20 : newWidth)
+
+    let newPhotoState = update(this.state.photo, {css_width: {$set: validWidth}})
+    this.setState({photo: newPhotoState})
+  }
+
+  stopResizing = () => {
+    onmousemove = null;
+    this.updatePhoto({css_width: this.state.photo.css_width})
+    onmouseup = null;
   }
 
   updatePhoto = (photoCharacteristics) => {
