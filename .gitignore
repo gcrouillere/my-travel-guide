@@ -37,4 +37,6 @@ yarn-debug.log*
 
 # Ignore application configuration
 /config/application.yml
-/app/javascript/config/*
+
+# JS config
+/app/javascript/config
