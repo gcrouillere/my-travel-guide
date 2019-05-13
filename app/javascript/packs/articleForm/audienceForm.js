@@ -16,9 +16,8 @@ class AudienceForm extends Component {
   }
 
   async componentDidMount() {
-
-    const audienceSelections = await ajaxHelpers.getDataFromURL("/audience_selections")
-    const article = await ajaxHelpers.getDataFromURL(`/articles/${this.props.id}`)
+    const audienceSelections = await ajaxHelpers.ajaxCall('GET', "/audience_selections")
+    const article = await ajaxHelpers.ajaxCall('GET', `/articles/${this.props.id}`)
 
     this.setState({
       audiencesSelection: article.audience_selections,
@@ -35,7 +34,7 @@ class AudienceForm extends Component {
       { audience_selection_ids: newSelectionIDS.length == 0 ? [""] : newSelectionIDS,
       audience_valid: newSelectionIDS.length > 0 }
     }
-    const article = await ajaxHelpers.updateDataInURL(`/articles/${this.props.id}`, data, this.props.token)
+    const article = await ajaxHelpers.ajaxCall('PUT', `/articles/${this.props.id}`, data, this.props.token)
 
     this.setState({
       audiencesSelection: article.audience_selections,
@@ -64,7 +63,7 @@ class AudienceForm extends Component {
 
   continueWriting = async () => {
     const data = { article: { audience_valid: true } }
-    const article = await ajaxHelpers.updateDataInURL(`/articles/${this.props.id}`, data, this.props.token)
+    const article = await ajaxHelpers.ajaxCall('PUT', `/articles/${this.props.id}`, data, this.props.token)
 
     this.setState({ continueWriting: true }, () => {
       this.props.updateArticleCompletion({audienceForm: this.state.audienceValid && this.state.continueWriting})

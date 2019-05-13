@@ -19,7 +19,7 @@ describe('ContentMenu test suite', () => {
     .toJSON()
   expect(contentMenuTree).toMatchSnapshot();
 
-  let addNewTextContent, addNewMap, addNewPhotoBloc, addNewComponentOnDrag = jest.fn()
+  let addNewTextContent, addNewMap, addNewPhotoBloc, addNewComponentOnDrag
   addNewTextContent = addNewMap = addNewPhotoBloc = addNewComponentOnDrag = jest.fn()
 
   const wrapper = mount(<ContentMenu addNewTextContent={addNewTextContent}
@@ -41,8 +41,8 @@ describe('ContentMenu test suite', () => {
   })
 
   it('defines map characteristics before creation', () => {
-    wrapper.instance().addNewMap("mapLocation", 2)
-    expect(addNewMap).toHaveBeenCalledWith(1, {lat: 0, lng: 0}, "mapLocation", 2)
+    wrapper.instance().addNewMap({id: 2})
+    expect(addNewMap).toHaveBeenCalledWith(1, {id: 2}, expect.anything())
   })
 
   it('passes text bloc addition to upper component', () => {
@@ -62,12 +62,6 @@ describe('ContentMenu test suite', () => {
     expect(wrapper.state('mapOverlayActive')).toEqual(false)
     wrapper.instance().abandonPhotoCreation()
     expect(wrapper.state('photoOverlayActive')).toEqual(false)
-  })
-
-  it('gets location from lower component', () => {
-    let event = {target: {value: "foo"}}
-    wrapper.instance().printLocation(event)
-    expect(wrapper.state('location')).toEqual("foo")
   })
 })
 

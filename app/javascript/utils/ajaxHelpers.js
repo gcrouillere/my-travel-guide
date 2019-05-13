@@ -3,32 +3,18 @@ import { GOOGLEKEY } from './../config/config'
 
 export default {
 
-
-  async getDataFromURL(url) {
+  async ajaxCall(method, url, data, token) {
     let returnData = null
 
     await $.ajax({
-      method: 'GET',
-      url: url,
-      dataType: "JSON"
-    })
-    .done(data => { returnData = data })
-    .fail(data => console.log(data))
-
-    return returnData
-  },
-
-  async updateDataInURL(url, data, token) {
-    let returnData = null
-
-     await $.ajax({
-      method: "PUT",
+      method: method,
       beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', token) },
       url: url,
+      dataType: "JSON",
       data: data
     })
-    .done(data => { returnData = data })
-    .fail(data => console.log(data))
+    .done((data) => { returnData = data })
+    .fail((data) => { console.log(data) })
 
     return returnData
   },
@@ -49,5 +35,4 @@ export default {
 
     return map
   }
-
 }

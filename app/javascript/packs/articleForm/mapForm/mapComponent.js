@@ -79,10 +79,10 @@ class MapComponent extends Component {
   }
 
   async updateMap(mapCharacteristics) {
-    let updatedMap = await ajaxHelpers.updateDataInURL(`/maps/${this.state.map.id}`, {map: mapCharacteristics}, this.props.token)
+    let updatedMap = await ajaxHelpers.ajaxCall('PUT', `/maps/${this.state.map.id}`, {map: mapCharacteristics}, this.props.token)
 
     this.props.setMap(updatedMap)
-    this.setState({map: updatedMap, showCenterAsMarker: updatedMap.show_map_center_as_marker, })
+    this.setState({map: updatedMap, showCenterAsMarker: updatedMap.show_map_center_as_marker})
     this.initMap()
   }
 

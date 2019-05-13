@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import $ from 'jquery'
 import tempMarkerLogo from './../../../../assets/images/circle-full-black.svg'
+import ajaxHelpers from './../../../utils/ajaxHelpers'
 
 class MapCustomization extends Component {
 
@@ -26,13 +27,7 @@ class MapCustomization extends Component {
     if (!this.state.markerOnConstruction) {
       this.setState({markerOnConstruction: true})
       this.props.preventCustomizationMix("initAddMarker")
-      this.props.googleMap.addListener('click', event => {
-        this.addMarker(
-          event,
-          {lat: event.latLng.lat(), lng: event.latLng.lng(), description: this.state.content, map_id: this.props.map.id, logo: "markerLogo"},
-          'click'
-        )
-      })
+      this.props.googleMap.addListener('click', event => { this.addMarker(event, 'click') })
     } else {
       this.props.preventCustomizationMix()
       google.maps.event.clearListeners(this.props.googleMap, 'click')
@@ -40,55 +35,80 @@ class MapCustomization extends Component {
     }
   }
 
-  addMarker = (event, markerCharacteristics, eventType) => {
-    $.ajax({
-      method: 'POST',
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/markers/`,
-      dataType: "JSON",
-      data: {marker: markerCharacteristics}
-    }).done((data) => {
-      google.maps.event.clearListeners(this.props.googleMap, eventType);
-      this.setState({markerOnConstruction: false})
-      this.props.preventCustomizationMix()
-      this.props.updateMapDataList(data, "markers", "add")
-    }).fail((data) => {
-      console.log(data)
-    })
+  addMarker = async (event, eventType) => {
+    const markerCharacteristics = {
+      lat: event.latLng.lat(),
+      lng: event.latLng.lng(),
+      description: this.state.content,
+      map_id: this.props.map.id,
+      logo: "markerLogo"
+    }
+
+    let newMarker = await ajaxHelpers.ajaxCall('POST', "/markers/", {marker: markerCharacteristics}, this.props.token)
+
+    google.maps.event.clearListeners(this.props.googleMap, eventType);
+    this.setState({markerOnConstruction: false})
+    this.props.preventCustomizationMix()
+    this.props.updateMapDataList(newMarker, "markers", "add")
   }
 
-  initPolyLine = (event) => {
+  initPolyLine = async (event) => {
     if (!this.state.polylineOnConstruction) {
-      this.polyline = new google.maps.Polyline({
-        map: this.props.googleMap,
-        strokeColor: '#495057',
-        strokeOpacity: 1.0,
-        strokeWeight: 2,
-        geodesic: true
-      });
+
       this.props.preventCustomizationMix("initPolyLine")
-      this.props.googleMap.addListener('click', event => {this.addPolylinePoint(event, this.polyline)})
+      this.polyline = this.createEmptyPolyline(this.props.googleMap)
+      this.props.googleMap.addListener('click', event => { this.addPolylinePoint(event, this.polyline) })
       this.setState({polylineOnConstruction: true, polyline: null})
-      this.createPolyline()
+      await this.createPolyline()
+
     } else {
+
       this.props.preventCustomizationMix()
       google.maps.event.clearListeners(this.props.googleMap, 'click');
       this.setState({polylineOnConstruction: false})
+
       if (this.state.polylineFilled) {
-        this.getPolyline()
+        await this.getPolyline()
         this.setState({polylineFilled: false})
       } else {
         this.deleteEmptyPolyline()
       }
+
     }
   }
 
-  addPolylinePoint = (event, polyline) => {
+  createEmptyPolyline(googleMap) {
+    return new google.maps.Polyline({
+      map: googleMap,
+      strokeColor: '#495057',
+      strokeOpacity: 1.0,
+      strokeWeight: 2,
+      geodesic: true
+    });
+  }
+
+  addPolylinePoint = async (event, polyline) => {
     var path = polyline.getPath()
-    var polylineMarkerCount = polyline.getPath().getLength()
-    var tempMarker = new google.maps.Marker({
+    path.push(event.latLng);
+
+    this.addTempGoogleMarker(this.props.googleMap, event)
+
+    const data = {
+      lat: event.latLng.lat(),
+      lng: event.latLng.lng(),
+      position: polyline.getPath().getLength(),
+      polyline_id: this.state.polyline.id
+    }
+
+    await ajaxHelpers.ajaxCall('POST', "/markers/", { marker: data }, this.props.token)
+
+    this.setState({polylineFilled: true})
+  }
+
+  addTempGoogleMarker(googleMap, event) {
+    new google.maps.Marker({
       position: event.latLng,
-      map: this.props.googleMap,
+      map: googleMap,
       icon: {
         url: tempMarkerLogo,
         size: new google.maps.Size(24, 24),
@@ -96,51 +116,27 @@ class MapCustomization extends Component {
         anchor: new google.maps.Point(6,6)
       }
     })
-    path.push(event.latLng);
-    $.ajax({
-      method: 'POST',
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/markers/`,
-      dataType: "JSON",
-      data: {marker: {lat: event.latLng.lat(), lng: event.latLng.lng(), position: polylineMarkerCount, polyline_id: this.state.polyline.id}}
-    }).done((data) => { this.setState({polylineFilled: true}) })
-    .fail((data) => { console.log(data) })
   }
 
-  createPolyline = () => {
-    $.ajax({
-      method: 'POST',
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/polylines/`,
-      dataType: "JSON",
-      data: {polyline: {map_id: this.props.map.id}}
-    }).done((data) => { this.setState({polyline: data}) })
-    .fail((data) => { console.log(data) })
+  createPolyline = async () => {
+    const polyline = await ajaxHelpers.ajaxCall(
+      'POST',
+      "/polylines/",
+      { polyline: { map_id: this.props.map.id } },
+      this.props.token
+    )
+    this.setState({polyline: polyline})
   }
 
-  getPolyline = () => {
-    $.ajax({
-      method: 'GET',
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/polylines/${this.state.polyline.id}`,
-      dataType: "JSON"
-    }).done((data) => {
-      this.setState({polyline: data})
-      this.props.updateMapDataList(this.state.polyline, "polylines", "add")
-    })
-    .fail((data) => { console.log(data) })
+  getPolyline = async () => {
+    const polyline = await ajaxHelpers.ajaxCall('GET', `/polylines/${this.state.polyline.id}`)
+    this.setState({polyline: polyline})
+    this.props.updateMapDataList(this.state.polyline, "polylines", "add")
   }
 
-  deleteEmptyPolyline = () => {
-    $.ajax({
-      method: 'DELETE',
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/polylines/${this.state.polyline.id}`,
-      dataType: "JSON"
-    }).done((data) => {
-      document.getElementById(`polylineCustomization-${this.props.map.id}`).classList.remove("active")
-      this.setState({polyline: null})
-    }).fail((data) => {console.log(data)})
+  deleteEmptyPolyline = async () => {
+    await ajaxHelpers.ajaxCall('DELETE', `/polylines/${this.state.polyline.id}`, this.props.token)
+    this.setState({polyline: null})
   }
 
   showCenterAsMarker = (event) => {
@@ -163,24 +159,42 @@ class MapCustomization extends Component {
             <p>Display Map Center ?</p>
             {[true, false].map(x =>
             <div key={x} className="form-check form-check-inline">
-              <input className="form-check-input mapCenterShowinput" type="radio" id={`radio-${x}`} name="inlineRadioOptions" value={x}
+              <input className="form-check-input mapCenterShowinput" type="radio" id={`radio-${x}`}
+              name="inlineRadioOptions" value={x}
               checked={this.props.map.show_map_center_as_marker == x}
               onChange={this.showCenterAsMarker}
-              disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "showCenterAsMarker" : false}/>
+              disabled={this.props.customizationOnGoing.status ?
+                this.props.customizationOnGoing.trigger !== "showCenterAsMarker" :
+                false
+              }/>
               <label className="form-check-label" htmlFor={`radio-${x}`}>{x ? "Yes" : "No"}</label>
             </div>
             )}
           </div>
+
           <button className={`btn btn-dark mapCustomizationBlock ${this.state.markerOnConstruction ? "finishPath" : "startPath"}`}
-            onClick={this.initAddMarker} disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "initAddMarker" : false}>
+            onClick={this.initAddMarker}
+            disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "initAddMarker" : false}>
+
             {this.state.markerOnConstruction ? "Click on Map to place Marker" : "Add a Marker"}
+
             {this.state.markerOnConstruction && <p className="actionCancelInfo">Click button again to cancel action</p>}
           </button>
+
           <button className={`btn btn-dark mapCustomizationBlock ${this.state.polylineOnConstruction ? "finishPath" : "startPath"}`}
-            onClick={this.initPolyLine} disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "initPolyLine" : false}>
-            {this.state.polylineOnConstruction ? (this.state.polylineFilled ? "Finish Path" : "Click on Map to draw Path") : "Add a Path"}
-            {this.state.polylineOnConstruction && !this.state.polylineFilled && <p className="actionCancelInfo">Click button again to cancel action</p>}
+            onClick={this.initPolyLine}
+            disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "initPolyLine" : false}>
+
+            {this.state.polylineOnConstruction ?
+              (this.state.polylineFilled ? "Finish Path" : "Click on Map to draw Path") :
+              "Add a Path"
+            }
+
+            {this.state.polylineOnConstruction && !this.state.polylineFilled &&
+              <p className="actionCancelInfo">Click button again to cancel action</p>
+            }
           </button>
+
         </div>
       </div>
     )

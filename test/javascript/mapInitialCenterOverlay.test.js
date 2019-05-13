@@ -11,19 +11,19 @@ configure({ adapter: new Adapter() });
 
 describe('MapInitialCenterOverlay test suite', () => {
 
-  let abandonMapCreation, printLocation
-  abandonMapCreation = printLocation = jest.fn()
+  let abandonMapCreation, addNewMap
+  abandonMapCreation = addNewMap = jest.fn()
 
   const mapInitialCenterOverlayTree = renderer
-    .create(<MapInitialCenterOverlay abandonMapCreation={abandonMapCreation} printLocation={printLocation}/>)
+    .create(<MapInitialCenterOverlay abandonMapCreation={abandonMapCreation} addNewMap={addNewMap}/>)
     .toJSON()
   expect(mapInitialCenterOverlayTree).toMatchSnapshot();
 
-  const wrapper = mount(<MapInitialCenterOverlay abandonMapCreation={abandonMapCreation} printLocation={printLocation}/>)
+  const wrapper = mount(<MapInitialCenterOverlay abandonMapCreation={abandonMapCreation} addNewMap={addNewMap}/>)
 
   it('passes location to upper component', () => {
-    wrapper.find("#initialMapLocation").simulate('change', {target: {value: "foo"}})
-    expect(printLocation).toHaveBeenCalled()
+    wrapper.instance().handleMap()
+    expect(addNewMap).toHaveBeenCalled()
   })
 
   it('passes overlay closing to upper component', () => {

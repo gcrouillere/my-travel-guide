@@ -15,14 +15,24 @@ global.google = {
       lat() {return 36.7917802}
       lng() {return 3.0445432}
     },
+    Size: class {},
+    Point: class {},
     InfoWindow: class { open(){} },
     Marker: class { addListener(){} },
+    Polyline: class {
+      constructor() { this.list = [] }
+      getPath() { return this }
+      getLength() { return this.list.length}
+      push(x) { this.list.push(x) }
+      addListener() {}
+    },
     LatLngBounds: class {},
     ControlPosition: {
       LEFT_CENTER: 'LEFT_CENTER'
     },
     event: {
-      addDomListener: () => {}
+      addDomListener: () => {},
+      clearListeners: () => {}
     },
     places: {
       Autocomplete: class {

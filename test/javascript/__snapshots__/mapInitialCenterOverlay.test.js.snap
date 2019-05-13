@@ -26,26 +26,33 @@ exports[` 1`] = `
     If no suggestion is given, try a near match. You 'll be able to fine tune the map in the article editor.
   </p>
   <div
-    className="input-group input-group-lg"
+    className="mapLocation"
   >
     <div
-      className="input-group-prepend"
+      className="locationInput input-group mb-3"
     >
-      <span
-        className="input-group-text"
-        id="inputGroup-sizing-large"
+      <div
+        className="input-group-prepend"
       >
-        Map's center
-      </span>
+        <span
+          className="input-group-text"
+          id="inputGroup-sizing-default"
+        >
+          Map's center
+        </span>
+      </div>
+      <input
+        aria-describedby="inputGroup-sizing-default"
+        aria-label="Default"
+        className="form-control mapLocationInput"
+        draggable={true}
+        id="mapLocationmenu"
+        onChange={[Function]}
+        onDragStart={[Function]}
+        type="text"
+        value=""
+      />
     </div>
-    <input
-      aria-describedby="inputGroup-sizing-large"
-      aria-label="Large"
-      className="form-control"
-      id="initialMapLocation"
-      onChange={[Function]}
-      type="text"
-    />
   </div>
 </div>
 `;

@@ -96,8 +96,11 @@ describe('MapComponent tests', () => {
   it('updates map on input change', async () => {
     await wrapper.instance().handleMap({name: "ma ville"})
     wrapper.update()
-
     expect(wrapper.state().map.name).toEqual("ma ville")
+
+    await wrapper.instance().handleMap({show_map_center_as_marker: true})
+    wrapper.update()
+    expect(wrapper.state().map.show_map_center_as_marker).toEqual(true)
   })
 
   it('passes functions to parent component on call', () => {
