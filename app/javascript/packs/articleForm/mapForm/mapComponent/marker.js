@@ -2,34 +2,15 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import $ from 'jquery'
-import markerLogo from './../../../../../assets/images/place-black.svg'
-import restaurantLogo from './../../../../../assets/images/restaurant-black.svg'
-import hotelLogo from './../../../../../assets/images/hotel-black.svg'
-import barLogo from './../../../../../assets/images/bar-black.svg'
-import cafeLogo from './../../../../../assets/images/cafe-black.svg'
-import busLogo from './../../../../../assets/images/bus-black.svg'
-import boatLogo from './../../../../../assets/images/boat-black.svg'
-import trainLogo from './../../../../../assets/images/train-black.svg'
-import parkingLogo from './../../../../../assets/images/parking-black.svg'
-import seeLogo from './../../../../../assets/images/see-black.svg'
+import ajaxHelpers from './../../../../utils/ajaxHelpers'
+import markerLogos from './../markerLogos'
 
 class Marker extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      logos: {
-        markerLogo: {url: markerLogo},
-        restaurantLogo: {url: restaurantLogo},
-        hotelLogo: {url: hotelLogo},
-        barLogo: {url: barLogo},
-        cafeLogo: {url: cafeLogo},
-        busLogo: {url: busLogo},
-        boatLogo: {url: boatLogo},
-        trainLogo: {url: trainLogo},
-        parkingLogo: {url: parkingLogo},
-        seeLogo: {url: seeLogo}
-      }
+      logos: markerLogos
     }
   }
 
@@ -62,19 +43,17 @@ class Marker extends Component {
     this.props.manageMarker(event, googleMarker, this.props.marker)
   }
 
-  updateMarkerPosition = (event, marker) => {
+  updateMarkerPosition = async (event, marker) => {
     let markerCharacteristics = {lat: event.latLng.lat(), lng: event.latLng.lng()}
-    $.ajax({
-      method: 'PUT',
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/markers/${this.props.marker.id}`,
-      dataType: "JSON",
-      data: {marker: markerCharacteristics}
-    }).done((data) => {
-      this.props.updateMapDataList(data, "markers", "change")
-    }).fail((data) => {
-      console.log(data)
-    })
+
+    const newMarker = await ajaxHelpers.ajaxCall(
+      'PUT',
+      `/markers/${this.props.marker.id}`,
+      { marker: markerCharacteristics },
+      this.props.token
+    )
+
+    this.props.updateMapDataList(newMarker, "markers", "change")
   }
 
   render() {

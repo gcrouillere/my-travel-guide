@@ -136,11 +136,11 @@ class MapComponent extends Component {
           }
           {this.state.markers.map(marker =>
             <Marker key={`marker${marker.id}`} googleMap={this.state.googleMap} map={this.state.map} marker={marker}
-            manageMarker={this.manageMarker} updateMapDataList={this.updateMapDataList}/>
+            manageMarker={this.manageMarker} updateMapDataList={this.updateMapDataList} token={this.props.token}/>
           )}
           {this.state.polylines.map(polyline =>
             <Polyline key={`polyline${polyline.id}`} googleMap={this.state.googleMap} map={this.state.map} polyline={polyline}
-            managePolyline={this.managePolyline} updateMapDataList={this.updateMapDataList}
+            managePolyline={this.managePolyline} updateMapDataList={this.updateMapDataList} token={this.props.token}
             managePolylinePoint={this.managePolylinePoint}/>
           )}
         </div>

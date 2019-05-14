@@ -65,6 +65,10 @@ const ajaxCall = jest.fn((method, url, data, token) => {
         let newMarker = update(marker, {logo: {$set: "restaurantLogo"}})
         return Promise.resolve(newMarker)
       }
+      if (data.marker.lat) {
+        let newMarker = update(marker, {lat: {$set: 69}, lng: {$set: 69}})
+        return Promise.resolve(newMarker)
+      }
     }
     if  (method == 'DELETE') { return Promise.resolve(marker) }
   }
