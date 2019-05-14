@@ -22,7 +22,6 @@ class MapComponent extends Component {
       resizeOrigin: null,
       initialMapHeight: null
     }
-    this.mapLocationInputRef = React.createRef()
   }
 
   componentDidMount() { this.initMap() }

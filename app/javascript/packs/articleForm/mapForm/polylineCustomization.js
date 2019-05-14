@@ -39,6 +39,10 @@ class PolylineCustomization extends Component {
     }
   }
 
+  hidePolylineCustomization = () => { this.setState({ polylineCustomizationActive: false }) }
+
+  showPolylineCustomization = () => { this.setState({ polylineCustomizationActive: true }) }
+
   distanceDisplay = (event) => {
     this.setState({distanceDisplayed: event.target.value == "true"})
     this.updatePolyline({distance_displayed: event.target.value == "true"})

@@ -51,6 +51,17 @@ const ajaxCall = jest.fn((method, url, data, token) => {
       let newMarker = update(marker, {id: {$set: 1}, lat: {$set: 6}, lng: {$set: 6}})
       return Promise.resolve(newMarker)
     }
+    if  (method == 'PUT') {
+      if (data.marker.description) {
+        let newMarker = update(marker, {description: {$set: "my description"}})
+        return Promise.resolve(newMarker)
+      }
+      if (data.marker.logo) {
+        let newMarker = update(marker, {logo: {$set: "restaurantLogo"}})
+        return Promise.resolve(newMarker)
+      }
+    }
+    if  (method == 'DELETE') { return Promise.resolve(marker) }
   }
 
   if ( /^\/polylines/.test(url) ) {

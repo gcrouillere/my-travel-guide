@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MarkerCustomization tests renders component 1`] = `
+<div
+  className="markerCustomization "
+  draggable={true}
+  id="markerCustomization-2"
+  onDragStart={[Function]}
+>
+  <div
+    className="overflowContainer"
+  >
+    <button
+      aria-label="Close"
+      className="close"
+      onClick={[Function]}
+    >
+      <span
+        aria-hidden="true"
+      >
+        ×
+      </span>
+    </button>
+    <h3>
+      Marker Customization:
+    </h3>
+    <div
+      className="mapCustomizationBlock"
+    >
+      <textarea
+        id="description-2"
+        onChange={[Function]}
+        value=""
+      />
+      <button
+        className="btn btn-dark"
+        disabled={false}
+        onClick={[Function]}
+      >
+        Save description
+      </button>
+    </div>
+  </div>
+</div>
+`;

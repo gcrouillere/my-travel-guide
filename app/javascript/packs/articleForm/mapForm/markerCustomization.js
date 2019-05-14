@@ -2,16 +2,8 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import $ from 'jquery'
-import markerLogo from './../../../../assets/images/place-black.svg'
-import restaurantLogo from './../../../../assets/images/restaurant-black.svg'
-import hotelLogo from './../../../../assets/images/hotel-black.svg'
-import barLogo from './../../../../assets/images/bar-black.svg'
-import cafeLogo from './../../../../assets/images/cafe-black.svg'
-import busLogo from './../../../../assets/images/bus-black.svg'
-import boatLogo from './../../../../assets/images/boat-black.svg'
-import trainLogo from './../../../../assets/images/train-black.svg'
-import parkingLogo from './../../../../assets/images/parking-black.svg'
-import seeLogo from './../../../../assets/images/see-black.svg'
+import ajaxHelpers from './../../../utils/ajaxHelpers'
+import markerLogos from './markerLogos'
 
 class MarkerCustomization extends Component {
 
@@ -22,40 +14,34 @@ class MarkerCustomization extends Component {
       marker: null,
       logo: null,
       description: "",
-      logos: {
-        markerLogo: {url: markerLogo},
-        restaurantLogo: {url: restaurantLogo},
-        hotelLogo: {url: hotelLogo},
-        barLogo: {url: barLogo},
-        cafeLogo: {url: cafeLogo},
-        busLogo: {url: busLogo},
-        boatLogo: {url: boatLogo},
-        trainLogo: {url: trainLogo},
-        parkingLogo: {url: parkingLogo},
-        seeLogo: {url: seeLogo}
-      }
+      markerCustomizationActive: false,
+      logos: markerLogos
     }
+    this.textareaRef = React.createRef()
   }
 
   initMarkerCustomization = (event, googleMarker, marker) => {
     if (!this.props.customizationOnGoing.status) {
-      this.setState({googleMarker: googleMarker, marker: marker, description: marker.description || "", logo: marker.logo})
-      document.getElementById(`markerCustomization-${this.props.map.id}`).classList.add("active")
-      document.getElementById(`description-${this.props.map.id}`).focus()
-      document.getElementById(`polylineCustomization-${this.props.map.id}`).classList.remove("active")
+      this.setState({
+        googleMarker: googleMarker,
+        marker: marker,
+        description: marker.description || "",
+        logo: marker.logo,
+        markerCustomizationActive: true
+      })
+      this.props.hidePolylineCustomization()
+      this.textareaRef.current.focus()
     }
   }
 
-  abandonMarkerCustomization = () => { document.getElementById(`markerCustomization-${this.props.map.id}`).classList.remove("active") }
+  hideMarkerCustomization = () => { this.setState({markerCustomizationActive: false}) }
 
   handleDescription = (event) => {this.setState({description: event.target.value})}
 
   saveDescription = (event) => {
-    if (this.state.googleMarker.mapCenter) {
-      this.props.updateMap({name: this.state.description})
-    } else {
+    this.state.googleMarker.mapCenter ?
+      this.props.updateMap({name: this.state.description}) :
       this.updateMarker({description: this.state.description})
-    }
   }
 
   logoChange = (event) => {
@@ -63,33 +49,27 @@ class MarkerCustomization extends Component {
     this.updateMarker({logo: event.target.value})
   }
 
-  updateMarker = (markerCharacteristic) => {
-    $.ajax({
-      method: 'PUT',
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/markers/${this.state.marker.id}`,
-      dataType: "JSON",
-      data: {marker: markerCharacteristic}
-    }).done((data) => {
-      document.getElementById(`markerCustomization-${this.props.map.id}`).classList.remove("active")
-      this.setState({googleMarker: null, marker: null, logo: null})
-      this.props.updateMapDataList(data, "markers", "change")
-    }).fail((data) => {
-      console.log(data)
-    })
+  updateMarker = async (markerCharacteristic) => {
+    const newMarker = await ajaxHelpers.ajaxCall(
+      'PUT',
+      `/markers/${this.state.marker.id}`,
+      { marker: markerCharacteristic },
+      this.props.token
+    )
+
+    this.setState({googleMarker: null, marker: null, logo: null, markerCustomizationActive: false})
+    this.props.updateMapDataList(newMarker, "markers", "change")
   }
 
-  deleteMarker = () => {
-    $.ajax({
-      method: 'DELETE',
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/markers/${this.state.marker.id}`,
-      dataType: "JSON"
-    }).done((data) => {
-      document.getElementById(`markerCustomization-${this.props.map.id}`).classList.remove("active")
-      this.setState({googleMarker: null, marker: null, logo: null})
-      this.props.updateMapDataList(data, "markers", "delete")
-    }).fail((data) => {console.log(data)})
+  deleteMarker = async () => {
+    const deletedMarker = await ajaxHelpers.ajaxCall(
+      'DELETE',
+      `/markers/${this.state.marker.id}`,
+      {},
+      this.props.token
+    )
+    this.setState({googleMarker: null, marker: null, logo: null, markerCustomizationActive: false})
+    this.props.updateMapDataList(deletedMarker, "markers", "delete")
   }
 
   onDragStart = (event) => {
@@ -99,14 +79,17 @@ class MarkerCustomization extends Component {
 
   render() {
     return (
-      <div id={`markerCustomization-${this.props.map.id}`} className="markerCustomization" draggable onDragStart={this.onDragStart}>
+      <div id={`markerCustomization-${this.props.map.id}`}
+      className={`markerCustomization ${this.state.markerCustomizationActive ? "active" : ""}`}
+      draggable onDragStart={this.onDragStart}>
         <div className="overflowContainer">
-          <button onClick={this.abandonMarkerCustomization} className="close" aria-label="Close">
+          <button onClick={this.hideMarkerCustomization} className="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
           <h3>Marker Customization:</h3>
           <div className="mapCustomizationBlock">
-            <textarea id={`description-${this.props.map.id}`} value={this.state.description} onChange={this.handleDescription}/>
+            <textarea id={`description-${this.props.map.id}`} value={this.state.description} onChange={this.handleDescription}
+            ref={this.textareaRef}/>
             <button className="btn btn-dark" onClick={this.saveDescription}
             disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "saveDescription" : false}>
               Save description
@@ -117,10 +100,13 @@ class MarkerCustomization extends Component {
               <div className="mapCustomizationBlock">
               {Object.keys(this.state.logos).map(logosKey =>
                 <div key={`${logosKey}`} className="form-check form-check-inline">
-                  <input className="form-check-input markerLogoInput" type="radio" id={`radio-${logosKey}`} name="inlineRadioOptions"
-                  value={logosKey} checked={this.state.logo == null ? false : this.state.logo == logosKey} onChange={this.logoChange}
+                  <input className="form-check-input markerLogoInput" type="radio" id={`radio-${logosKey}`}
+                  name="inlineRadioOptions" onChange={this.logoChange}
+                  value={logosKey} checked={this.state.logo == null ? false : this.state.logo == logosKey}
                   disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "logoChange" : false}/>
-                  <label className="form-check-label" htmlFor={`radio-${logosKey}`}><img src={this.state.logos[logosKey].url}/></label>
+                  <label className="form-check-label" htmlFor={`radio-${logosKey}`}>
+                    <img src={this.state.logos[logosKey].url}/>
+                  </label>
                 </div>
               )}
               </div>
