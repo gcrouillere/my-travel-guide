@@ -24,7 +24,7 @@
       "polyline_id": null, "created_at": "Thu, 09 May 2019 13:23:27 UTC +00:00", "updated_at": "Thu, 09 May 2019 13:23:27 UTC +00:00"}],
     "polylines": [
       {"id": 37,
-       "distance_displayed": null,
+       "distance_displayed": false,
        "map_id": 30,
        "created_at": "Mon, 13 May 2019 12:15:11 UTC +00:00",
        "updated_at": "Mon, 13 May 2019 12:15:11 UTC +00:00",

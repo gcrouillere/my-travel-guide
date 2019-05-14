@@ -5,6 +5,11 @@ global.React = React
 // GOOGLE
 global.google = {
   maps: {
+    geometry: {
+      spherical: {
+        computeLength() {}
+      }
+    },
     Marker: class {},
     Map: class {
       setTilt() {}
@@ -22,7 +27,7 @@ global.google = {
     Polyline: class {
       constructor() { this.list = [] }
       getPath() { return this }
-      getLength() { return this.list.length}
+      getLength() { return this.list.length + 2}
       push(x) { this.list.push(x) }
       addListener() {}
     },

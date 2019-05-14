@@ -48,8 +48,13 @@ const ajaxCall = jest.fn((method, url, data, token) => {
 
   if ( /^\/markers/.test(url) ) {
     if  (method == 'POST') {
-      let newMarker = update(marker, {id: {$set: 1}, lat: {$set: 6}, lng: {$set: 6}})
-      return Promise.resolve(newMarker)
+      if (data.marker.position) {
+        let newMarker = update(marker, {id: {$set: 1}, position: {$set: 3}})
+        return Promise.resolve(newMarker)
+      } else {
+        let newMarker = update(marker, {id: {$set: 1}, lat: {$set: 6}, lng: {$set: 6}})
+        return Promise.resolve(newMarker)
+      }
     }
     if  (method == 'PUT') {
       if (data.marker.description) {
@@ -68,6 +73,15 @@ const ajaxCall = jest.fn((method, url, data, token) => {
     if  (method == 'GET') {
       let newPolyline = update(polyline, {id: {$set: 1}})
       return Promise.resolve(newPolyline)
+    }
+    if  (method == 'PUT') {
+      if (data.polyline.distance_displayed) {
+        let newPolyline = update(polyline, {distance_displayed: {$set: data.polyline.distance_displayed}})
+        return Promise.resolve(newPolyline)
+      }
+    }
+    if  (method == 'DELETE') {
+      return Promise.resolve(polyline)
     }
   }
 })

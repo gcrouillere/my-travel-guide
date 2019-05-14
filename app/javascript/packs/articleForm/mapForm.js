@@ -71,6 +71,8 @@ class MapForm extends Component {
 
   hidePolylineCustomization = () => {this.polylineCustomizationRef.current.hidePolylineCustomization()}
 
+  hideMarkerCustomization = () => {this.markerCustomizationRef.current.hideMarkerCustomization()}
+
   render() {
 
     return (
@@ -101,6 +103,7 @@ class MapForm extends Component {
 
         <PolylineCustomization googleMap={this.state.googleMap} map={this.state.map}
         token={this.props.token} customizationOnGoing={this.state.customizationOnGoing}
+        hideMarkerCustomization={this.hideMarkerCustomization}
         updateMapDataList={this.updateMapDataList} preventCustomizationMix={this.preventCustomizationMix}
         ref={this.polylineCustomizationRef}/>
 
