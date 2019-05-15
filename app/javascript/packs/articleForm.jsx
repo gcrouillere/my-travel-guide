@@ -139,6 +139,7 @@ class ArticleForm extends Component {
   }
 
   onDragStart = (event, id, position, articleContent) => {
+    console.log(articleContent)
     document.getElementById(`content-${position}`).classList.add("draggingElement")
     this.setState({dragging: true})
     event.dataTransfer.setData("type", "positionUpdate")

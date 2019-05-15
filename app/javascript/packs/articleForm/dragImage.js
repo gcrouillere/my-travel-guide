@@ -2,14 +2,15 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 
+import htmlSanitizer from './../../utils/htmlSanitizer'
+
 class DragImage extends Component {
   constructor(props) {
     super(props)
   }
 
-  sanitizeHTML(text) {
-    const etc = text.length > 50 ? " ..." : ""
-    return text.replace(/<(?:.|\n)*?>/gm, '').substr(0, 50) + etc
+  sanitizeAndTruncateHTML(html) {
+    return htmlSanitizer.sanitizeAndTruncateHTML(html, 50)
   }
 
   render() {
@@ -19,7 +20,7 @@ class DragImage extends Component {
         {Object.keys(this.props.dragContent).map(dragContentKey => {
           if (dragContentKey == "text") { return (
             <div key={"dragImageContentText"}>
-              <p>{this.sanitizeHTML(this.props.dragContent[dragContentKey])}</p>
+              <p>{this.sanitizeAndTruncateHTML(this.props.dragContent[dragContentKey])}</p>
             </div>
           )}
           else if (dragContentKey == "name") { return (

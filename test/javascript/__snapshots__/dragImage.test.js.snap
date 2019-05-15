@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DragImage test suite renders component with a map 1`] = `
+<div
+  className="dragImage-active"
+  id="dragImage"
+>
+  <div>
+    <p>
+      Map : 
+      44260 Savenay, France
+    </p>
+  </div>
+</div>
+`;
+
+exports[`DragImage test suite renders component with a photo 1`] = `
+<div
+  className="dragImage-active"
+  id="dragImage"
+>
+  <div
+    className="imageDragging"
+  >
+    <img
+      alt=""
+      src="http://res.cloudinary.com/dbhsa0hgf/image/upload/v1556523579/vrc7darjtvbjiwwhi8n6.jpg"
+    />
+  </div>
+</div>
+`;
+
+exports[`DragImage test suite renders component with a text_content 1`] = `
+<div
+  className="dragImage-active"
+  id="dragImage"
+>
+  <div>
+    <p>
+      Text content is not empty
+    </p>
+  </div>
+</div>
+`;

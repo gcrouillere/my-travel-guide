@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import update from 'immutability-helper'
+import htmlSanitizer from './../utils/htmlSanitizer'
 
 class ArticlesList extends Component {
   constructor(props) {
@@ -41,13 +42,8 @@ class ArticlesList extends Component {
     })
   }
 
-  sanitizeAndShortenTextContent(text_contents) {
-    if (text_contents[0]) {
-      const etc = text_contents[0].text.length > 100 ? " ..." : ""
-      return text_contents[0].text.replace(/<(?:.|\n)*?>/gm, '').substr(0, 100) + etc
-    } else {
-      return ""
-    }
+  sanitizeAndTruncateHTML(html) {
+    return htmlSanitizer.sanitizeAndTruncateHTML(html, 100)
   }
 
   render() {
@@ -67,7 +63,9 @@ class ArticlesList extends Component {
                     </button>
                   </div>
                 <div className="card-body">
-                  <p className="card-text">{this.sanitizeAndShortenTextContent(article.text_contents)}</p>
+                  <p className="card-text">
+                  { article.text_contents[0] ? this.sanitizeAndTruncateHTML(article.text_contents[0].text) : "" }
+                  </p>
                   <Link to={`articles/${article.id}/edit`} className="btn btn-primary text-white">Edit</Link>
                 </div>
                </div>
