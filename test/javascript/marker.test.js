@@ -19,8 +19,6 @@ jest.mock('../../app/javascript/utils/ajaxHelpers')
 
 describe('Marker tests', () => {
 
-  let preventDraggingOnOtherElements = jest.fn()
-
   let setGoogleMap, manageMarker
 
   manageMarker = setGoogleMap = jest.fn()

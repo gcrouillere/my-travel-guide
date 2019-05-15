@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import $ from 'jquery'
 import update from 'immutability-helper'
+import ajaxHelpers from './../../../../utils/ajaxHelpers'
 import tempMarkerLogo from './../../../../../assets/images/circle-full-black.svg'
 import pathStartLogo from './../../../../../assets/images/circle-black.svg'
 import pathEndLogo from './../../../../../assets/images/path-end-black.svg'
@@ -35,6 +36,7 @@ class Polyline extends Component {
     })
 
     this.state.polyline.markers.forEach((marker, index) => {
+
       let icon = this.getPolylinePointLogo(index)
       let tempMarker = new google.maps.Marker({
         position: {lat: marker.lat, lng: marker.lng},
@@ -50,11 +52,13 @@ class Polyline extends Component {
       tempMarker.addListener('dragend', event => {this.updatePolylinePoint(event, tempMarker)})
       tempMarker.addListener('drag', event => {this.updatePolyline(event, this.googlePolyline, tempMarker)})
       tempMarker.addListener('click', event => {this.managePolylinePoint(event, this.googlePolyline, tempMarker)})
+
     })
+
     this.googlePolyline.addListener('click', event => { this.managePolyline(event, this.googlePolyline) })
   }
 
-  managePolyline = (event, googlePolyline) => {this.props.managePolyline(event, googlePolyline, this.state.polyline)}
+  managePolyline = (event, googlePolyline) => { this.props.managePolyline(event, googlePolyline, this.state.polyline) }
 
   managePolylinePoint = (event, googlePolyline, googleMarker) => {
     this.props.managePolylinePoint(event, googlePolyline, this.state.polyline, googleMarker)
@@ -85,22 +89,19 @@ class Polyline extends Component {
     googlePolyline.getPath().setAt(tempGoogleMarker.markerIndex, tempGoogleMarker.getPosition());
   }
 
-  updatePolylinePoint = (event, tempGoogleMarker) => {
-    $.ajax({
-      method: 'PUT',
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/markers/${tempGoogleMarker.appMarker.id}`,
-      dataType: "JSON",
-      data: {marker: {lat: event.latLng.lat(), lng: event.latLng.lng()}}
-    }).done((data) => {
-      let markerIndex = tempGoogleMarker.markerIndex
-      let polylineMarkers = update(this.state.polylineMarkers, {$splice: [[markerIndex, 1, data]]})
-      let polyline = update(this.state.polyline, {markers: {$set: polylineMarkers}})
-      this.setState({polylineMarkers: polylineMarkers, polyline: polyline})
-      this.props.updateMapDataList(polyline, "polylines", "change")
-    }).fail((data) => {
-      console.log(data)
-    })
+  updatePolylinePoint = async (event, tempGoogleMarker) => {
+    const newMarker = await ajaxHelpers.ajaxCall(
+      'PUT',
+      `/markers/${tempGoogleMarker.appMarker.id}`,
+      { marker: { lat: event.latLng.lat(), lng: event.latLng.lng() } },
+      this.props.token
+    )
+
+    let markerIndex = tempGoogleMarker.markerIndex
+    let polylineMarkers = update(this.state.polylineMarkers, {$splice: [[markerIndex, 1, newMarker]]})
+    let polyline = update(this.state.polyline, {markers: {$set: polylineMarkers}})
+    this.setState({polylineMarkers: polylineMarkers, polyline: polyline})
+    this.props.updateMapDataList(polyline, "polylines", "change")
   }
 
   render() {

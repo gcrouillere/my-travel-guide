@@ -98,7 +98,7 @@ class MapComponent extends Component {
       datas = update(this.state[dataType], {$splice: [[dataIndex, 1, data]]})
     }
 
-    this.setState({[dataType]: datas})
+    this.setState({ [dataType]: datas })
     this.initMap()
   }
 
