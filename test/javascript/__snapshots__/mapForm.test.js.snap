@@ -1,0 +1,340 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MapForm test suite renders component 1`] = `
+<div
+  className="mapInput "
+  draggable={true}
+  id="content-1"
+  onDragEnter={[Function]}
+  onDragLeave={[Function]}
+  onDragOver={[Function]}
+  onDragStart={[Function]}
+  onDrop={[Function]}
+>
+  <div
+    className="contentDelete"
+    onClick={[Function]}
+  >
+    <img
+      src="test-file-stub"
+    />
+  </div>
+  <div
+    className="DragVisualElements"
+  >
+    <div
+      className="dragLogo"
+    >
+      <img
+        src="test-file-stub"
+      />
+    </div>
+    <div
+      className="tuneLogo"
+      onMouseDown={[Function]}
+    >
+      <img
+        src="test-file-stub"
+      />
+    </div>
+    <div
+      className="dragOverlay"
+    >
+      <p>
+        Content being dragged
+      </p>
+    </div>
+  </div>
+  <div
+    className="dropZone-before drop-before"
+  >
+    <p
+      className="drop-before"
+    >
+      Drop your content here
+    </p>
+  </div>
+  <div
+    className="mapCustomization "
+    id="mapCustomization-2"
+  >
+    <div
+      className="overflowContainer"
+    >
+      <button
+        aria-label="Close"
+        className="close"
+        onClick={[Function]}
+      >
+        <span
+          aria-hidden="true"
+        >
+          ×
+        </span>
+      </button>
+      <h3>
+        Map Customization:
+      </h3>
+      <div
+        className="mapCenterShow mapCustomizationBlock"
+      >
+        <p>
+          Display Map Center ?
+        </p>
+        <div
+          className="form-check form-check-inline"
+        >
+          <input
+            checked={true}
+            className="form-check-input mapCenterShowinput"
+            disabled={false}
+            id="radio-true"
+            name="inlineRadioOptions"
+            onChange={[Function]}
+            type="radio"
+            value={true}
+          />
+          <label
+            className="form-check-label"
+            htmlFor="radio-true"
+          >
+            Yes
+          </label>
+        </div>
+        <div
+          className="form-check form-check-inline"
+        >
+          <input
+            checked={false}
+            className="form-check-input mapCenterShowinput"
+            disabled={false}
+            id="radio-false"
+            name="inlineRadioOptions"
+            onChange={[Function]}
+            type="radio"
+            value={false}
+          />
+          <label
+            className="form-check-label"
+            htmlFor="radio-false"
+          >
+            No
+          </label>
+        </div>
+      </div>
+      <button
+        className="btn btn-dark mapCustomizationBlock startPath"
+        disabled={false}
+        onClick={[Function]}
+      >
+        Add a Marker
+      </button>
+      <button
+        className="btn btn-dark mapCustomizationBlock startPath"
+        disabled={false}
+        onClick={[Function]}
+      >
+        Add a Path
+      </button>
+    </div>
+  </div>
+  <div
+    className="markerCustomization "
+    draggable={true}
+    id="markerCustomization-2"
+    onDragStart={[Function]}
+  >
+    <div
+      className="overflowContainer"
+    >
+      <button
+        aria-label="Close"
+        className="close"
+        onClick={[Function]}
+      >
+        <span
+          aria-hidden="true"
+        >
+          ×
+        </span>
+      </button>
+      <h3>
+        Marker Customization:
+      </h3>
+      <div
+        className="mapCustomizationBlock"
+      >
+        <textarea
+          id="description-2"
+          onChange={[Function]}
+          value=""
+        />
+        <button
+          className="btn btn-dark"
+          disabled={false}
+          onClick={[Function]}
+        >
+          Save description
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    className="polylineCustomization "
+    id="polylineCustomization-2"
+  >
+    <div
+      className="overflowContainer"
+    >
+      <button
+        aria-label="Close"
+        className="close"
+        onClick={[Function]}
+      >
+        <span
+          aria-hidden="true"
+        >
+          ×
+        </span>
+      </button>
+      <h3>
+        Path Customization:
+      </h3>
+      <div
+        className="distanceDisplayRadios mapCustomizationBlock"
+      >
+        <p>
+          Display path length ?
+        </p>
+        <div
+          className="form-check form-check-inline"
+        >
+          <input
+            checked={false}
+            className="form-check-input markerLogoInput"
+            disabled={false}
+            id="radio-true"
+            name="inlineRadioOptions"
+            onChange={[Function]}
+            type="radio"
+            value={true}
+          />
+          <label
+            className="form-check-label"
+            htmlFor="radio-true"
+          >
+            Yes
+          </label>
+        </div>
+        <div
+          className="form-check form-check-inline"
+        >
+          <input
+            checked={false}
+            className="form-check-input markerLogoInput"
+            disabled={false}
+            id="radio-false"
+            name="inlineRadioOptions"
+            onChange={[Function]}
+            type="radio"
+            value={false}
+          />
+          <label
+            className="form-check-label"
+            htmlFor="radio-false"
+          >
+            No
+          </label>
+        </div>
+      </div>
+      <button
+        className="btn btn-dark mapCustomizationBlock startPath"
+        disabled={false}
+        onClick={[Function]}
+      >
+        Continue Path
+      </button>
+      <button
+        className="btn btn-dark mapCustomizationBlock startPath"
+        disabled={false}
+        onClick={[Function]}
+      >
+        Delete a Point from Path
+      </button>
+      <button
+        className="btn btn-dark"
+        disabled={false}
+        onClick={[Function]}
+      >
+        Delete Path
+      </button>
+    </div>
+  </div>
+  <div
+    className="mapBloc"
+  >
+    <div
+      className="elementResize"
+      onDragStart={[Function]}
+      onMouseDown={[Function]}
+    >
+      <div
+        className="resizeLogo vertical"
+      >
+        <img
+          src="test-file-stub"
+        />
+      </div>
+    </div>
+    <div
+      className="mapLocation"
+    >
+      <div
+        className="locationInput input-group mb-3"
+      >
+        <div
+          className="input-group-prepend"
+        >
+          <span
+            className="input-group-text"
+            id="inputGroup-sizing-default"
+          >
+            Map's center
+          </span>
+        </div>
+        <input
+          aria-describedby="inputGroup-sizing-default"
+          aria-label="Default"
+          className="form-control mapLocationInput"
+          draggable={true}
+          id="mapLocation2"
+          onChange={[Function]}
+          onDragStart={[Function]}
+          type="text"
+          value="44260 Savenay, France"
+        />
+      </div>
+    </div>
+    <div
+      className="googleMap"
+      id="map2"
+      onMouseDown={[Function]}
+      style={
+        Object {
+          "height": "250px",
+          "width": "100%",
+        }
+      }
+    />
+  </div>
+  <div
+    className="dropZone-after drop-after"
+  >
+    <p
+      className="drop-after"
+    >
+      Drop your content here
+    </p>
+  </div>
+</div>
+`;

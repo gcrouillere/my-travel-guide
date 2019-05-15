@@ -47,7 +47,7 @@ class MapLocationInput extends Component {
       map = await ajaxHelpers.geocodePlace(userInput)
     }
 
-    this.setState({location: this.props.menu ? "" : map.name})
+    this.setState({ location: this.props.menu ? "" : map.name })
     this.props.handleMap(map)
   }
 

@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MapLocationInput test suite renders component with a photo 1`] = `
+<div
+  className="mapLocation"
+>
+  <div
+    className="locationInput input-group mb-3"
+  >
+    <div
+      className="input-group-prepend"
+    >
+      <span
+        className="input-group-text"
+        id="inputGroup-sizing-default"
+      >
+        Map's center
+      </span>
+    </div>
+    <input
+      aria-describedby="inputGroup-sizing-default"
+      aria-label="Default"
+      className="form-control mapLocationInput"
+      draggable={true}
+      id="mapLocationundefined"
+      onChange={[Function]}
+      onDragStart={[Function]}
+      type="text"
+      value=""
+    />
+  </div>
+</div>
+`;
