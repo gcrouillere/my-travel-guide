@@ -1,0 +1,211 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PhotoForm test suite renders component 1`] = `
+<div
+  className="photoInput "
+  draggable={true}
+  id="content-2"
+  onDragEnter={[Function]}
+  onDragLeave={[Function]}
+  onDragOver={[Function]}
+  onDragStart={[Function]}
+  onDrop={[Function]}
+>
+  <div
+    className="DragVisualElements"
+  >
+    <div
+      className="dragLogo"
+    >
+      <img
+        src="test-file-stub"
+      />
+    </div>
+    <div
+      className="tuneLogo"
+      onMouseDown={[Function]}
+    >
+      <img
+        src="test-file-stub"
+      />
+    </div>
+    <div
+      className="dragOverlay"
+    >
+      <p>
+        Content being dragged
+      </p>
+    </div>
+  </div>
+  <div
+    className="contentDelete"
+    onClick={[Function]}
+  >
+    <img
+      src="test-file-stub"
+    />
+  </div>
+  <div
+    className="dropZone-before drop-before"
+  >
+    <p
+      className="drop-before"
+    >
+      Drop your content here
+    </p>
+  </div>
+  <div
+    className="photoContainer"
+  >
+    <div
+      className="processingOverlay inactive"
+    >
+      <button
+        className="btn btn-dark"
+        disabled={true}
+        type="button"
+      >
+        <span
+          aria-hidden="true"
+          className="spinner-border spinner-border-sm"
+          role="status"
+        />
+        Processing ...
+      </button>
+    </div>
+    <div
+      className="photoCustomization "
+      draggable={true}
+      id="photoCustomization-8"
+      onDragStart={[Function]}
+    >
+      <div
+        className="overflowContainer"
+      >
+        <button
+          aria-label="Close"
+          className="close"
+          onClick={[Function]}
+        >
+          <span
+            aria-hidden="true"
+          >
+            ×
+          </span>
+        </button>
+        <h3>
+          Photo Customization:
+        </h3>
+        <button
+          className="btn btn-dark photoCustomizationBlock
+            crop"
+          disabled={false}
+          onClick={[Function]}
+        >
+          Crop
+        </button>
+        <div
+          className="photoCustomizationBlock"
+        >
+          <input
+            className="titleInput"
+            onChange={[Function]}
+            type="text"
+            value="artificial-background-blue-1282170"
+          />
+          <button
+            className="btn btn-dark"
+            onClick={[Function]}
+          >
+            Save Photo Title
+          </button>
+        </div>
+        <div
+          className="distanceDisplayRadios photoCustomizationBlock"
+        >
+          <p>
+            Display photo Title ?
+          </p>
+          <div
+            className="form-check form-check-inline"
+          >
+            <input
+              checked={false}
+              className="form-check-input markerLogoInput"
+              id="radio-true"
+              name="inlineRadioOptions"
+              onChange={[Function]}
+              type="radio"
+              value={true}
+            />
+            <label
+              className="form-check-label"
+              htmlFor="radio-true"
+            >
+              Yes
+            </label>
+          </div>
+          <div
+            className="form-check form-check-inline"
+          >
+            <input
+              checked={false}
+              className="form-check-input markerLogoInput"
+              id="radio-false"
+              name="inlineRadioOptions"
+              onChange={[Function]}
+              type="radio"
+              value={false}
+            />
+            <label
+              className="form-check-label"
+              htmlFor="radio-false"
+            >
+              No
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="elementResize"
+      onDragStart={[Function]}
+      onMouseDown={[Function]}
+    >
+      <div
+        className="resizeLogo horizontal"
+      >
+        <img
+          src="test-file-stub"
+        />
+      </div>
+    </div>
+    <img
+      alt=""
+      className="photo-2 original"
+      crop={
+        Object {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      onChange={[Function]}
+      src="http://res.cloudinary.com/dbhsa0hgf/image/upload/v1556523579/vrc7darjtvbjiwwhi8n6.jpg"
+      style={
+        Object {
+          "width": "80%",
+        }
+      }
+    />
+  </div>
+  <div
+    className="dropZone-after drop-after"
+  >
+    <p
+      className="drop-after"
+    >
+      Drop your content here
+    </p>
+  </div>
+</div>
+`;

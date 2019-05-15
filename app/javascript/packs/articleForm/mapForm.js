@@ -73,6 +73,12 @@ class MapForm extends Component {
 
   hideMarkerCustomization = () => {this.markerCustomizationRef.current.hideMarkerCustomization()}
 
+  hideMapCustomizations = () => {
+    this.abandonCustomization()
+    this.hidePolylineCustomization()
+    this.hideMarkerCustomization()
+  }
+
   render() {
 
     return (

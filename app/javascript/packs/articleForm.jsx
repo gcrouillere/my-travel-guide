@@ -30,6 +30,7 @@ class ArticleForm extends Component {
       customizationOnGoing: {status: false, trigger: null},
       token: $('meta[name="csrf-token"]').attr('content')
     }
+    this.MapFormRef = {}
   }
 
   componentDidMount() {
@@ -139,7 +140,6 @@ class ArticleForm extends Component {
   }
 
   onDragStart = (event, id, position, articleContent) => {
-    console.log(articleContent)
     document.getElementById(`content-${position}`).classList.add("draggingElement")
     this.setState({dragging: true})
     event.dataTransfer.setData("type", "positionUpdate")
@@ -254,8 +254,14 @@ class ArticleForm extends Component {
     if (dropItemClasses.length == 0) {
       this.setState({dropZone: "after"})
     } else {
-      dropItemClasses.map(x => /before/.test(x)).reduce((x, acc) => acc && x) ? this.setState({dropZone: "before"}) : this.setState({dropZone: "after"})
+      dropItemClasses.map(x => /before/.test(x)).reduce((x, acc) => acc && x) ?
+      this.setState({dropZone: "before"}) :
+      this.setState({dropZone: "after"})
     }
+  }
+
+  hideMapsCustomizations = () => {
+    Object.keys(this.MapFormRef).map(mapFormId => { this.MapFormRef[mapFormId].hideMapCustomizations() })
   }
 
   clearDraggingExtraClasses() {
@@ -275,8 +281,8 @@ class ArticleForm extends Component {
           <header className={`maintTitle ${this.state.titleValid ? "complete" : "incomplete"}`}>
             <h2 className="sectionLabel">{this.state.titleValid ? "Article title" : "Write Your Article Title"}</h2>
             {!this.state.titleValid && <p className="mainTitleSub">(10 characters long minimum)</p>}
-            <input type="text" placeholder="Type here your article title" value={this.state.title} onChange={this.handleTitleChange}
-            onBlur={this.saveTitleOnBlur}/>
+            <input type="text" placeholder="Type here your article title" value={this.state.title}
+            onChange={this.handleTitleChange} onBlur={this.saveTitleOnBlur}/>
           </header>
         }
 
@@ -292,7 +298,7 @@ class ArticleForm extends Component {
             {this.state.articleElements.map(element => {
               if (element.class_name == "TextContent") {
                 return <TextContentForm key={`text${element.id}`} textContent={element} dragging={this.state.dragging}
-                articleId={this.state.id} position={element.position} id={element.id}
+                articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
                 onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                 onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
                 mapCustomizationOnGoing={this.state.customizationOnGoing}/>
@@ -302,14 +308,15 @@ class ArticleForm extends Component {
                 articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
                 onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                 onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
-                preventDraggingOnOtherElements={this.preventDraggingOnOtherElements} />
+                preventDraggingOnOtherElements={this.preventDraggingOnOtherElements}
+                ref={(ref) => this.MapFormRef[element.id] = ref}/>
               }
               else if (element.class_name == "Photo") {
                 return <PhotoForm key={`photo${element.id}`} photo={element} dragging={this.state.dragging}
-                articleId={this.state.id} position={element.position} id={element.id}
+                articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
                 onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                 onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
-                mapCustomizationOnGoing={this.state.customizationOnGoing}/>
+                mapCustomizationOnGoing={this.state.customizationOnGoing} hideMapCustomizations={this.hideMapCustomizations}/>
               }
             })}
              <DragImage dragContent={this.state.dragContent} activeDragImage={this.state.activeDragImage}/>

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-
 import ajaxHelpers from './../../utils/ajaxHelpers'
 
 class MapLocationInput extends Component {
@@ -58,8 +57,9 @@ class MapLocationInput extends Component {
           <div className="input-group-prepend">
             <span className="input-group-text" id="inputGroup-sizing-default">Map's center</span>
           </div>
-          <input type="text" className="form-control mapLocationInput" aria-label="Default" aria-describedby="inputGroup-sizing-default"
-          draggable onDragStart={this.onDragStart} id={`mapLocation${this.props.id}`} value={this.state.location}
+          <input type="text" className="form-control mapLocationInput" aria-label="Default"
+          aria-describedby="inputGroup-sizing-default" id={`mapLocation${this.props.id}`}
+          draggable onDragStart={this.onDragStart} value={this.state.location}
           onChange={this.printLocation} ref={this.inputRef}/>
         </div>
       </div>

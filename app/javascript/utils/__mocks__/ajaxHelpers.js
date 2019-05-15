@@ -9,6 +9,8 @@ const marker = map.markers[0]
 
 const polyline = map.polylines[0]
 
+const photo = article.photos[0]
+
 const ajaxCall = jest.fn((method, url, data, token) => {
   if ( /^\/articles\/[0-9]+/.test(url) ) {
     if (method == 'GET') { return Promise.resolve(article) }
@@ -86,6 +88,13 @@ const ajaxCall = jest.fn((method, url, data, token) => {
     }
     if  (method == 'DELETE') {
       return Promise.resolve(polyline)
+    }
+  }
+
+  if(/^\/photos/.test(url)) {
+    if (method == 'PUT') {
+      let newPhoto = update(photo, {css_width: {$set: 30}})
+      return Promise.resolve(newPhoto)
     }
   }
 })
