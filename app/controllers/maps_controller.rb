@@ -2,7 +2,7 @@ class MapsController < ApplicationController
   def update
     @map = Map.find(params[:id])
     if @map.update(map_params)
-      render json: @map.as_json(methods: :class_name)
+      render json: @map.as_json(methods: :class_name, include: { markers: {}, polylines: { include: { markers: {} } } })
     else
       render json: @map.errors, status: :unprocessable_entity
     end

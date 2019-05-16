@@ -36,7 +36,8 @@ class PolylineCustomization extends Component {
       }
     }
     if (googleMarker) {
-      this.setState({markerClicked: googleMarker})
+      this.setState({markerClicked: googleMarker}, () => {
+      })
       if (this.state.markerToDelete) this.deletePointFromPath()
     }
   }
@@ -95,7 +96,6 @@ class PolylineCustomization extends Component {
     )
 
     let markerIndex = newMarker.position
-
     let polylineMarkers = update(this.state.polylineMarkers, {$splice: [[markerIndex, 1, newMarker]]})
     let polyline = update(this.state.polyline, {markers: {$set: polylineMarkers}})
     this.setState({polylineMarkers: polylineMarkers, polyline: polyline})
@@ -120,11 +120,13 @@ class PolylineCustomization extends Component {
   }
 
   deletePointFromPath = async () => {
-    const deletedMarker = await ajaxHelpers.ajaxCall('DELETE', `/markers/${this.state.markerClicked.markerDBID}`, {}, this.props.token)
+    const deletedMarker = await ajaxHelpers.ajaxCall('DELETE', `/markers/${this.state.markerClicked.appMarker.id}`, {},
+      this.props.token)
 
-    let markerIndex = deletedMarker.position
+    let markerIndex = this.state.polylineMarkers.findIndex(x => x.id == deletedMarker.id)
     let polylineMarkers = update(this.state.polylineMarkers, {$splice: [[markerIndex, 1]]})
     let polyline = update(this.state.polyline, {markers: {$set: polylineMarkers}})
+
     this.setState({polylineMarkers: polylineMarkers, polyline: polyline, markerToDelete: false, polylineCustomizationActive: false})
     this.props.preventCustomizationMix()
     this.props.updateMapDataList(this.state.polyline, "polylines", "change")

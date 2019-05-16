@@ -32,7 +32,6 @@ class Polyline extends Component {
       strokeOpacity: 1.0,
       strokeWeight: 2,
       geodesic: true
-
     })
 
     this.state.polyline.markers.forEach((marker, index) => {
@@ -43,7 +42,6 @@ class Polyline extends Component {
         map: this.props.googleMap,
         draggable: true,
         markerIndex: index,
-        markerDBID: marker.id,
         appMarker: marker,
         icon: icon
       })
