@@ -50,9 +50,9 @@ describe('PhotoForm test suite', () => {
     expect(wrapper.state().photo.css_width).toEqual(30)
   })
 
-  it('displays photo customization on click and strore crop', async () => {
+  it('displays photo customization on click and strore crop', () => {
     wrapper.instance().onCropChange({ x: 10, y: 10 })
-    await wrapper.update()
+    wrapper.update()
 
     expect(wrapper.find(".photoCustomization.active").length).toEqual(1)
     expect(wrapper.state().crop.x).toEqual(10)

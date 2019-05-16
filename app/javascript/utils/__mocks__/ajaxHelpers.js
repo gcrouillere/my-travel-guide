@@ -93,8 +93,26 @@ const ajaxCall = jest.fn((method, url, data, token) => {
 
   if(/^\/photos/.test(url)) {
     if (method == 'PUT') {
-      let newPhoto = update(photo, {css_width: {$set: 30}})
-      return Promise.resolve(newPhoto)
+      if (data.photo.css_width) {
+        let newPhoto = update(photo, {css_width: {$set: 30}})
+        return Promise.resolve(newPhoto)
+      }
+      if (data.photo.original_filename) {
+       let newPhoto = update(photo, {original_filename: {$set: 'another title'}})
+        return Promise.resolve(newPhoto)
+      }
+      if (data.photo.display_title) {
+       let newPhoto = update(photo, {original_filename: {$set: data.photo.display_title}})
+        return Promise.resolve(newPhoto)
+      }
+      if (data.photo.height >= 0) {
+       let newPhoto = update(photo, {
+         height: {$set: data.photo.height},
+         width: {$set: data.photo.width},
+         cropped_url: {$set: data.photo.cropped_url}
+       })
+        return Promise.resolve(newPhoto)
+      }
     }
   }
 })

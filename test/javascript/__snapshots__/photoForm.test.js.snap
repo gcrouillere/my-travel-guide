@@ -97,8 +97,7 @@ exports[`PhotoForm test suite renders component 1`] = `
           Photo Customization:
         </h3>
         <button
-          className="btn btn-dark photoCustomizationBlock
-            crop"
+          className="btn btn-dark photoCustomizationBlock crop"
           disabled={false}
           onClick={[Function]}
         >

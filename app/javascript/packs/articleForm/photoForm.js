@@ -50,7 +50,7 @@ class PhotoForm extends Component {
     newWidth = this.state.initialPhotoWidth + ((event.screenX - this.state.resizeOrigin) / this.state.maxWidth) * 100
     validWidth = newWidth > 100 ? 100 : (newWidth < 20 ? 20 : newWidth)
 
-    let newPhotoState = update(this.state.photo, {css_width: {$set: validWidth}})
+    let newPhotoState = update(this.state.photo, { css_width: { $set: validWidth }})
 
     this.setState({photo: newPhotoState})
   }
@@ -87,25 +87,19 @@ class PhotoForm extends Component {
     this.props.onDragStart(event, this.props.id, this.props.position, this.props.photo)
   }
 
-  onDragOver = (event) => {this.props.onDragOver(event, this.props.id, this.props.position)}
+  onDragOver = (event) => { this.props.onDragOver(event, this.props.id, this.props.position) }
 
-  onDragEnter = (event) => {this.props.onDragEnter(event, this.props.id, this.props.position)}
+  onDragEnter = (event) => { this.props.onDragEnter(event, this.props.id, this.props.position) }
 
-  onDragLeave = (event) => {this.props.onDragLeave(event, this.props.id, this.props.position)}
+  onDragLeave = (event) => { this.props.onDragLeave(event, this.props.id, this.props.position) }
 
-  onDrop = (event) => {this.props.onDrop(event, this.props.id, this.props.position)}
+  onDrop = (event) => { this.props.onDrop(event, this.props.id, this.props.position)}
 
-  getPhotoNode = () => {
-    return this.photoRef.current.componentRef
-  }
+  getPhotoNode = () => { return this.photoRef.current.componentRef }
 
-  abandonCustomization = () => {
-    this.setState({customizationActive: false})
-  }
+  abandonCustomization = () => { this.setState({ customizationActive: false }) }
 
-  activeCustomization = () => {
-   this.setState({customizationActive: true})
-  }
+  activeCustomization = () => { this.setState({ customizationActive: true }) }
 
   render() {
     return (

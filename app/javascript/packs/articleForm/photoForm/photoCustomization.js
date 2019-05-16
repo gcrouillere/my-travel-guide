@@ -18,7 +18,7 @@ class PhotoCustomization extends Component {
 
   saveTitle = () => { this.props.updatePhoto({original_filename: this.state.title}) }
 
-  changeTitleDisplay = () => {
+  changeTitleDisplay = (event) => {
     this.setState({displayTitle: event.target.value == "true"})
     this.props.updatePhoto({display_title: event.target.value == "true"})
   }
@@ -27,22 +27,34 @@ class PhotoCustomization extends Component {
     if (!this.props.cropped) {
       let photo = this.props.getPhotoNode()
 
-      let cssWidth = photo.clientWidth
-      let horizontalRatio = photo.clientWidth / this.props.photo.original_width > 1 ? 1 / (photo.clientWidth / this.props.photo.original_width) : photo.clientWidth / this.props.photo.original_width
-      let newX = Math.round(this.props.crop.x / horizontalRatio)
-      let newWidth =  Math.round(this.props.crop.width / horizontalRatio)
+      let horizontalRatio = this.getRatio(photo.clientWidth, "original_width")
+      let newXRefs = this.getRefAndLengthOnAxis("horizontal", horizontalRatio)
 
-      let cssHeight = photo.clientHeight
-      let verticalRatio = photo.clientHeight / this.props.photo.original_height > 1 ? 1 / (photo.clientHeight / this.props.photo.original_height) : photo.clientHeight / this.props.photo.original_height
-      let newY = Math.round(this.props.crop.y / verticalRatio)
-      let newHeight =  Math.round(this.props.crop.height / verticalRatio)
+      let verticalRatio = this.getRatio(photo.clientHeight, "original_height")
+      let newYRefs = this.getRefAndLengthOnAxis("vertical", verticalRatio)
 
-      let cropRefs = `c_crop,h_${newHeight},w_${newWidth},x_${newX},y_${newY}`
+      let cropRefs = `c_crop,h_${newYRefs.newHeight},w_${newXRefs.newWidth},x_${newXRefs.newX},y_${newYRefs.newY}`
       let newUrl = `http://res.cloudinary.com/${CLOUDINARYKEYS.cloudName}/image/upload/${cropRefs}/${this.props.photo.public_id}`
-      this.props.updatePhoto({ height: newHeight, width: newWidth, cropped_url: newUrl })
+
+      this.props.updatePhoto({ height: newYRefs.newHeight, width: newXRefs.newWidth, cropped_url: newUrl })
     } else {
       this.props.updatePhoto({ height: 0, width: 0, cropped_url: "" })
     }
+  }
+
+  getRefAndLengthOnAxis(axis, ratio) {
+    if (axis == "horizontal") {
+      return { newX: Math.round(this.props.crop.x / ratio), newWidth: Math.round(this.props.crop.width / ratio)}
+    }
+    if (axis == "vertical") {
+      return { newY: Math.round(this.props.crop.y / ratio), newHeight: Math.round(this.props.crop.height / ratio)}
+    }
+  }
+
+  getRatio(clientLength, originalLength) {
+    return clientLength / this.props.photo[originalLength] > 1 ?
+      1 / (clientLength / this.props.photo[originalLength]) :
+      clientLength / this.props.photo[originalLength]
   }
 
   onDragStart = (event) => {
@@ -65,8 +77,9 @@ class PhotoCustomization extends Component {
             <span aria-hidden="true">&times;</span>
           </button>
           <h3>Photo Customization:</h3>
-          <button className={`btn btn-dark photoCustomizationBlock
-            ${this.props.cropped ? "cancelCrop" : (disableCrop ? "disableCrop" : "crop")}`
+          <button className={`btn btn-dark photoCustomizationBlock ${this.props.cropped ?
+            "cancelCrop" :
+             (disableCrop ? "disableCrop" : "crop")}`
           }
           onClick={this.manageCrop} disabled={!this.props.cropped && disableCrop}>
             {this.props.cropped ? "Cancel Crop" : "Crop"}
