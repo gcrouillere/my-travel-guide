@@ -9,6 +9,7 @@ import ContentMenu from './articleForm/contentMenu'
 import DragImage from './articleForm/dragImage'
 import $ from 'jquery'
 import update from 'immutability-helper'
+import ajaxHelpers from './../utils/ajaxHelpers'
 import 'react-quill/dist/quill.snow.css'
 
 class ArticleForm extends Component {
@@ -21,6 +22,7 @@ class ArticleForm extends Component {
       audienceForm: false,
       dropZone: "",
       draggedElementId: null,
+      draggingElement: null,
       dragging: false,
       initialPosition: null,
       previousHoveredElementPosition: null,
@@ -33,27 +35,26 @@ class ArticleForm extends Component {
     this.MapFormRef = {}
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     if (this.props.match.params.id) {
-      $.ajax({
-        method: 'GET',
-        url: `/articles/${this.props.match.params.id}`,
-        dataType: "JSON"
-      }).done((data) => {
-        this.setState({title: data.title, titleValid: data.title.length > 10, id: data.id,
-        articleElements: this.orderArticleElements(data)})
+      const article = await ajaxHelpers.ajaxCall('GET', `/articles/${this.props.match.params.id}`, {}, this.state.token)
+
+      this.setState({
+        title: article.title,
+        titleValid: article.title.length > 10,
+        id: article.id,
+        articleElements: this.orderArticleElements(article)
       })
     } else {
-      $.ajax({
-        method: 'POST',
-        beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-        url: `/articles`,
-        dataType: "JSON",
-        data: {article: {title: "", audiencesSelection:[]}}
-      }).done((data) => {
-        this.setState({title: data.title, articleElements: [], id: data.id})
-        this.props.history.push(`/articles/${data.id}/edit`)
-      });
+      let data = { article: { title: "", audiencesSelection:[] }}
+      const article = await ajaxHelpers.ajaxCall( 'POST', "/articles/", data, this.state.token)
+
+      this.setState({
+        title: article.title,
+        articleElements: [],
+        id: article.id
+      })
+      this.props.history.push(`/articles/${article.id}/edit`)
     }
   }
 
@@ -66,28 +67,16 @@ class ArticleForm extends Component {
   }
 
   saveTitleOnBlur = () => {
-     $.ajax({
-      method: "PUT",
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/articles/${this.state.id}`,
-      data: {article: {title: this.state.title}}
-    }).done((data) => {console.log(data)})
-     .fail((data) => {console.log(data)})
+    ajaxHelpers.ajaxCall('PUT', `/articles/${this.state.id}`, {article: {title: this.state.title}}, this.state.token)
   }
 
-  addNewTextContent = (id, {initPositionAtCreation = undefined} = {}) => {
-    $.ajax({
-      method: 'POST',
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/text_contents/`,
-      dataType: "JSON",
-      data: {text_content: {text: "", article_id: id, position: this.state.articleElements.length}}
-    }).done((data) => {
-      this.updatePositionAfterCreation(initPositionAtCreation, id)
-    }).fail((data) => {console.log(data)})
+  addNewTextContent = async (id, {initPositionAtCreation = undefined} = {}) => {
+    let textContent = {text_content: {text: "", article_id: id, position: this.state.articleElements.length}}
+    await ajaxHelpers.ajaxCall('POST', "/text_contents", textContent, this.state.token)
+    this.updatePositionAfterCreation(initPositionAtCreation, id)
   }
 
-  addNewMap = (id, map, initPositionAtCreation) => {
+  addNewMap = async (id, map, initPositionAtCreation) => {
     this.refs.contentMenu.setState({mapOverlayActive: false})
 
     const newMap = update(map, { $merge: {
@@ -98,29 +87,28 @@ class ArticleForm extends Component {
       show_map_center_as_marker: true
     }})
 
-    $.ajax({
-      method: 'POST',
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/maps/`,
-      dataType: "JSON",
-      data: {map: newMap}
-    }).done((data) => {
-      this.updatePositionAfterCreation(initPositionAtCreation, id)
-    }).fail((data) => { console.log(data) })
+    await ajaxHelpers.ajaxCall('POST', "/maps", {map: newMap}, this.state.token)
+    this.updatePositionAfterCreation(initPositionAtCreation, id)
   }
 
-  addNewPhotoBloc  = (data, initPositionAtCreation) => {
-    $.ajax({
-      method: 'POST',
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/photos/`,
-      dataType: "JSON",
-      data: {photo: { public_id: data.public_id, version: data.version, signature: data.signature, original_width: data.width,
-        original_height: data.height, bytes: data.bytes, format: data.format, resource_type: data.resource_type, url: data.url,
-        original_filename: data.original_filename, article_id: this.state.id, position: this.state.articleElements.length }}
-    }).done((data) => {
-      this.updatePositionAfterCreation(initPositionAtCreation, this.state.id)
-    }).fail((data) => {console.log(data)})
+  addNewPhotoBloc  = async (data, initPositionAtCreation) => {
+    let photo = { photo: {
+      public_id: data.public_id,
+      version: data.version,
+      signature: data.signature,
+      original_width: data.width,
+      original_height: data.height,
+      bytes: data.bytes,
+      format: data.format,
+      resource_type: data.resource_type,
+      url: data.url,
+      original_filename: data.original_filename,
+      article_id: this.state.id,
+      position: this.state.articleElements.length
+    }}
+
+    await ajaxHelpers.ajaxCall('POST', "/photos", photo, this.state.token)
+    this.updatePositionAfterCreation(initPositionAtCreation, this.state.id)
   }
 
   updatePositionAfterCreation = (initPositionAtCreation, id) => {
@@ -128,20 +116,14 @@ class ArticleForm extends Component {
     this.updateElementPosition(id, -1, finalPositionAtCreation)
   }
 
-  deleteElement = (event, id, position, controller) => {
-    $.ajax({
-      method: 'DELETE',
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/${controller}/${id}`,
-      dataType: "JSON"
-    }).done((data) => {
-      this.updateElementPosition(id, undefined, undefined)
-    }).fail((data) => {console.log(data)})
+  deleteElement = async (event, id, position, controller) => {
+    await ajaxHelpers.ajaxCall('DELETE', `/${controller}/${id}`, {}, this.state.token)
+    this.updateElementPosition(id, undefined, undefined)
   }
 
   onDragStart = (event, id, position, articleContent) => {
     document.getElementById(`content-${position}`).classList.add("draggingElement")
-    this.setState({dragging: true})
+    this.setState({dragging: true, draggingElement: position})
     event.dataTransfer.setData("type", "positionUpdate")
     this.setState({
       initialPosition: position,
@@ -217,20 +199,15 @@ class ArticleForm extends Component {
     this.setState(module)
   }
 
-  updateElementPosition(id, initPosition, targetPosition) {
-    $.ajax({
-      method: 'POST',
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/articles/element_position_update/`,
-      dataType: "JSON",
-      data: {article: this.state.id, positions: {
+  async updateElementPosition(id, initPosition, targetPosition) {
+    let data = {
+      article: this.state.id,
+      positions: {
         init: {id: id, position: initPosition},
         target: {id: id, position: targetPosition}
-      }}
-    }).done((data) => {
-      console.log(data)
-      this.updateElementsState(data)
-    }).fail((data) => {console.log(data)})
+    }}
+    let newData = await ajaxHelpers.ajaxCall('POST', "/articles/element_position_update/", data, this.state.token)
+    this.updateElementsState(newData)
   }
 
   updateElementsState = (data) => {
@@ -265,6 +242,7 @@ class ArticleForm extends Component {
   }
 
   clearDraggingExtraClasses() {
+    this.setState({draggingElement: null})
     document.querySelectorAll(".dropZone-before , .dropZone-after").forEach(x => x.classList.remove("active"))
     document.querySelectorAll(".draggingElement").forEach(x => x.classList.remove("draggingElement"))
     document.querySelectorAll(".contentMenu").forEach(x => x.classList.remove("disable-hover"))
@@ -297,14 +275,16 @@ class ArticleForm extends Component {
           <h2 className="sectionLabel">Article content</h2>
             {this.state.articleElements.map(element => {
               if (element.class_name == "TextContent") {
-                return <TextContentForm key={`text${element.id}`} textContent={element} dragging={this.state.dragging}
+                return <TextContentForm key={`text${element.id}`} textContent={element}
+                dragging={this.state.dragging} draggingElement={element.position == this.state.draggingElement}
                 articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
                 onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                 onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
-                mapCustomizationOnGoing={this.state.customizationOnGoing}/>
+                mapCustomizationOnGoing={this.state.customizationOnGoing} hideMapsCustomizations={this.hideMapsCustomizations}/>
               }
               else if (element.class_name == "Map") {
-                return <MapForm key={`map${element.id}`} map={element} name={element.name} dragging={this.state.dragging}
+                return <MapForm key={`map${element.id}`} map={element} name={element.name}
+                dragging={this.state.dragging} draggingElement={element.position == this.state.draggingElement}
                 articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
                 onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                 onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
@@ -312,11 +292,12 @@ class ArticleForm extends Component {
                 ref={(ref) => this.MapFormRef[element.id] = ref}/>
               }
               else if (element.class_name == "Photo") {
-                return <PhotoForm key={`photo${element.id}`} photo={element} dragging={this.state.dragging}
+                return <PhotoForm key={`photo${element.id}`} photo={element}
+                dragging={this.state.dragging} draggingElement={element.position == this.state.draggingElement}
                 articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
                 onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                 onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
-                mapCustomizationOnGoing={this.state.customizationOnGoing} hideMapCustomizations={this.hideMapCustomizations}/>
+                mapCustomizationOnGoing={this.state.customizationOnGoing} hideMapsCustomizations={this.hideMapsCustomizations}/>
               }
             })}
              <DragImage dragContent={this.state.dragContent} activeDragImage={this.state.activeDragImage}/>
