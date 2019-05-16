@@ -1,0 +1,115 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextContentForm test suite renders component 1`] = `
+<div
+  className="textContentInput "
+  draggable={true}
+  id="content-0"
+  onDragEnter={[Function]}
+  onDragLeave={[Function]}
+  onDragOver={[Function]}
+  onDragStart={[Function]}
+  onDrop={[Function]}
+>
+  <div
+    className="DragVisualElements"
+  >
+    <div
+      className="dragLogo"
+    >
+      <img
+        src="test-file-stub"
+      />
+    </div>
+    <div
+      className="dragOverlay"
+    >
+      <p>
+        Content being dragged
+      </p>
+    </div>
+  </div>
+  <div
+    className="contentDelete"
+    onClick={[Function]}
+  >
+    <img
+      src="test-file-stub"
+    />
+  </div>
+  <div
+    className="dropZone-before drop-before"
+  >
+    <p
+      className="drop-before"
+    >
+      Drop your content here
+    </p>
+  </div>
+  <textarea
+    draggable={true}
+    formats={
+      Array [
+        "header",
+        "bold",
+        "italic",
+        "underline",
+        "strike",
+        "blockquote",
+        "list",
+        "bullet",
+        "indent",
+      ]
+    }
+    modules={
+      Object {
+        "toolbar": Array [
+          Array [
+            Object {
+              "header": Array [
+                2,
+                3,
+                false,
+              ],
+            },
+          ],
+          Array [
+            "bold",
+            "italic",
+            "underline",
+            "strike",
+            "blockquote",
+          ],
+          Array [
+            Object {
+              "list": "ordered",
+            },
+            Object {
+              "list": "bullet",
+            },
+            Object {
+              "indent": "-1",
+            },
+            Object {
+              "indent": "+1",
+            },
+          ],
+        ],
+      }
+    }
+    onBlur={[Function]}
+    onChange={[Function]}
+    onDragStart={[Function]}
+    value="Text content is not empty"
+  />
+  <div
+    className="dropZone-after drop-after"
+  >
+    <p
+      className="drop-after"
+    >
+      Drop your content here
+    </p>
+  </div>
+</div>
+`;

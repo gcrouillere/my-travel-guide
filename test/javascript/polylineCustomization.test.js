@@ -64,6 +64,8 @@ describe('PolylineCustomization tests', () => {
   })
 
   it('deletes a marker on function call', async () => {
+    wrapper.find(PolylineCustomization).setState({ markerClicked: { appMarker: { id: 83 }}})
+    wrapper.update()
     await wrapper.find(PolylineCustomization).instance().deletePointFromPath()
 
     expect(wrapper.find(PolylineCustomization).state().polylineMarkers.length).toEqual(2)

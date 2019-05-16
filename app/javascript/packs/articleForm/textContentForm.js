@@ -30,14 +30,16 @@ class TextContentForm extends Component {
     'list', 'bullet', 'indent',
   ]
 
-  handleChange = (value) => { this.setState({textContent: value}) }
+  handleChange = (value) => {
+    this.setState({textContent: value})
+  }
 
   saveOnBlur = async () => {
     await ajaxHelpers.ajaxCall(
       'PUT',
       `/text_contents/${this.props.id}`,
       { text_content: {text: this.state.textContent, article_id: this.props.articleId} },
-      this.props.tokens
+      this.props.token
     )
   }
 

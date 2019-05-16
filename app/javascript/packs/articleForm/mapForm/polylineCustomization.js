@@ -36,8 +36,7 @@ class PolylineCustomization extends Component {
       }
     }
     if (googleMarker) {
-      this.setState({markerClicked: googleMarker}, () => {
-      })
+      this.setState({markerClicked: googleMarker})
       if (this.state.markerToDelete) this.deletePointFromPath()
     }
   }
