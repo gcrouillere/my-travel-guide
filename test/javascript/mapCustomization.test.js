@@ -63,7 +63,7 @@ describe('MapComponent tests', () => {
 
     await wrapper.find(MapCustomization).instance().addMarker(event, 'click')
     wrapper.update()
-    expect(wrapper.find("#map2 Marker").length).toEqual(2)
+    expect(wrapper.find("Marker").length).toEqual(2)
   })
 
   it('initiates polyline creation on click', async () => {
@@ -92,7 +92,7 @@ describe('MapComponent tests', () => {
     await wrapper.find(".mapCustomizationBlock.finishPath").simulate('click')
     wrapper.update()
 
-    expect(wrapper.find("#map2 Polyline").length).toEqual(2)
+    expect(wrapper.find("Polyline").length).toEqual(2)
   })
 
   it('hides mapCustomization overlay on click', () => {

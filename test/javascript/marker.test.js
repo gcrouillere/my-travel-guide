@@ -40,11 +40,11 @@ describe('Marker tests', () => {
   it('updates marke position on drag', async () => {
     let event = { latLng: {
       lat: jest.fn().mockImplementation(() => {return 2}),
-      lng: jest.fn().mockImplementation(() => {return 2})
+      lng: jest.fn().mockImplementation(() => {return 3})
     }}
     await wrapper2.find(Marker).at(0).instance().updateMarkerPosition(event, marker)
 
-    expect(wrapper2.state().markers[0].lat + wrapper2.state().markers[0].lng).toEqual(138)
+    expect(wrapper2.state().markers[0].lat + wrapper2.state().markers[0].lng).toEqual(5)
   })
 
 })

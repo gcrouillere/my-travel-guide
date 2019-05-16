@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import $ from 'jquery'
+import ajaxHelpers from './../../utils/ajaxHelpers'
 import ReactQuill from 'react-quill'
 import DropZone from './formElementManagement/dropZone'
 import DragVisualElements from './formElementManagement/dragVisualElements'
@@ -29,28 +30,21 @@ class TextContentForm extends Component {
     'list', 'bullet', 'indent',
   ]
 
-  handleChange = (value) => {
-    this.setState({textContent: value})
-  }
+  handleChange = (value) => { this.setState({textContent: value}) }
 
-  saveOnBlur = () => {
-    $.ajax({
-      type: "PATCH",
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/text_contents/${this.props.id}`,
-      dataType: "JSON",
-      data: {text_content: {text: this.state.textContent, article_id: this.props.articleId}}
-    }).done((data) => {
-      console.log(data)
-    }).fail((data) => {
-      console.log(data)
-    });
+  saveOnBlur = async () => {
+    await ajaxHelpers.ajaxCall(
+      'PUT',
+      `/text_contents/${this.props.id}`,
+      { text_content: {text: this.state.textContent, article_id: this.props.articleId} },
+      this.props.tokens
+    )
   }
 
   deleteElement = (event) => {this.props.deleteElement(event, this.props.id, this.props.position, "text_contents")}
 
   onDragStart = (event) => {
-    document.querySelectorAll(".mapCustomization, .markerCustomization, .polylineCustomization").forEach(x => {x.classList.remove("active")})
+    this.props.hideMapsCustomizations()
     this.props.onDragStart(event, this.props.id, this.props.position, this.props.textContent)
   }
 

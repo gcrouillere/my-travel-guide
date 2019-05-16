@@ -38,7 +38,7 @@ class PhotoCustomization extends Component {
 
       this.props.updatePhoto({ height: newYRefs.newHeight, width: newXRefs.newWidth, cropped_url: newUrl })
     } else {
-      this.props.updatePhoto({ height: 0, width: 0, cropped_url: "" })
+      this.props.updatePhoto({ height: 0, width: 0, cropped_url: false })
     }
   }
 

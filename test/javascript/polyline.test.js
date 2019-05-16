@@ -55,7 +55,7 @@ describe('Polyline tests', () => {
     expect(
       wrapper2.find(Polyline).state().polylineMarkers[0].lat +
       wrapper2.find(Polyline).state().polylineMarkers[0].lng)
-    .toEqual(138)
+    .toEqual(4)
   })
 
 })

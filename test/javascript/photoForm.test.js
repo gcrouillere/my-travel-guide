@@ -47,7 +47,7 @@ describe('PhotoForm test suite', () => {
   it('updates photo on resize stop', async () => {
     await wrapper.instance().stopResizing()
 
-    expect(wrapper.state().photo.css_width).toEqual(30)
+    expect(wrapper.state().photo.css_width).toEqual(90)
   })
 
   it('displays photo customization on click and strore crop', () => {

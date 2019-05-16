@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`processingOverlay test suite renders component 1`] = `
+<div
+  className="processingOverlay inactive"
+>
+  <button
+    className="btn btn-dark"
+    disabled={true}
+    type="button"
+  >
+    <span
+      aria-hidden="true"
+      className="spinner-border spinner-border-sm"
+      role="status"
+    />
+    Processing ...
+  </button>
+</div>
+`;

@@ -34,6 +34,7 @@ class AudienceForm extends Component {
       { audience_selection_ids: newSelectionIDS.length == 0 ? [""] : newSelectionIDS,
       audience_valid: newSelectionIDS.length > 0 }
     }
+
     const article = await ajaxHelpers.ajaxCall('PUT', `/articles/${this.props.id}`, data, this.props.token)
 
     this.setState({

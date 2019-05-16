@@ -54,7 +54,7 @@ describe('MapComponent tests', () => {
     wrapper.update()
 
     expect(setMap).toHaveBeenCalled()
-    expect(wrapper.state().map.height).toEqual(339)
+    expect(wrapper.state().map.height).toEqual(340)
     expect(wrapper.state('resizeOrigin')).toEqual(null)
     expect(wrapper.state('initialMapHeight')).toEqual(null)
   })
@@ -64,7 +64,7 @@ describe('MapComponent tests', () => {
      wrapper.update()
 
      expect(setMap).toHaveBeenCalled()
-     expect(wrapper.state().map.zoom).toEqual(2)
+     expect(wrapper.state().map.zoom).toEqual(1)
   })
 
   it('handles map center on function call', async () => {
@@ -72,8 +72,8 @@ describe('MapComponent tests', () => {
     wrapper.update()
 
     expect(setMap).toHaveBeenCalled()
-    expect(wrapper.state().map.lat).toEqual(1)
-    expect(wrapper.state().map.lng).toEqual(1)
+    expect(wrapper.state().map.lat).toEqual(36.7917802)
+    expect(wrapper.state().map.lng).toEqual(3.0445432)
   })
 
   it('updates data list as exepcted', () => {

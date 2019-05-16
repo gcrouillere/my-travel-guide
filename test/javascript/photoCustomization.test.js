@@ -36,7 +36,7 @@ describe('PhotoCustomization tests', () => {
   it('updates photo title on change', () => {
     wrapper.find(".photoCustomization .photoCustomizationBlock").at(1).find("input").simulate(
       'change',
-      { target: { value: "my title" }}
+      { target: { value: 'my title' }}
     )
     wrapper.update()
 
@@ -47,7 +47,7 @@ describe('PhotoCustomization tests', () => {
     await wrapper.find(".photoCustomization .photoCustomizationBlock").at(1).find("button").simulate('click')
     wrapper.update()
 
-    expect(wrapper.state().photo.original_filename).toEqual('another title')
+    expect(wrapper.state().photo.original_filename).toEqual('my title')
   })
 
   it('changes title display on click', async () => {
@@ -74,7 +74,7 @@ describe('PhotoCustomization tests', () => {
     await wrapper.find("button.photoCustomizationBlock").simulate('click')
     wrapper.update()
 
-    expect(wrapper.state().photo.cropped_url).toEqual("")
+    expect(wrapper.state().photo.cropped_url).toEqual(false)
     expect(wrapper.state().photo.width).toEqual(0)
     expect(wrapper.state().photo.height).toEqual(0)
   })
