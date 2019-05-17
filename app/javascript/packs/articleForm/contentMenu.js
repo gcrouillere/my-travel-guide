@@ -31,7 +31,7 @@ class ContentMenu extends Component {
   }
 
   addNewTextContent = () => {
-    this.props.addNewTextContent(this.props.id, { initPositionAtCreation: undefined })
+    this.props.addNewTextContent(this.props.id)
   }
 
   addNewMap = (map) => {

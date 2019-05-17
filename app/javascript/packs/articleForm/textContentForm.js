@@ -64,6 +64,7 @@ class TextContentForm extends Component {
   }
 
   render() {
+
     return (
       <div id={`content-${this.props.position}`}
       className={`textContentInput ${this.props.dragging ? "dragging" : ""} ${this.props.draggingElement ? "draggingElement" : ""}`}

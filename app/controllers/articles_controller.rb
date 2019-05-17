@@ -70,7 +70,9 @@ class ArticlesController < ApplicationController
       article_elements_json_mapped_sorted.insert(params[:positions][:target][:position].to_i, moving_element)
       # Update all positions in DB
       article_elements_json_mapped_sorted.each_with_index do |element, index|
-        article_elements_json_mapped_sorted[index][0].constantize.find(article_elements_json_mapped_sorted[index][1]).update(position: index)
+        article_elements_json_mapped_sorted[index][0]
+        .constantize.find(article_elements_json_mapped_sorted[index][1])
+        .update(position: index)
       end
     end
 

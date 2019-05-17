@@ -30,7 +30,11 @@ const ajaxCall = jest.fn((method, url, data, token) => {
   let newInstance = instances[model]
 
   if (/\/articles\/element_position_update\//.test(url)) {
-    let newTextContent = update(instances.text_content, {id: {$set: 1}})
+    let newTextContent = update(instances.text_content, {
+      id: {$set: 1},
+      text: {$set: "caca"},
+      position: {$set: data.positions.target.position}
+    })
     newInstance = update(newInstance, { text_contents: {$push: [newTextContent] }})
     return Promise.resolve(newInstance)
   }

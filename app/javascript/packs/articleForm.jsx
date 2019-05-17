@@ -24,7 +24,7 @@ class ArticleForm extends Component {
       draggedElementId: null,
       draggingElement: null,
       dragging: false,
-      dropTarget: { possibleDrop: null, where: null },
+      dropTarget: { possibleDrop: null, where: [] },
       forceContentMenuHidding: false,
       initialPosition: null,
       previousHoveredElementPosition: null,
@@ -36,6 +36,7 @@ class ArticleForm extends Component {
     }
     this.MapFormRef = {}
     this.dragImageRef = React.createRef()
+    this.contentMenuRef = React.createRef()
   }
 
   async componentDidMount() {
@@ -73,11 +74,12 @@ class ArticleForm extends Component {
     ajaxHelpers.ajaxCall('PUT', `/articles/${this.state.id}`, {article: {title: this.state.title}}, this.state.token)
   }
 
-  addNewTextContent = async (id, {initPositionAtCreation = undefined} = {}) => {
+  addNewTextContent = async (id, initPositionAtCreation = undefined) => {
     const textContent = {text_content: {text: "", article_id: id, position: this.state.articleElements.length}}
+
     await ajaxHelpers.ajaxCall('POST', "/text_contents", textContent, this.state.token)
 
-    this.updatePositionAfterCreation(initPositionAtCreation, id)
+    await this.updatePositionAfterCreation(initPositionAtCreation, id)
   }
 
   addNewMap = async (id, map, initPositionAtCreation) => {
@@ -117,6 +119,7 @@ class ArticleForm extends Component {
 
   updatePositionAfterCreation = async (initPositionAtCreation, id) => {
     let finalPositionAtCreation = this.definePositionAtCreation(initPositionAtCreation)
+
     await this.updateElementPosition(id, -1, finalPositionAtCreation)
   }
 
@@ -147,41 +150,43 @@ class ArticleForm extends Component {
   }
 
   onDragEnter = (event, id, position) => {
-    this.setState({forceContentMenuHidding: true})
     event.preventDefault();
+    this.setState({forceContentMenuHidding: true})
+
     if (position !== this.state.initialPosition && position == this.state.previousHoveredElementPosition) {
       if (this.state.initialPosition > position) {
-        this.setState({ dropTarget: { possibleDrop: position, where: "before" }})
+        this.setState({ dropTarget: { possibleDrop: position, where: ["before"] }})
       } else {
-        this.setState({ dropTarget: { possibleDrop: position, where: "after" }})
+        this.setState({ dropTarget: { possibleDrop: position, where: ["after"] }})
         if (position == 0 && this.state.initialPosition == -1) {
-          this.setState({ dropTarget: { possibleDrop: position, where: "before" }})
+          this.setState({ dropTarget: { possibleDrop: position, where: ["before", "after"] }})
         }
       }
     } else {
-      this.setState({ dropTarget: { possibleDrop: null, where: null }, previousHoveredElementPosition: position })
+      this.setState({ dropTarget: { possibleDrop: null, where: [] }, previousHoveredElementPosition: position })
     }
+
   }
 
   onDragLeave = (event, id, position) => {
     if (position == this.state.initialPosition || position != this.state.previousHoveredElementPosition) {
-      this.setState({ dropTarget: { possibleDrop: null, where: null }})
+      this.setState({ dropTarget: { possibleDrop: null, where: [] }})
     }
   }
 
-  onDrop = (event, id, position) => {
+  onDrop = async (event, id, position) => {
     this.clearDraggingExtraClasses()
     this.setState({dragging: false, dragContent: {}})
     this.setDropzoneClass(event)
 
     if (event.dataTransfer.getData("type") == "positionUpdate") {
-      this.updateElementPosition(id, this.state.initialPosition, position)
+      await this.updateElementPosition(id, this.state.initialPosition, position)
     } else if (event.dataTransfer.getData("type") == "mapCreation") {
-      this.refs.contentMenu.initAddNewMap(position)
+      this.contentMenuRef.current.initAddNewMap(position)
     } else if (event.dataTransfer.getData("type") == "textCreation") {
-      this.addNewTextContent(this.state.id, {initPositionAtCreation: position})
+      await this.addNewTextContent(this.state.id, position)
     } else if (event.dataTransfer.getData("type") == "photoCreation") {
-      this.refs.contentMenu.initAddNewPhotoBloc(position)
+      this.contentMenuRef.current.initAddNewPhotoBloc(position)
     }
   }
 
@@ -210,16 +215,14 @@ class ArticleForm extends Component {
         init: {id: id, position: initPosition},
         target: {id: id, position: targetPosition}
     }}
-    let newData = await ajaxHelpers.ajaxCall('POST', "/articles/element_position_update/", data, this.state.token)
 
+    let newData = await ajaxHelpers.ajaxCall('POST', "/articles/element_position_update/", data, this.state.token)
     this.updateElementsState(newData)
   }
 
   updateElementsState = (data) => {
     const sortedElements = data.text_contents.concat(data.maps).concat(data.photos).sort((x, y) => x.position - y.position)
-    this.setState({articleElements: sortedElements, activeDragImage: false, initialPosition: null, dropZone: ""},() => {
-      console.log(this.state.articleElements)
-    })
+    this.setState({articleElements: sortedElements, activeDragImage: false, initialPosition: null, dropZone: ""})
   }
 
   definePositionAtCreation(position) {
@@ -252,7 +255,7 @@ class ArticleForm extends Component {
     this.setState({
       draggingElement: null,
       forceContentMenuHidding: false,
-      dropTarget: { possibleDrop: null, where: null }
+      dropTarget: { possibleDrop: null, where: [] }
     })
   }
 
@@ -275,7 +278,7 @@ class ArticleForm extends Component {
 
         {this.state.audienceForm && this.state.titleValid &&
           <ContentMenu id={this.state.id} addNewTextContent={this.addNewTextContent} addNewMap={this.addNewMap}
-          addNewPhotoBloc={this.addNewPhotoBloc} addNewComponentOnDrag={this.addNewComponentOnDrag} ref="contentMenu"
+          addNewPhotoBloc={this.addNewPhotoBloc} addNewComponentOnDrag={this.addNewComponentOnDrag} ref={this.contentMenuRef}
           elementsCount={this.state.articleElements.length} forceContentMenuHidding={this.state.forceContentMenuHidding}/>
         }
 

@@ -3,9 +3,11 @@ import { CLOUDINARYKEYS } from './../config/config'
 
 export default {
 
-  photoUpload(event, formData, context) {
+  async photoUpload(event, formData, context) {
     var self = context
-    const data = $.ajax({
+    let returnData = null
+
+    await $.ajax({
     xhr: function() {
         var xhr = new window.XMLHttpRequest()
         //Upload progress
@@ -22,10 +24,11 @@ export default {
       data: formData,
       processData: false,
       contentType: false,
-      success: function(data) { return data },
-      error: function(xhr, error) { console.log(error) }
+      success: function(data) { returnData = data },
+      error: function(error) { console.log(error) }
     })
-    return data
+
+    return returnData
   }
 
 }

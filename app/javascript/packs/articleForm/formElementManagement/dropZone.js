@@ -10,7 +10,7 @@ class DropZone extends Component {
   render() {
 
     let active = this.props.dropTarget ?
-      (this.props.dropTarget.where == this.props.area ? "active" : "") :
+      (this.props.dropTarget.where.indexOf(this.props.area) > -1 ? "active" : "") :
       ""
 
     return (
