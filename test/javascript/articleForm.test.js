@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { shallow, configure, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { MemoryRouter } from 'react-router'
+import renderer from 'react-test-renderer';
 
 import ArticleForm from '../../app/javascript/packs/articleForm'
 import ContentMenu from '../../app/javascript/packs/articleForm/contentMenu'
@@ -14,52 +15,87 @@ import fakeArticleFedWithText from './__mocks__/fakeArticleFedWithText'
 
 configure({ adapter: new Adapter() });
 
-const match = {params: {}}
-let wrapper = shallow(<ArticleForm match={match}/>);
+jest.mock('../../app/javascript/utils/ajaxHelpers')
+jest.mock('react-quill', () => { return "textarea" })
 
-describe('Render Article Form without content', () => {
+const ajaxHelpers = require('../../app/javascript/utils/ajaxHelpers')
 
-  it('renders a blank article form without crashing', () => {
-    expect(wrapper.find('header.maintTitle').length).toEqual(0)
-  });
+// describe('Article Form without content', () => {
 
-  it('renders title input', () => {
-    wrapper.setState({audienceForm: true})
-    expect(wrapper.find('header.maintTitle.incomplete').length).toEqual(1)
-    expect(wrapper.find('.articleContent').length).toEqual(0)
-  });
+//   const match = {params: {}}
 
-  it('renders article form when input is valid', () => {
-    wrapper.find('.maintTitle input').simulate('change', { "target": { "value": "10 characters long article title" } })
-    wrapper.update()
-    expect(wrapper.find('.articleContent').length).toEqual(1)
-    expect(wrapper.find('.maintTitle input').props().value).toEqual("10 characters long article title")
-  });
+//   it('renders a blank article form without crashing', () => {
+//     const articleFormTree = renderer
+//       .create(<ArticleForm match={match} history={[]}/>)
+//       .toJSON()
+//     expect(articleFormTree).toMatchSnapshot();
+//   });
 
-})
+//   let wrapper = shallow(<ArticleForm match={match} history={[]}/>);
 
-describe('Render Article Form with content', () => {
+//   it('renders title input', () => {
+//     wrapper.setState({audienceForm: true})
 
-  let articleElements = wrapper.instance().orderArticleElements(fakeArticle)
+//     expect(wrapper.find('header.maintTitle.incomplete').length).toEqual(1)
+//     expect(wrapper.find('.articleContent').length).toEqual(0)
+//   });
 
-  it('renders an article with text, map and photo in proper order', () => {
-    wrapper.setState({articleElements: articleElements, titleValid: true})
-    wrapper.update()
-    expect(wrapper.find(TextContentForm).length + wrapper.find(MapForm).length + wrapper.find(PhotoForm).length).toEqual(3)
-    expect(wrapper.find(TextContentForm).prop('position')).toEqual(0)
-    expect(wrapper.find(MapForm).prop('position')).toEqual(1)
-    expect(wrapper.find(PhotoForm).prop('position')).toEqual(2)
-  });
+//   it('renders article form when input is valid', () => {
+//     wrapper.find('.maintTitle input').simulate('change', { "target": { "value": "10 characters long article title" } })
+//     wrapper.update()
 
-  it('returns correct position after click on text bloc addition', () => {
-    wrapper.setState({initialPosition: -1})
-    let finalPositionAtCreation = wrapper.instance().definePositionAtCreation(undefined)
-    expect(finalPositionAtCreation).toEqual(3)
-  })
+//     expect(wrapper.find('.articleContent').length).toEqual(1)
+//     expect(wrapper.find(".maintTitle input[value='10 characters long article title']").length).toEqual(1)
+//   });
 
-  it('updates article content with appropriate positions', () => {
-    wrapper.instance().updateElementsState(fakeArticleFedWithText)
-    wrapper.update()
-    expect(wrapper.find(TextContentForm).at(1).prop('position')).toEqual(3)
+//   it('saves title on blur', () => {
+//     wrapper.find('.maintTitle input').simulate('blur')
+//     expect(ajaxHelpers.ajaxCall).toHaveBeenCalled()
+//   })
+
+// })
+
+// describe('Article Form with content', () => {
+
+//     const match = {params: {id: 1}}
+//     let wrapper2 = shallow(<ArticleForm match={match}/>);
+//     wrapper2.setState({audienceForm: true})
+
+//   it('renders an article with text, map and photo in proper order', async () => {
+//     await wrapper2.instance().componentDidMount()
+//     wrapper2.update()
+
+//     expect(wrapper2.find(TextContentForm).length + wrapper2.find(MapForm).length + wrapper2.find(PhotoForm).length).toEqual(3)
+//     expect(wrapper2.find(TextContentForm).prop('position')).toEqual(0)
+//     expect(wrapper2.find(MapForm).prop('position')).toEqual(1)
+//     expect(wrapper2.find(PhotoForm).prop('position')).toEqual(2)
+//   });
+
+//   it('returns correct position after click on text bloc addition', () => {
+//     wrapper2.setState({initialPosition: -1})
+//     let finalPositionAtCreation = wrapper2.instance().definePositionAtCreation(undefined)
+//     expect(finalPositionAtCreation).toEqual(3)
+//   })
+
+//   // it('updates article content with appropriate positions', () => {
+//   //   wrapper.instance().updateElementsState(fakeArticleFedWithText)
+//   //   wrapper.update()
+//   //   expect(wrapper.find(TextContentForm).at(1).prop('position')).toEqual(3)
+//   // })
+// })
+
+describe('Article content updates', () => {
+
+    const match = {params: {id: 1}}
+    let wrapper3 = mount(<ArticleForm match={match}/>);
+
+  it('adds textContent on click', async () => {
+    await wrapper3.instance().componentDidMount()
+    wrapper3.setState({audienceForm: true})
+    wrapper3.update()
+
+    await wrapper3.find(".blocAddition.text .addNew").simulate('click')
+    wrapper3.update()
+    console.log(wrapper3.state())
   })
 })

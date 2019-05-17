@@ -29,6 +29,12 @@ const ajaxCall = jest.fn((method, url, data, token) => {
   let model = pluralmodel.substr(0, pluralmodel.length - 1)
   let newInstance = instances[model]
 
+  if (/\/articles\/element_position_update\//.test(url)) {
+    let newTextContent = update(instances.text_content, {id: {$set: 1}})
+    newInstance = update(newInstance, { text_contents: {$push: [newTextContent] }})
+    return Promise.resolve(newInstance)
+  }
+
   if (method == 'PUT' || method == 'POST') {
     Object.keys(data).map(modelKey => {
       Object.keys(data[modelKey]).map(characteristic => {

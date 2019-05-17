@@ -61,7 +61,7 @@ class ArticleForm extends Component {
     }
   }
 
-  orderArticleElements = (data) => {
+  orderArticleElements(data) {
     return data.text_contents.concat(data.maps).concat(data.photos).sort((x, y) => x.position - y.position)
   }
 
@@ -74,8 +74,9 @@ class ArticleForm extends Component {
   }
 
   addNewTextContent = async (id, {initPositionAtCreation = undefined} = {}) => {
-    let textContent = {text_content: {text: "", article_id: id, position: this.state.articleElements.length}}
+    const textContent = {text_content: {text: "", article_id: id, position: this.state.articleElements.length}}
     await ajaxHelpers.ajaxCall('POST', "/text_contents", textContent, this.state.token)
+
     this.updatePositionAfterCreation(initPositionAtCreation, id)
   }
 
@@ -90,12 +91,12 @@ class ArticleForm extends Component {
       show_map_center_as_marker: true
     }})
 
-    await ajaxHelpers.ajaxCall('POST', "/maps", {map: newMap}, this.state.token)
+    await ajaxHelpers.ajaxCall('POST', "/maps", { map: newMap }, this.state.token)
     this.updatePositionAfterCreation(initPositionAtCreation, id)
   }
 
   addNewPhotoBloc  = async (data, initPositionAtCreation) => {
-    let photo = { photo: {
+    const photo = { photo: {
       public_id: data.public_id,
       version: data.version,
       signature: data.signature,
@@ -114,9 +115,9 @@ class ArticleForm extends Component {
     this.updatePositionAfterCreation(initPositionAtCreation, this.state.id)
   }
 
-  updatePositionAfterCreation = (initPositionAtCreation, id) => {
+  updatePositionAfterCreation = async (initPositionAtCreation, id) => {
     let finalPositionAtCreation = this.definePositionAtCreation(initPositionAtCreation)
-    this.updateElementPosition(id, -1, finalPositionAtCreation)
+    await this.updateElementPosition(id, -1, finalPositionAtCreation)
   }
 
   deleteElement = async (event, id, position, controller) => {
@@ -210,12 +211,15 @@ class ArticleForm extends Component {
         target: {id: id, position: targetPosition}
     }}
     let newData = await ajaxHelpers.ajaxCall('POST', "/articles/element_position_update/", data, this.state.token)
+
     this.updateElementsState(newData)
   }
 
   updateElementsState = (data) => {
     const sortedElements = data.text_contents.concat(data.maps).concat(data.photos).sort((x, y) => x.position - y.position)
-    this.setState({articleElements: sortedElements, activeDragImage: false, initialPosition: null, dropZone: ""})
+    this.setState({articleElements: sortedElements, activeDragImage: false, initialPosition: null, dropZone: ""},() => {
+      console.log(this.state.articleElements)
+    })
   }
 
   definePositionAtCreation(position) {
@@ -253,6 +257,7 @@ class ArticleForm extends Component {
   }
 
   render() {
+
     return (
       <div className="container article-container" onDrop={this.onDropOnContainer} onDragOver={this.onDragOver}>
 
