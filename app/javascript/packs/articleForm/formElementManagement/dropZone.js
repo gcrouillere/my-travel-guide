@@ -8,8 +8,13 @@ class DropZone extends Component {
   }
 
   render() {
+
+    let active = this.props.dropTarget ?
+      (this.props.dropTarget.where == this.props.area ? "active" : "") :
+      ""
+
     return (
-      <div className={`dropZone-${this.props.area} drop-${this.props.area}`}>
+      <div className={`dropZone-${this.props.area} drop-${this.props.area} ${active}`}>
         <p className={`drop-${this.props.area}`}>Drop your content here</p>
       </div>
     )

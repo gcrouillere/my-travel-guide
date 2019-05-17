@@ -75,10 +75,10 @@ class TextContentForm extends Component {
       onDrop={this.onDrop}>
         <DragVisualElements />
         <DeleteButton deleteElement={this.deleteElement}/>
-        <DropZone area={"before"} onDrop={this.onDrop}/>
+        <DropZone area={"before"} onDrop={this.onDrop} dropTarget={this.props.dropTarget}/>
         <ReactQuill value={this.state.textContent} onBlur={this.saveOnBlur} onChange={this.handleChange} modules={this.modules}
         formats={this.formats} draggable={true} onDragStart={this.preventTextAreaDragging}/>
-        <DropZone area={"after"} onDrop={this.onDrop}/>
+        <DropZone area={"after"} onDrop={this.onDrop} dropTarget={this.props.dropTarget}/>
       </div>
     )
   }

@@ -24,6 +24,8 @@ class ArticleForm extends Component {
       draggedElementId: null,
       draggingElement: null,
       dragging: false,
+      dropTarget: { possibleDrop: null, where: null },
+      forceContentMenuHidding: false,
       initialPosition: null,
       previousHoveredElementPosition: null,
       activeDragImage: false,
@@ -33,6 +35,7 @@ class ArticleForm extends Component {
       token: $('meta[name="csrf-token"]').attr('content')
     }
     this.MapFormRef = {}
+    this.dragImageRef = React.createRef()
   }
 
   async componentDidMount() {
@@ -121,19 +124,19 @@ class ArticleForm extends Component {
     this.updateElementPosition(id, undefined, undefined)
   }
 
-  onDragStart = (event, id, position, articleContent) => {
-    document.getElementById(`content-${position}`).classList.add("draggingElement")
-    this.setState({dragging: true, draggingElement: position})
+  onDragStart = async (event, id, position, articleContent) => {
     event.dataTransfer.setData("type", "positionUpdate")
     this.setState({
       initialPosition: position,
-      draggedElementId: id,
       previousHoveredElementPosition: position,
       activeDragImage: true,
-      dragContent: articleContent
+      draggedElementId: id,
+      dragContent: articleContent,
+      dragging: true,
+      draggingElement: position,
     })
 
-    let dragImage = document.getElementById("dragImage")
+    let dragImage = this.dragImageRef.current.getDragImageNode()
     event.dataTransfer.setDragImage(dragImage, 0, 0);
     return false
   }
@@ -143,33 +146,33 @@ class ArticleForm extends Component {
   }
 
   onDragEnter = (event, id, position) => {
-    document.querySelector(".contentMenu").classList.add("disable-hover")
+    this.setState({forceContentMenuHidding: true})
     event.preventDefault();
     if (position !== this.state.initialPosition && position == this.state.previousHoveredElementPosition) {
       if (this.state.initialPosition > position) {
-        document.querySelector(`#content-${position} .dropZone-before`).classList.add("active")
+        this.setState({ dropTarget: { possibleDrop: position, where: "before" }})
       } else {
-        document.querySelector(`#content-${position} .dropZone-after`).classList.add("active")
+        this.setState({ dropTarget: { possibleDrop: position, where: "after" }})
         if (position == 0 && this.state.initialPosition == -1) {
-          document.querySelector(`#content-${position} .dropZone-before`).classList.add("active")
+          this.setState({ dropTarget: { possibleDrop: position, where: "before" }})
         }
       }
     } else {
-      document.querySelectorAll(".dropZone-before, .dropZone-after").forEach(x => x.classList.remove("active"))
-      this.setState({previousHoveredElementPosition: position})
+      this.setState({ dropTarget: { possibleDrop: null, where: null }, previousHoveredElementPosition: position })
     }
   }
 
   onDragLeave = (event, id, position) => {
     if (position == this.state.initialPosition || position != this.state.previousHoveredElementPosition) {
-      document.querySelectorAll(".dropZone-before, .dropZone-after").forEach(x => x.classList.remove("active"))
+      this.setState({ dropTarget: { possibleDrop: null, where: null }})
     }
   }
 
   onDrop = (event, id, position) => {
     this.clearDraggingExtraClasses()
-    this.setState({dragging: false})
+    this.setState({dragging: false, dragContent: {}})
     this.setDropzoneClass(event)
+
     if (event.dataTransfer.getData("type") == "positionUpdate") {
       this.updateElementPosition(id, this.state.initialPosition, position)
     } else if (event.dataTransfer.getData("type") == "mapCreation") {
@@ -242,10 +245,11 @@ class ArticleForm extends Component {
   }
 
   clearDraggingExtraClasses() {
-    this.setState({draggingElement: null})
-    document.querySelectorAll(".dropZone-before , .dropZone-after").forEach(x => x.classList.remove("active"))
-    document.querySelectorAll(".draggingElement").forEach(x => x.classList.remove("draggingElement"))
-    document.querySelectorAll(".contentMenu").forEach(x => x.classList.remove("disable-hover"))
+    this.setState({
+      draggingElement: null,
+      forceContentMenuHidding: false,
+      dropTarget: { possibleDrop: null, where: null }
+    })
   }
 
   render() {
@@ -267,16 +271,20 @@ class ArticleForm extends Component {
         {this.state.audienceForm && this.state.titleValid &&
           <ContentMenu id={this.state.id} addNewTextContent={this.addNewTextContent} addNewMap={this.addNewMap}
           addNewPhotoBloc={this.addNewPhotoBloc} addNewComponentOnDrag={this.addNewComponentOnDrag} ref="contentMenu"
-          elementsCount={this.state.articleElements.length} />
+          elementsCount={this.state.articleElements.length} forceContentMenuHidding={this.state.forceContentMenuHidding}/>
         }
 
         {this.state.audienceForm && this.state.titleValid &&
           <div className="articleContent" >
           <h2 className="sectionLabel">Article content</h2>
             {this.state.articleElements.map(element => {
+
+              let dropTarget = element.position == this.state.dropTarget.possibleDrop ? this.state.dropTarget : null
+
               if (element.class_name == "TextContent") {
                 return <TextContentForm key={`text${element.id}`} textContent={element}
                 dragging={this.state.dragging} draggingElement={element.position == this.state.draggingElement}
+                dropTarget={dropTarget}
                 articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
                 onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                 onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
@@ -285,6 +293,7 @@ class ArticleForm extends Component {
               else if (element.class_name == "Map") {
                 return <MapForm key={`map${element.id}`} map={element} name={element.name}
                 dragging={this.state.dragging} draggingElement={element.position == this.state.draggingElement}
+                dropTarget={dropTarget}
                 articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
                 onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                 onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
@@ -294,13 +303,14 @@ class ArticleForm extends Component {
               else if (element.class_name == "Photo") {
                 return <PhotoForm key={`photo${element.id}`} photo={element}
                 dragging={this.state.dragging} draggingElement={element.position == this.state.draggingElement}
+                dropTarget={dropTarget}
                 articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
                 onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                 onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
                 mapCustomizationOnGoing={this.state.customizationOnGoing} hideMapsCustomizations={this.hideMapsCustomizations}/>
               }
             })}
-             <DragImage dragContent={this.state.dragContent} activeDragImage={this.state.activeDragImage}/>
+             <DragImage ref={this.dragImageRef} dragContent={this.state.dragContent} activeDragImage={this.state.activeDragImage}/>
           </div>
         }
 

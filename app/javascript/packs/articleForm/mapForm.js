@@ -81,6 +81,7 @@ class MapForm extends Component {
 
   render() {
 
+
     return (
       <div id={`content-${this.props.position}`}
         className={`mapInput ${this.props.dragging ? "dragging" : ""} ${this.props.draggingElement ? "draggingElement" : ""}`}
@@ -95,7 +96,7 @@ class MapForm extends Component {
 
         <DragVisualElements map={this.state.map} activeCustomization={this.activeCustomization}/>
 
-        <DropZone area={"before"} onDrop={this.onDrop}/>
+        <DropZone area={"before"} onDrop={this.onDrop} dropTarget={this.props.dropTarget}/>
 
         <MapCustomization googleMap={this.state.googleMap} map={this.state.map} token={this.props.token}
         customizationOnGoing={this.state.customizationOnGoing}
@@ -122,7 +123,7 @@ class MapForm extends Component {
         preventCustomizationMix={this.preventCustomizationMix} updateMap={this.updateMap} token={this.props.token}
         ref={this.mapComponentRef}/>
 
-        <DropZone area={"after"} onDrop={this.onDrop}/>
+        <DropZone area={"after"} onDrop={this.onDrop} dropTarget={this.props.dropTarget}/>
       </div>
     );
   }

@@ -49,7 +49,7 @@ class ContentMenu extends Component {
   render() {
 
     return(
-      <div id="contentMenu" className="contentMenu">
+      <div id="contentMenu" className={`contentMenu ${this.props.forceContentMenuHidding ? "disable-hover" : ""}`}>
         <div className="buttons">
 
           <div className="blocAddition text">

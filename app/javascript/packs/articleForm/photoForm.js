@@ -113,7 +113,7 @@ class PhotoForm extends Component {
       onDrop={this.onDrop}>
         <DragVisualElements photo={this.state.photo} activeCustomization={this.activeCustomization}/>
         <DeleteButton deleteElement={this.deleteElement}/>
-        <DropZone area={"before"} onDrop={this.onDrop}/>
+        <DropZone area={"before"} onDrop={this.onDrop} dropTarget={this.props.dropTarget}/>
         <div className="photoContainer">
           <ProcessingOverlay processing={this.state.processing}/>
           <PhotoCustomization photo={this.state.photo} cropped={this.state.cropped} crop={this.state.crop}
@@ -125,7 +125,7 @@ class PhotoForm extends Component {
           style={{width: `${this.state.photo.css_width}%`}}
           crop={this.state.crop} onChange={this.onCropChange} ref={this.photoRef}/>
         </div>
-        <DropZone area={"after"} onDrop={this.onDrop}/>
+        <DropZone area={"after"} onDrop={this.onDrop} dropTarget={this.props.dropTarget}/>
       </div>
     )
   }

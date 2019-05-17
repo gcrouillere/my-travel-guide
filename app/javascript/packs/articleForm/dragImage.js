@@ -7,16 +7,20 @@ import htmlSanitizer from './../../utils/htmlSanitizer'
 class DragImage extends Component {
   constructor(props) {
     super(props)
+    this.divRef = React.createRef()
   }
 
   sanitizeAndTruncateHTML(html) {
     return htmlSanitizer.sanitizeAndTruncateHTML(html, 50)
   }
 
-  render() {
+  getDragImageNode() {
+    return this.divRef.current
+  }
 
+  render() {
     return (
-      <div id="dragImage" className={`dragImage-${this.props.activeDragImage ? "active" : ""}`}>
+      <div ref={this.divRef} id="dragImage" className={`dragImage-${this.props.activeDragImage ? "active" : ""}`}>
         {Object.keys(this.props.dragContent).map(dragContentKey => {
           if (dragContentKey == "text") { return (
             <div key={"dragImageContentText"}>
@@ -28,9 +32,10 @@ class DragImage extends Component {
               <p>Map : {this.props.dragContent[dragContentKey]}</p>
             </div>
           )}
-          else if (dragContentKey == "url") { return (
-            <div key={"dragImageContentMap"} className="imageDragging">
-              <img src={this.props.dragContent[dragContentKey]} alt=""/>
+          else if (dragContentKey == "original_filename") {
+            return (
+            <div key={"dragImageContentMap"}>
+              <p>Image : {this.props.dragContent[dragContentKey]}</p>
             </div>
           )}
         })}
