@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import $ from 'jquery'
-import ajaxHelpers from './../../utils/ajaxHelpers'
 import ReactQuill from 'react-quill'
+
+import ajaxHelpers from './../../utils/ajaxHelpers'
 import DropZone from './formElementManagement/dropZone'
 import DragVisualElements from './formElementManagement/dragVisualElements'
 import DeleteButton from './formElementManagement/deleteButton'
@@ -83,6 +83,25 @@ class TextContentForm extends Component {
       </div>
     )
   }
+}
+
+TextContentForm.propTypes = {
+  textContent: PropTypes.object.isRequired,
+  id: PropTypes.number.isRequired,
+  articleId: PropTypes.number.isRequired,
+  position: PropTypes.number.isRequired,
+  token: PropTypes.string.isRequired,
+  onDragStart: PropTypes.func.isRequired,
+  onDragOver: PropTypes.func.isRequired,
+  onDragEnter: PropTypes.func.isRequired,
+  onDragLeave: PropTypes.func.isRequired,
+  onDrop: PropTypes.func.isRequired,
+  deleteElement: PropTypes.func.isRequired,
+  hideMapsCustomizations: PropTypes.func.isRequired,
+  mapCustomizationOnGoing: PropTypes.object.isRequired,
+  draggingElement: PropTypes.bool.isRequired,
+  dragging: PropTypes.bool.isRequired,
+  dropTarget: PropTypes.object
 }
 
 export default TextContentForm

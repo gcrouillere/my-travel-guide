@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
+
 import $ from 'jquery'
+
 import photoHelpers from './../../../utils/photoHelpers'
 import { CLOUDINARYKEYS } from './../../../config/config'
 
@@ -63,6 +65,12 @@ class PhotoInitialFileOverlay extends Component {
       </div>
     )
   }
+}
+
+PhotoInitialFileOverlay.propTypes = {
+  photoOverlayActive: PropTypes.bool.isRequired,
+  addNewPhotoBloc: PropTypes.func.isRequired,
+  abandonPhotoCreation: PropTypes.func.isRequired,
 }
 
 export default PhotoInitialFileOverlay

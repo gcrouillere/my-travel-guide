@@ -21,4 +21,9 @@ class DropZone extends Component {
   }
 }
 
+DropZone.propTypes = {
+  area: PropTypes.string.isRequired,
+  dropTarget: PropTypes.object,
+}
+
 export default DropZone

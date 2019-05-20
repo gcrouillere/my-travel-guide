@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
+
 import dragLogo from './../../../../assets/images/drag-order-white.svg'
 import tuneLogo from './../../../../assets/images/tune-white.svg'
 
@@ -24,6 +25,12 @@ class DragVisualElements extends Component {
       </div>
     )
   }
+}
+
+DragVisualElements.propTypes = {
+  activeCustomization: PropTypes.func,
+  photo: PropTypes.object,
+  map: PropTypes.object
 }
 
 export default DragVisualElements

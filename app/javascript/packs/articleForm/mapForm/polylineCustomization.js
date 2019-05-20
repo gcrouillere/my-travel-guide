@@ -192,4 +192,14 @@ class PolylineCustomization extends Component {
   }
 }
 
+PolylineCustomization.propTypes = {
+  googleMap: PropTypes.object,
+  map: PropTypes.object.isRequired,
+  token: PropTypes.string.isRequired,
+  customizationOnGoing: PropTypes.object.isRequired,
+  updateMapDataList: PropTypes.func.isRequired,
+  hideMarkerCustomization: PropTypes.func.isRequired,
+  preventCustomizationMix: PropTypes.func.isRequired
+}
+
 export default PolylineCustomization

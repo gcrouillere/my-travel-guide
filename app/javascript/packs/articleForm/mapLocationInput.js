@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
+
 import ajaxHelpers from './../../utils/ajaxHelpers'
 
 class MapLocationInput extends Component {
@@ -65,6 +66,11 @@ class MapLocationInput extends Component {
       </div>
     )
   }
+}
+
+MapLocationInput.propTypes = {
+  location: PropTypes.string,
+  handleMap: PropTypes.func.isRequired
 }
 
 export default MapLocationInput

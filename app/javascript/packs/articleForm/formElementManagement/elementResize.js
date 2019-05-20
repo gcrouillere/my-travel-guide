@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
+
 import resizeLogo from './../../../../assets/images/resize-white.svg'
 import resizeHorizontalLogo from './../../../../assets/images/resize-horizontal-white.svg'
 
@@ -31,6 +32,12 @@ class ElementResize extends Component {
       </div>
     )
   }
+}
+
+ElementResize.propTypes = {
+  direction: PropTypes.string.isRequired,
+  dropTarget: PropTypes.object,
+  preventDragging: PropTypes.func
 }
 
 export default ElementResize

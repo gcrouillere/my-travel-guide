@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
+
+import $ from 'jquery'
+import update from 'immutability-helper'
+import ReactCrop from 'react-image-crop'
+import 'react-image-crop/lib/ReactCrop.scss'
+
 import DropZone from './formElementManagement/dropZone'
 import DragVisualElements from './formElementManagement/dragVisualElements'
 import DeleteButton from './formElementManagement/deleteButton'
-import $ from 'jquery'
-import update from 'immutability-helper'
 import ElementResize from './formElementManagement/elementResize'
-import ReactCrop from 'react-image-crop'
-import 'react-image-crop/lib/ReactCrop.scss'
 import PhotoCustomization from './photoForm/photoCustomization'
 import ProcessingOverlay from './photoForm/processingOverlay'
 import ajaxHelpers from './../../utils/ajaxHelpers'
@@ -130,4 +131,24 @@ class PhotoForm extends Component {
     )
   }
 }
+
+PhotoForm.propTypes = {
+  photo: PropTypes.object.isRequired,
+  id: PropTypes.number.isRequired,
+  articleId: PropTypes.number.isRequired,
+  position: PropTypes.number.isRequired,
+  token: PropTypes.string.isRequired,
+  onDragStart: PropTypes.func.isRequired,
+  onDragOver: PropTypes.func.isRequired,
+  onDragEnter: PropTypes.func.isRequired,
+  onDragLeave: PropTypes.func.isRequired,
+  onDrop: PropTypes.func.isRequired,
+  deleteElement: PropTypes.func.isRequired,
+  mapCustomizationOnGoing: PropTypes.object,
+  hideMapsCustomizations: PropTypes.func.isRequired,
+  draggingElement: PropTypes.bool,
+  dragging: PropTypes.bool,
+  dropTarget: PropTypes.object
+}
+
 export default PhotoForm

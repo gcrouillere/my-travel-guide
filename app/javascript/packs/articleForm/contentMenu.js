@@ -97,14 +97,23 @@ class ContentMenu extends Component {
           <div className="chevron-open">></div>
         </div>
 
-        <MapInitialCenterOverlay mapOverlayActive={this.state.mapOverlayActive}
-        abandonMapCreation={this.abandonMapCreation} ref={this.mapLocationInputRef} addNewMap={this.addNewMap}/>
-        <PhotoInitialFileOverlay photoOverlayActive={this.state.photoOverlayActive} onPhotoSelected={this.onPhotoSelected}
-        addNewPhotoBloc={this.addNewPhotoBloc} abandonPhotoCreation={this.abandonPhotoCreation}
-        initPositionAtCreation={this.state.initPositionAtCreation}/>
+        <MapInitialCenterOverlay mapOverlayActive={this.state.mapOverlayActive} ref={this.mapLocationInputRef}
+        abandonMapCreation={this.abandonMapCreation} addNewMap={this.addNewMap}/>
+        <PhotoInitialFileOverlay photoOverlayActive={this.state.photoOverlayActive} addNewPhotoBloc={this.addNewPhotoBloc}
+        abandonPhotoCreation={this.abandonPhotoCreation}/>
       </div>
     )
   }
+}
+
+ContentMenu.propTypes = {
+  id: PropTypes.number.isRequired,
+  elementsCount: PropTypes.number.isRequired,
+  addNewTextContent: PropTypes.func.isRequired,
+  addNewMap: PropTypes.func.isRequired,
+  addNewPhotoBloc: PropTypes.func.isRequired,
+  addNewComponentOnDrag: PropTypes.func.isRequired,
+  forceContentMenuHidding: PropTypes.bool.isRequired,
 }
 
 export default ContentMenu

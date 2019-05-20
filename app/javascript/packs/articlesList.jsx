@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+
 import $ from 'jquery'
 import update from 'immutability-helper'
+
 import htmlSanitizer from './../utils/htmlSanitizer'
 import ajaxHelpers from './../utils/ajaxHelpers'
 

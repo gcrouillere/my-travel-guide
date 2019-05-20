@@ -20,4 +20,8 @@ class ProcessingOverlay extends Component {
   }
 }
 
+ProcessingOverlay.propTypes = {
+  processing: PropTypes.bool.isRequired
+}
+
 export default ProcessingOverlay

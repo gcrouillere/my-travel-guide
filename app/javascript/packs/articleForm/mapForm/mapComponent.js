@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
+
 import $ from 'jquery'
 import update from 'immutability-helper'
+
 import MapLocationInput from './../mapLocationInput'
 import Marker from './mapComponent/marker'
 import Polyline from './mapComponent/polyline'
@@ -148,6 +150,22 @@ class MapComponent extends Component {
       </div>
     )
   }
+}
+
+MapComponent.propTypes = {
+  map: PropTypes.object.isRequired,
+  polylines: PropTypes.array.isRequired,
+  markers: PropTypes.array.isRequired,
+  token: PropTypes.string.isRequired,
+  customizationOnGoing: PropTypes.object.isRequired,
+  manageMarker: PropTypes.func.isRequired,
+  managePolyline: PropTypes.func.isRequired,
+  managePolylinePoint: PropTypes.func.isRequired,
+  setGoogleMap: PropTypes.func.isRequired,
+  setMap: PropTypes.func.isRequired,
+  updateMap: PropTypes.func.isRequired,
+  preventCustomizationMix: PropTypes.func.isRequired,
+
 }
 
 export default MapComponent

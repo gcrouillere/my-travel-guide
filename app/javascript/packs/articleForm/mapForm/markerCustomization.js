@@ -121,4 +121,15 @@ class MarkerCustomization extends Component {
     )
   }
 }
+
+MarkerCustomization.propTypes = {
+  googleMap: PropTypes.object,
+  map: PropTypes.object.isRequired,
+  token: PropTypes.string.isRequired,
+  customizationOnGoing: PropTypes.object.isRequired,
+  updateMapDataList: PropTypes.func.isRequired,
+  updateMap: PropTypes.func.isRequired,
+  hidePolylineCustomization: PropTypes.func.isRequired,
+}
+
 export default MarkerCustomization

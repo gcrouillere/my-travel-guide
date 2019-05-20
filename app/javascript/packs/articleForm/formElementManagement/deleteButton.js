@@ -17,4 +17,8 @@ class DeleteButton extends Component {
   }
 }
 
+DeleteButton.propTypes = {
+  deleteElement: PropTypes.func.isRequired
+}
+
 export default DeleteButton

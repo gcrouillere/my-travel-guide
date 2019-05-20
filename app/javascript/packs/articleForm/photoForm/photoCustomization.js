@@ -107,4 +107,15 @@ class PhotoCustomization extends Component {
   }
 }
 
+PhotoCustomization.propTypes = {
+  processing: PropTypes.bool,
+  photo: PropTypes.object.isRequired,
+  cropped: PropTypes.bool.isRequired,
+  crop: PropTypes.object.isRequired,
+  customizationActive: PropTypes.bool.isRequired,
+  abandonCustomization: PropTypes.func.isRequired,
+  updatePhoto: PropTypes.func.isRequired,
+  getPhotoNode: PropTypes.func.isRequired
+}
+
 export default PhotoCustomization

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
@@ -32,6 +31,10 @@ class AppHeader extends Component {
       </div>
     )
   }
+}
+
+AppHeader.propTypes = {
+  location: PropTypes.object.isRequired
 }
 
 export default AppHeader

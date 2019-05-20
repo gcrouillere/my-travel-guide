@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import TextContentForm from './articleForm/textContentForm'
 import $ from 'jquery'
@@ -44,6 +43,10 @@ class Article extends Component {
       </div>
     )
   }
+}
+
+Article.propTypes = {
+  match: PropTypes.object.isRequired
 }
 
 export default Article

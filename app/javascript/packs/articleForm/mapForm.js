@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+
 import DropZone from './formElementManagement/dropZone'
 import DragVisualElements from './formElementManagement/dragVisualElements'
 import DeleteButton from './formElementManagement/deleteButton'
@@ -100,7 +102,6 @@ class MapForm extends Component {
 
         <MapCustomization googleMap={this.state.googleMap} map={this.state.map} token={this.props.token}
         customizationOnGoing={this.state.customizationOnGoing}
-        initAddSimpleMarker={this.initAddSimpleMarker} initAddMarkerWithIW={this.initAddMarkerWithIW}
         updateMapDataList={this.updateMapDataList} updateMap={this.updateMap}
         preventCustomizationMix={this.preventCustomizationMix}
         customizationActive={this.state.customizationActive} abandonCustomization={this.abandonCustomization}/>
@@ -119,14 +120,32 @@ class MapForm extends Component {
         markers={this.state.map.markers} token={this.props.token}
         customizationOnGoing={this.state.customizationOnGoing} manageMarker={this.manageMarker}
         managePolyline={this.managePolyline} managePolylinePoint={this.managePolylinePoint}
-        handleZoom={this.handleZoom} handleCenter={this.handleCenter} setGoogleMap={this.setGoogleMap} setMap={this.setMap}
-        preventCustomizationMix={this.preventCustomizationMix} updateMap={this.updateMap} token={this.props.token}
+        handleZoom={this.handleZoom} setGoogleMap={this.setGoogleMap} setMap={this.setMap}
+        preventCustomizationMix={this.preventCustomizationMix} updateMap={this.updateMap}
         ref={this.mapComponentRef}/>
 
         <DropZone area={"after"} onDrop={this.onDrop} dropTarget={this.props.dropTarget}/>
       </div>
     );
   }
+}
+
+MapForm.propTypes = {
+  id: PropTypes.number.isRequired,
+  articleId: PropTypes.number.isRequired,
+  position: PropTypes.number.isRequired,
+  map: PropTypes.object.isRequired,
+  token: PropTypes.string.isRequired,
+  onDragStart: PropTypes.func.isRequired,
+  onDragOver: PropTypes.func.isRequired,
+  onDragEnter: PropTypes.func.isRequired,
+  onDragLeave: PropTypes.func.isRequired,
+  onDrop: PropTypes.func.isRequired,
+  deleteElement: PropTypes.func.isRequired,
+  preventDraggingOnOtherElements: PropTypes.func.isRequired,
+  draggingElement: PropTypes.bool.isRequired,
+  dragging: PropTypes.bool.isRequired,
+  dropTarget: PropTypes.object
 }
 
 export default MapForm

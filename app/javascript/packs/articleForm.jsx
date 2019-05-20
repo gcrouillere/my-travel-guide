@@ -1,16 +1,17 @@
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
+
+import $ from 'jquery'
+import update from 'immutability-helper'
+import 'react-quill/dist/quill.snow.css'
+
 import AudienceForm from './articleForm/audienceForm'
 import TextContentForm from './articleForm/textContentForm'
 import MapForm from './articleForm/mapForm'
 import PhotoForm from './articleForm/photoForm'
 import ContentMenu from './articleForm/contentMenu'
 import DragImage from './articleForm/dragImage'
-import $ from 'jquery'
-import update from 'immutability-helper'
 import ajaxHelpers from './../utils/ajaxHelpers'
-import 'react-quill/dist/quill.snow.css'
 
 class ArticleForm extends Component {
   constructor(props) {
@@ -83,7 +84,7 @@ class ArticleForm extends Component {
   }
 
   addNewMap = async (id, map, initPositionAtCreation) => {
-    this.refs.contentMenu.setState({mapOverlayActive: false})
+    this.contentMenuRef.current.abandonMapCreation()
 
     const newMap = update(map, { $merge: {
       position: this.state.articleElements.length,
@@ -325,6 +326,11 @@ class ArticleForm extends Component {
       </div>
     )
   }
+}
+
+ArticleForm.propTypes = {
+  match: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
 }
 
 export default ArticleForm

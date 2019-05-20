@@ -44,4 +44,9 @@ class DragImage extends Component {
   }
 }
 
+DragImage.propTypes = {
+  dragContent: PropTypes.object.isRequired,
+  activeDragImage: PropTypes.bool.isRequired
+}
+
 export default DragImage

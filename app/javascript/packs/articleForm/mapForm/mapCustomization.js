@@ -201,4 +201,16 @@ class MapCustomization extends Component {
   }
 }
 
+MapCustomization.propTypes = {
+  googleMap: PropTypes.object,
+  map: PropTypes.object.isRequired,
+  token: PropTypes.string.isRequired,
+  customizationOnGoing: PropTypes.object.isRequired,
+  updateMapDataList: PropTypes.func.isRequired,
+  updateMap: PropTypes.func.isRequired,
+  preventCustomizationMix: PropTypes.func.isRequired,
+  customizationActive: PropTypes.bool.isRequired,
+  abandonCustomization: PropTypes.func.isRequired
+}
+
 export default MapCustomization

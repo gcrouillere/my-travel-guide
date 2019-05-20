@@ -32,4 +32,10 @@ class MapInitialCenterOverlay extends Component {
   }
 }
 
+MapInitialCenterOverlay.propTypes = {
+  mapOverlayActive: PropTypes.bool.isRequired,
+  abandonMapCreation: PropTypes.func.isRequired,
+  addNewMap: PropTypes.func.isRequired
+}
+
 export default MapInitialCenterOverlay

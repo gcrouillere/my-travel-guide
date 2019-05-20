@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom';
 import { Route } from 'react-router-dom'
 import AppHeader from './appHeader';
 import ArticlesList from './articlesList'

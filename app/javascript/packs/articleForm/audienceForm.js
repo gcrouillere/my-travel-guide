@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+
 import update from 'immutability-helper'
 import $ from 'jquery'
+
 import ajaxHelpers from './../../utils/ajaxHelpers'
 
 class AudienceForm extends Component {
@@ -94,6 +97,12 @@ class AudienceForm extends Component {
       </div>
     )
   }
+}
+
+AudienceForm.propTypes = {
+  id: PropTypes.string.isRequired,
+  token: PropTypes.string.isRequired,
+  updateArticleCompletion: PropTypes.func.isRequired
 }
 
 export default AudienceForm
