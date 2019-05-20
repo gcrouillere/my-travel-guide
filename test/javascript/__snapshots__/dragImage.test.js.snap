@@ -19,13 +19,11 @@ exports[`DragImage test suite renders component with a photo 1`] = `
   className="dragImage-active"
   id="dragImage"
 >
-  <div
-    className="imageDragging"
-  >
-    <img
-      alt=""
-      src="http://res.cloudinary.com/dbhsa0hgf/image/upload/v1556523579/vrc7darjtvbjiwwhi8n6.jpg"
-    />
+  <div>
+    <p>
+      Image : 
+      artificial-background-blue-1282170
+    </p>
   </div>
 </div>
 `;

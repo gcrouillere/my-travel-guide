@@ -1,27 +1,107 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[` 1`] = `
-<div
-  className="audienceSelection incomplete"
+exports[`AudienceForm test suite renders component 1`] = `
+<AudienceForm
+  id={1}
+  updateArticleCompletion={
+    [MockFunction] {
+      "calls": Array [
+        Array [
+          Object {
+            "audienceForm": false,
+          },
+        ],
+        Array [
+          Object {
+            "audienceForm": false,
+          },
+        ],
+        Array [
+          Object {
+            "audienceForm": false,
+          },
+        ],
+      ],
+      "results": Array [
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+      ],
+    }
+  }
 >
-  <h2
-    className="sectionLabel"
-  >
-    For whom is the trip intended ?
-  </h2>
-  <p
-    className="mainTitleSub"
-  >
-    (select all that apply)
-  </p>
   <div
-    className="form-check"
-  />
-  <button
-    className="btn btn-dark AudienceSubmit"
-    onClick={[Function]}
+    className="audienceSelection incomplete"
   >
-    Continue writing
-  </button>
-</div>
+    <h2
+      className="sectionLabel"
+    >
+      For whom is the trip intended ?
+    </h2>
+    <p
+      className="mainTitleSub"
+    >
+      (select all that apply)
+    </p>
+    <div
+      className="form-check"
+    >
+      <div
+        key="Couple0"
+      >
+        <input
+          checked={true}
+          className="form-check-input"
+          id="category-2"
+          key="Couple1"
+          onChange={[Function]}
+          type="checkbox"
+          value="Couple"
+        />
+        <label
+          className="form-check-label ticked"
+          htmlFor="category-2"
+          key="Couple2"
+        >
+          Couple
+        </label>
+      </div>
+      <div
+        key="Friends0"
+      >
+        <input
+          checked={false}
+          className="form-check-input"
+          id="category-3"
+          key="Friends1"
+          onChange={[Function]}
+          type="checkbox"
+          value="Friends"
+        />
+        <label
+          className="form-check-label blank"
+          htmlFor="category-3"
+          key="Friends2"
+        >
+          Friends
+        </label>
+      </div>
+    </div>
+    <button
+      className="btn btn-dark AudienceSubmit"
+      onClick={[Function]}
+    >
+      Continue writing
+    </button>
+  </div>
+</AudienceForm>
 `;

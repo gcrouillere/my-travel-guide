@@ -1,7 +1,6 @@
 import update from 'immutability-helper'
 import article from './../../../../test/javascript/__mocks__/fakeArticle.json'
 import audienceSelection from './../../../../test/javascript/__mocks__/audienceSelection.json'
-import updatedArticle from './../../../../test/javascript/__mocks__/fakeArticleFedWithText.json'
 
 const map = article.maps[0]
 
@@ -32,7 +31,7 @@ const ajaxCall = jest.fn((method, url, data, token) => {
   if (/\/articles\/element_position_update\//.test(url)) {
     let newTextContent = update(instances.text_content, {
       id: {$set: 1},
-      text: {$set: "caca"},
+      text: {$set: "foo"},
       position: {$set: data.positions.target.position}
     })
     newInstance = update(newInstance, { text_contents: {$push: [newTextContent] }})
@@ -45,10 +44,6 @@ const ajaxCall = jest.fn((method, url, data, token) => {
         newInstance = update(newInstance, { [characteristic]: {$set: data[modelKey][characteristic]}})
       })
     })
-
-    if (newInstance.audience_selection_ids) {
-      return newInstance.audience_selection_ids.length > 1 ? Promise.resolve(updatedArticle) : Promise.resolve(article)
-    }
   }
 
   if (method = 'GET' || method == 'POST') {

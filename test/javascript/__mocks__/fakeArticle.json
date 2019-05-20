@@ -1,7 +1,7 @@
 {
   "id": 4,
   "title": "My 10 characters long article title",
-  "audience_valid": true,
+  "audience_valid": false,
   "created_at": "Mon, 29 Apr 2019 07:20:32 UTC +00:00",
   "updated_at": "Mon, 29 Apr 2019 07:34:24 UTC +00:00",
   "text_contents":

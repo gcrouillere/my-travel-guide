@@ -42,7 +42,7 @@ exports[` 2`] = `
 
 exports[` 3`] = `
 <div
-  className="dropZone-after drop-after"
+  className="dropZone-after drop-after "
 >
   <p
     className="drop-after"

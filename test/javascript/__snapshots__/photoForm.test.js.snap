@@ -2,7 +2,7 @@
 
 exports[`PhotoForm test suite renders component 1`] = `
 <div
-  className="photoInput "
+  className="photoInput  "
   draggable={true}
   id="content-2"
   onDragEnter={[Function]}
@@ -46,7 +46,7 @@ exports[`PhotoForm test suite renders component 1`] = `
     />
   </div>
   <div
-    className="dropZone-before drop-before"
+    className="dropZone-before drop-before "
   >
     <p
       className="drop-before"
@@ -198,7 +198,7 @@ exports[`PhotoForm test suite renders component 1`] = `
     />
   </div>
   <div
-    className="dropZone-after drop-after"
+    className="dropZone-after drop-after "
   >
     <p
       className="drop-after"

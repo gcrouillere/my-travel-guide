@@ -17,7 +17,7 @@ class AudienceForm extends Component {
 
   async componentDidMount() {
     const audienceSelections = await ajaxHelpers.ajaxCall('GET', "/audience_selections")
-    const article = await ajaxHelpers.ajaxCall('GET', `/articles/${this.props.id}`)
+    const article = await ajaxHelpers.ajaxCall('GET', `/articles/${this.props.id}`, {}, {})
 
     this.setState({
       audiencesSelection: article.audience_selections,

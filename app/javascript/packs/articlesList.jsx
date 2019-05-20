@@ -5,41 +5,30 @@ import { Link } from 'react-router-dom'
 import $ from 'jquery'
 import update from 'immutability-helper'
 import htmlSanitizer from './../utils/htmlSanitizer'
+import ajaxHelpers from './../utils/ajaxHelpers'
 
 class ArticlesList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      articles: this.props.articles || []
+      articles: [],
+      token: $('meta[name="csrf-token"]').attr('content')
     }
   }
 
-  componentDidMount () {
-    $.ajax({
-      method: 'GET',
-      url: "/articles",
-      dataType: "JSON"
-    }).then(response => {
-      this.setState({articles: response});
-    }).fail( response => {
-      console.log(response)
-    })
+  async componentDidMount () {
+    const articles = await ajaxHelpers.ajaxCall('GET', "/articles")
+    this.setState({articles: articles})
   }
 
-  deleteArticle = (event) => {
+  deleteArticle = async (event) => {
     const articleID = event.target.getAttribute('articlid')
+
+    await ajaxHelpers.ajaxCall('DELETE', `/articles/${articleID}`, {}, this.state.token)
+
     const articleIndex = this.state.articles.findIndex(x => x.id == articleID)
-    $.ajax({
-      type: "DELETE",
-      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      url: `/articles/${articleID}`,
-      dataType: "JSON",
-    }).done((data) => {
-      const articles = update(this.state.articles, {$splice: [[articleIndex, 1]]})
-      this.setState({articles: articles})
-    }).fail((response) => {
-      console.log(response);
-    })
+    const articles = update(this.state.articles, {$splice: [[articleIndex, 1]]})
+    this.setState({articles: articles})
   }
 
   sanitizeAndTruncateHTML(html) {

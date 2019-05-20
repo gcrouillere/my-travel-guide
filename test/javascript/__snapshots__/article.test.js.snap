@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Article test Suite renders component 1`] = `
+<Article
+  match={
+    Object {
+      "params": Object {
+        "id": 1,
+      },
+    }
+  }
+>
+  <div
+    className="container article-container"
+  >
+    <header
+      className="text-center"
+    >
+      <h1>
+        My 10 characters long article title
+      </h1>
+    </header>
+    <div
+      id="articleTextContents"
+    >
+      Text content is not empty
+    </div>
+  </div>
+</Article>
+`;

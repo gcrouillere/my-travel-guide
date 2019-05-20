@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App test suite renders App without crashing 1`] = `
+<div>
+  <div>
+    <nav
+      className="navbar navbar-light bg-dark"
+    >
+      <a
+        className="navbar-brand nav-link text-white"
+        href="/"
+        onClick={[Function]}
+      >
+        My Travel Guide
+      </a>
+      <a
+        className="nav-link text-white"
+        href="/articles/new"
+        onClick={[Function]}
+      >
+        Create article
+      </a>
+    </nav>
+  </div>
+  <div
+    className="container articles-container"
+  >
+    <div
+      className="row"
+    />
+  </div>
+</div>
+`;

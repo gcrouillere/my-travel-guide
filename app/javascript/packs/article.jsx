@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import TextContentForm from './articleForm/textContentForm'
 import $ from 'jquery'
 import 'react-quill/dist/quill.snow.css';
+import ajaxHelpers from './../utils/ajaxHelpers'
 
 class Article extends Component {
   constructor(props) {
@@ -13,22 +14,18 @@ class Article extends Component {
       text: "",
       title: ""
     }
+    this.articlesDivRef = React.createRef()
   }
 
-  componentDidMount() {
-    $.ajax({
-      method: 'GET',
-      url: `/articles/${this.props.match.params.id}`,
-      dataType: "JSON"
-    }).done((data) => {
-      this.setState({title: data.title, textContents: data.text_contents})
-    });
+  async componentDidMount() {
+    const article = await ajaxHelpers.ajaxCall('GET', `/articles/${this.props.match.params.id}`, {}, {})
+
+    this.setState({title: article.title, textContents: article.text_contents})
   }
 
   createTextContentsHTML(textContents) {
-    var textContentsReceiver = document.getElementById('articleTextContents')
     textContents.forEach((textContent) => {
-      textContentsReceiver.insertAdjacentHTML('beforeend', textContent.text)
+      this.articlesDivRef.current.insertAdjacentHTML('beforeend', textContent.text)
     })
   }
 
@@ -40,7 +37,7 @@ class Article extends Component {
           <h1>{this.state.title}</h1>
         </header>
 
-        <div id="articleTextContents">
+        <div ref={this.articlesDivRef} id="articleTextContents">
           {this.createTextContentsHTML(this.state.textContents)}
         </div>
 
