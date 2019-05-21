@@ -8,7 +8,12 @@ class TextContentTest < ActiveSupport::TestCase
   end
 
   test "should save text content with article referenced and text empty" do
-    text_content = TextContent.new(article: Article.create())
+    text_content = TextContent.new(article: Article.new())
     assert text_content.save
+  end
+
+  test 'should return appropriate class' do
+    text_content = TextContent.new(article: Article.new())
+    assert text_content.class_name == "TextContent"
   end
 end

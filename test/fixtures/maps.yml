@@ -3,9 +3,19 @@
 one:
   lat: 1.5
   lng: 1.5
+  zoom: 11
+  name: "map 1"
+  position: 1
+  height: 400
+  show_map_center_as_marker: true
   article: one
 
 two:
   lat: 1.5
   lng: 1.5
+  zoom: 7
+  name: "map 2"
+  position: 5
+  height: 300
+  show_map_center_as_marker: false
   article: two

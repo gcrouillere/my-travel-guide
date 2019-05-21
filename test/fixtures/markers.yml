@@ -3,9 +3,23 @@
 one:
   lat: 1.5
   lng: 1.5
-  article: one
+  description: "Marker 1"
+  logo: "restaurantLogo"
+  position: null
+  map: one
 
 two:
-  lat: 1.5
-  lng: 1.5
-  article: two
+  lat: 2.5
+  lng: 2.5
+  description: ""
+  logo: "markerLogo"
+  position: 1
+  polyline: one
+
+three:
+  lat: 3.5
+  lng: 3.5
+  description: ""
+  logo: "markerLogo"
+  position: 2
+  polyline: two

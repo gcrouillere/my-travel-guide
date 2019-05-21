@@ -2,6 +2,8 @@
 
 one:
   title: Article one
+  audience_valid: true
 
 two:
   title: Article two
+  audience_valid: true
