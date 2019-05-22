@@ -18,7 +18,7 @@ one:
   bytes: "123"
   format: "jpg"
   resource_type: "image"
-  url: "fakeurl1"
+  url: "https://res.cloudinary.com/dbhsa0hgf/image/upload/v1550478209/iupxak0bo3npl43vwptt.jpg"
   cropped_url: ""
   original_filename: "photo 1"
   display_title: true
@@ -39,7 +39,7 @@ two:
   bytes: "345"
   format: "jpg"
   resource_type: "image"
-  url: "fakeurl2"
+  url: "https://res.cloudinary.com/dbhsa0hgf/image/upload/v1543409831/lrt4uzxmcvevfohzaipd.jpg"
   cropped_url: ""
   original_filename: "photo 2"
   display_title: true

@@ -74,8 +74,8 @@ describe('Article Form with content', () => {
 
 describe('Article content updates', () => {
 
-    const match = {params: {id: 1}}
-    let wrapper3 = mount(<ArticleForm match={match}/>);
+  const match = {params: {id: 1}}
+  let wrapper3 = mount(<ArticleForm match={match}/>);
 
   it('adds textContent on last position on click', async () => {
     await wrapper3.instance().componentDidMount()
@@ -101,7 +101,7 @@ describe('Article content updates', () => {
     expect(wrapper3.find("#dragImage p").text()).toEqual("Image : artificial-background-blue-1282170")
   })
 
-  it('set proper state on dragstart', () => {
+  it('set proper drop zones on dragstart', () => {
     wrapper3.setState({previousHoveredElementPosition: 0})
     wrapper3.find("#content-0").simulate('dragenter')
     wrapper3.update()

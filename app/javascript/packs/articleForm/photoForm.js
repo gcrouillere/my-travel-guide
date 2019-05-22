@@ -20,8 +20,8 @@ class PhotoForm extends Component {
     super(props)
     this.state = {
       photo: this.props.photo,
-      src: this.props.photo.cropped_url ? this.props.photo.cropped_url : this.props.photo.url,
-      cropped: this.props.photo.cropped_url ? (this.props.photo.cropped_url.length > 0 ? true : false) : false ,
+      src: this.retrievePhotoSRC(this.props.photo),
+      cropped: /c_crop/.test(this.retrievePhotoSRC(this.props.photo)),
       processing: false,
       customizationActive: false,
       resizeOrigin: null,
@@ -32,6 +32,12 @@ class PhotoForm extends Component {
     }
     this.photoRef = React.createRef()
     this.photoContentRef = React.createRef()
+  }
+
+  retrievePhotoSRC(photo) {
+    return photo.cropped_url ?
+      (photo.cropped_url == "false" ? photo.url : photo.cropped_url) :
+      photo.url
   }
 
   initResize = (event) => {
@@ -72,8 +78,8 @@ class PhotoForm extends Component {
 
     this.setState({
       photo: newPhoto,
-      cropped: newPhoto.cropped_url ? (newPhoto.cropped_url.length > 0 ? true : false) : false,
-      src: newPhoto.cropped_url ? (newPhoto.cropped_url.length > 0 ? newPhoto.cropped_url : newPhoto.url) : newPhoto.url,
+      cropped: /c_crop/.test(this.retrievePhotoSRC(newPhoto)),
+      src: this.retrievePhotoSRC(newPhoto),
       processing: false,
       customizationActive: false
     })

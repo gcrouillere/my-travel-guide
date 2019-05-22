@@ -1,11 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  text: <h1>Lorem ipsum dolor sit amet, consectetur adipiscing elit. </h1><p><br></p><h2>Sed sit amet quam nec mi aliquam varius. Morbi in varius metus, nec sollicitudin arcu. </h2><p><br></p><a href="www.google.fr" target="_blank">Phasellus</a><p><br></p><h2>Praesent a justo vulputate, lacinia tortor non, consectetur libero. Pellentesque magna mi, pulvinar non lobortis nec, rutrum at ipsum.</h2><p><br></p><p><br></p><ul><li>Etiam tempus viverra lectus, vitae egestas arcu imperdiet et. </li><li>Nam pretium varius ligula, in egestas lacus convallis sed.</li><li>Curabitur et pellentesque ante, non egestas mauris. </li></ul><p><br></p><p>Curabitur tristique urna eu augue maximus, ut venenatis lacus lacinia. In vestibulum vel arcu vehicula porta. Quisque et est interdum, iaculis ipsum quis, vulputate ante. Quisque consectetur mollis consectetur. Suspendisse condimentum feugiat semper. Ut laoreet ex magna. Nullam lobortis tellus eu euismod vestibulum. Mauris a dignissim ligula, at facilisis mi. Morbi suscipit leo in nibh cursus tempor.</p>
+  text: <h2>Awesome content</h2><p>Truly great</p>
   position: 3
   article: one
 
 two:
-  text: <h1>Lorem ipsum dolor sit amet, consectetur adipiscing elit. </h1><p>Nam commodo nisi erat, et rhoncus leo egestas vulputate. <a href="www.google.fr" target="_blank">Phasellus</a> pretium lacus a laoreet fringilla. Pellentesque ornare, dolor sed imperdiet ullamcorper, purus odio feugiat metus, id gravida nibh velit sed turpis. Vivamus eu condimentum odio. Curabitur vel dolor leo. Etiam ut ipsum rutrum, fermentum justo nec, lacinia lorem. Interdum et malesuada fames ac ante ipsum primis in faucibus. </p><p><br></p><h2>Praesent a justo vulputate, lacinia tortor non, consectetur libero. Pellentesque magna mi, pulvinar non lobortis nec, rutrum at ipsum.</h2><p><br></p><p>Pellentesque lobortis enim hendrerit dui auctor fringilla. Vestibulum vitae lacinia leo, eu lacinia purus. Nulla facilisi. In tempus nec turpis a feugiat. Maecenas egestas varius massa, nec pretium ipsum consequat elementum. Vestibulum lacinia blandit augue sit amet suscipit:</p>
+  text: <h2>Incredibly interesting</h2><a href="#">A fantastic link</a>
   position: 4
   article: two

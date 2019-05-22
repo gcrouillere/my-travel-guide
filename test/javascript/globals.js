@@ -75,7 +75,7 @@ class FormData {
 }
 global.FormData = FormData
 
-//JS raw event Listeners
+//Raw event Listeners
 global.onmousemove = {fn: () => {}}
 global.onmouseup = {fn: () => {}}
 

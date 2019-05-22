@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
+
 import $ from 'jquery'
+
 import { CLOUDINARYKEYS } from './../../../config/config'
 
 class PhotoCustomization extends Component {

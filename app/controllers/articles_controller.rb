@@ -88,10 +88,17 @@ class ArticlesController < ApplicationController
 
   def article_params
     if params[:article][:audience_selection_ids].present?
+
       params[:article][:audience_selection_ids] = [] if params[:article][:audience_selection_ids] == [""]
-      params.require(:article).permit(:title, :audience_valid).merge(audience_selection_ids: params[:article][:audience_selection_ids].map(&:to_i).uniq)
+
+      params
+        .require(:article)
+        .permit(:title, :audience_valid)
+        .merge(audience_selection_ids: params[:article][:audience_selection_ids].map(&:to_i).uniq)
     else
-      params.require(:article).permit(:title, :audience_valid)
+      params
+        .require(:article)
+        .permit(:title, :audience_valid)
     end
   end
 end
