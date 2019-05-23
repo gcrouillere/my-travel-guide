@@ -1,38 +1,39 @@
-import $ from 'jquery'
-import { GOOGLEKEY } from './../config/config'
+import $ from 'jquery';
+import { GOOGLEKEY } from '../config/config';
 
 export default {
 
   async ajaxCall(method, url, data, token) {
-    let returnData = null
+    let returnData = null;
 
     await $.ajax({
       method: method,
-      beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', token) },
+      beforeSend: function AttachHeadeToRequest(xhr) { xhr.setRequestHeader('X-CSRF-Token', token); },
       url: url,
-      dataType: "JSON",
+      dataType: 'JSON',
       data: data
     })
-    .done((data) => { returnData = data })
-    .fail((data) => { console.log(data) })
+      .done((reponse) => { returnData = reponse; })
+      .fail((reponse) => { console.log(reponse); });
 
-    return returnData
+    return returnData;
   },
 
   async geocodePlace(adress) {
-    const formattedAdress = adress.replace(/,/g, '').split(' ').join('+')
-    let map = null
+    const formattedAdress = adress.replace(/,/g, '').split(' ').join('+');
+    let map = null;
 
     await $.ajax({
-      method: "GET",
+      method: 'GET',
       url: `https://maps.googleapis.com/maps/api/geocode/json?address=${formattedAdress}&key=${GOOGLEKEY.googleAPIBrowserKey}`
     }).done(data => {
       map = {
         lat: data.results[0].geometry.location.lat,
         lng: data.results[0].geometry.location.lng,
         name: data.results[0].formatted_address
-    }})
+      };
+    });
 
-    return map
+    return map;
   }
-}
+};

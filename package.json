@@ -16,6 +16,7 @@
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.10.0",
     "enzyme-to-json": "^3.3.5",
+    "eslint-plugin-react": "^7.13.0",
     "immutability-helper": "^3.0.0",
     "jquery": "^3.3.1",
     "prop-types": "^15.7.2",
@@ -30,6 +31,9 @@
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.4.4",
     "babel-jest": "^24.1.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.2",
     "jest": "^24.1.0",
     "webpack-dev-server": "2.11.2"
   },
