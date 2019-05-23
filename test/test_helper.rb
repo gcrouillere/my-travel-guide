@@ -8,4 +8,9 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
+  def load_article
+    article = articles(:one)
+    visit edit_article_path(article)
+    sleep 0.1.seconds
+  end
 end

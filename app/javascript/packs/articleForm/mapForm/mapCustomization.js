@@ -172,7 +172,7 @@ class MapCustomization extends Component {
             )}
           </div>
 
-          <button className={`btn btn-dark mapCustomizationBlock ${this.state.markerOnConstruction ? "finishPath" : "startPath"}`}
+          <button id="marker" className={`btn btn-dark mapCustomizationBlock ${this.state.markerOnConstruction ? "finishPath" : "startPath"}`}
             onClick={this.initAddMarker}
             disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "initAddMarker" : false}>
 
@@ -181,7 +181,7 @@ class MapCustomization extends Component {
             {this.state.markerOnConstruction && <p className="actionCancelInfo">Click button again to cancel action</p>}
           </button>
 
-          <button className={`btn btn-dark mapCustomizationBlock ${this.state.polylineOnConstruction ? "finishPath" : "startPath"}`}
+          <button id="path" className={`btn btn-dark mapCustomizationBlock ${this.state.polylineOnConstruction ? "finishPath" : "startPath"}`}
             onClick={this.initPolyLine}
             disabled={this.props.customizationOnGoing.status ? this.props.customizationOnGoing.trigger !== "initPolyLine" : false}>
 
