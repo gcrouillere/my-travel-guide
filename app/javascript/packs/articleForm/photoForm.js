@@ -13,6 +13,7 @@ import ElementResize from './formElementManagement/elementResize'
 import PhotoCustomization from './photoForm/photoCustomization'
 import ProcessingOverlay from './photoForm/processingOverlay'
 import ajaxHelpers from './../../utils/ajaxHelpers'
+import photoHelpers from './../../utils/photoHelpers'
 
 class PhotoForm extends Component {
 
@@ -20,24 +21,20 @@ class PhotoForm extends Component {
     super(props)
     this.state = {
       photo: this.props.photo,
-      src: this.retrievePhotoSRC(this.props.photo),
-      cropped: /c_crop/.test(this.retrievePhotoSRC(this.props.photo)),
+      src: photoHelpers.retrievePhotoSRC(this.props.photo),
+      cropped: /c_crop/.test(photoHelpers.retrievePhotoSRC(this.props.photo)),
       processing: false,
       customizationActive: false,
       resizeOrigin: null,
       crop: {
         x: 0,
-        y: 0
+        y: 0,
+        height: 0,
+        width: 0
       }
     }
     this.photoRef = React.createRef()
     this.photoContentRef = React.createRef()
-  }
-
-  retrievePhotoSRC(photo) {
-    return photo.cropped_url ?
-      (photo.cropped_url == "false" ? photo.url : photo.cropped_url) :
-      photo.url
   }
 
   initResize = (event) => {
@@ -52,13 +49,16 @@ class PhotoForm extends Component {
   }
 
   resizeOnMove = (event) => {
-    let newWidth, validWidth = null
+    let newWidth, validWidth, pictureRatio, minPCWidth, maxPCWidth = null
 
+    pictureRatio = this.state.photo.original_width / this.state.photo.original_height
+    minPCWidth = (pictureRatio * 330) / this.state.maxWidth * 100
+    maxPCWidth = this.state.photo.original_width / this.state.maxWidth > 1 ? 100 : this.state.photo.original_width / this.state.maxWidth * 100
     newWidth = this.state.initialPhotoWidth + ((event.screenX - this.state.resizeOrigin) / this.state.maxWidth) * 100
-    validWidth = newWidth > 100 ? 100 : (newWidth < 20 ? 20 : newWidth)
+
+    validWidth = newWidth > maxPCWidth  ? maxPCWidth : (newWidth < minPCWidth ? minPCWidth : newWidth)
 
     let newPhotoState = update(this.state.photo, { css_width: { $set: validWidth }})
-
     this.setState({photo: newPhotoState})
   }
 
@@ -78,8 +78,8 @@ class PhotoForm extends Component {
 
     this.setState({
       photo: newPhoto,
-      cropped: /c_crop/.test(this.retrievePhotoSRC(newPhoto)),
-      src: this.retrievePhotoSRC(newPhoto),
+      cropped: /c_crop/.test(photoHelpers.retrievePhotoSRC(newPhoto)),
+      src: photoHelpers.retrievePhotoSRC(newPhoto),
       processing: false,
       customizationActive: false
     })

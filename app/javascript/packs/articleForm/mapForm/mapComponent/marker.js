@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
+
 import $ from 'jquery'
+
 import ajaxHelpers from './../../../../utils/ajaxHelpers'
+import mapHelper from './../../../../utils/mapHelper'
 import markerLogos from './../markerLogos'
 
 class Marker extends Component {
@@ -19,13 +22,9 @@ class Marker extends Component {
   }
 
   renderMarker() {
-    this.googleMarker = new google.maps.Marker({
-      position: {lat: this.props.marker.lat, lng: this.props.marker.lng},
-      map: this.props.googleMap,
-      draggable: !this.props.marker.mapCenter,
-      icon: this.state.logos[this.props.marker.logo].url,
-      mapCenter: this.props.marker.mapCenter
-    })
+    const icon = this.state.logos[this.props.marker.logo].url
+    const draggable = this.props.marker.mapCenter ? false : true
+    this.googleMarker = mapHelper.createMarker(this.props.marker, this.props.googleMap, icon, null, draggable)
 
     if (this.props.marker.description) {
       this.infowindow = new google.maps.InfoWindow({content: this.props.marker.description, disableAutoPan: true});

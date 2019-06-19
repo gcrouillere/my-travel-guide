@@ -29,6 +29,12 @@ export default {
     })
 
     return returnData
+  },
+
+  retrievePhotoSRC(photo) {
+    return photo.cropped_url ?
+      (photo.cropped_url == "false" ? photo.url : photo.cropped_url) :
+      photo.url
   }
 
 }

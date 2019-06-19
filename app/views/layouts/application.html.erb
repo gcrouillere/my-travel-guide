@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>MyTravelGuide</title>
+    <title>My Travel Guide</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_pack_tag 'bootstrap' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag "https://maps.google.com/maps/api/js?libraries=places,drawing,geometry&key=#{ENV['GOOGLE_API_BROWSER_KEY']}" %>
   </head>
 
   <body>
-    <%= yield %>
+    <div class="application-layout">
+      <%= render 'shared/flashes' %>
+      <%= yield %>
+    </div>
   </body>
 </html>

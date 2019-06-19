@@ -107,7 +107,6 @@ class ContentMenu extends Component {
 }
 
 ContentMenu.propTypes = {
-  id: PropTypes.number.isRequired,
   elementsCount: PropTypes.number.isRequired,
   addNewTextContent: PropTypes.func.isRequired,
   addNewMap: PropTypes.func.isRequired,

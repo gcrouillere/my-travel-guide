@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux';
 
 import $ from 'jquery'
 import update from 'immutability-helper'
@@ -19,46 +21,44 @@ class ArticlesList extends Component {
 
   async componentDidMount () {
     const articles = await ajaxHelpers.ajaxCall('GET', "/articles")
-    this.setState({articles: articles})
+    this.setState({articles: articles}, () => {console.log(this.state.articles)})
   }
 
-  deleteArticle = async (event) => {
-    const articleID = event.target.getAttribute('articlid')
-
-    await ajaxHelpers.ajaxCall('DELETE', `/articles/${articleID}`, {}, this.state.token)
-
-    const articleIndex = this.state.articles.findIndex(x => x.id == articleID)
-    const articles = update(this.state.articles, {$splice: [[articleIndex, 1]]})
-    this.setState({articles: articles})
-  }
 
   sanitizeAndTruncateHTML(html) {
     return htmlSanitizer.sanitizeAndTruncateHTML(html, 100)
   }
 
   render() {
+    console.log("article list render")
     return (
       <div className="container articles-container">
         <div className="row">
         {this.state.articles.map((article) => {
           return(
             <div key={article.id} className="col-6 col-md-4 article-card">
+            <Link to={`articles/${article.id}`}>
               <div className="card">
-                  <div className="card-header">
-                    <Link to={`articles/${article.id}`}>
-                      <span className="card-title">{article.title}</span>
-                    </Link>
-                    <button onClick={this.deleteArticle} className="close" aria-label="Close">
-                      <span aria-hidden="true" articlid={article.id}>&times;</span>
-                    </button>
-                  </div>
+                <div className="card-header">
+                  <p className="card-title">{article.title}</p>
+                </div>
                 <div className="card-body">
                   <p className="card-text">
                   { article.text_contents[0] ? this.sanitizeAndTruncateHTML(article.text_contents[0].text) : "" }
                   </p>
-                  <Link to={`articles/${article.id}/edit`} className="btn btn-primary text-white">Edit</Link>
+                  <div className="articleList-audienceSelection">
+                    <div className="row justify-content-center">
+                      { article.audience_selections.map(audience_selection =>
+                        <label key={audience_selection.audience}
+                        className="form-check-label col-2">
+                          { audience_selection.audience }
+                         </label>
+                      )}
+                    </div>
+                  </div>
                 </div>
                </div>
+             </Link>
             </div>
          )})}
         </div>
@@ -67,4 +67,10 @@ class ArticlesList extends Component {
   }
 }
 
-export default ArticlesList
+function mapStateToProps(state) {
+  return {
+    currentUser: state.currentUser
+  }
+}
+
+export default withRouter(connect(mapStateToProps, null)(ArticlesList))

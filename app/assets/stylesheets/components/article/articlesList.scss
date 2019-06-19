@@ -6,8 +6,24 @@
   width: 18rem;
   margin: 20px 0;
 
-  .card:hover {
-    box-shadow: 0 4px 6px rgba(50,50,93,0.11), 0 1px 3px rgba(0,0,0,0.08)
+  .card-header {
+    min-height: 75px;
+    display: flex;
+    justify-content: center;
+    p {
+      width: 100%;
+      flex: 1 0 auto;
+      margin: auto 0;
+    }
+  }
+
+  .card {
+      box-shadow: none;
+      transition: all 0.15s ease-in-out;
+    &:hover {
+      box-shadow: 0 4px 6px rgba(50,50,93,0.11), 0 1px 3px rgba(0,0,0,0.08);
+      transition: all 0.15s ease-in-out;
+    }
   }
 
   .card-body p {

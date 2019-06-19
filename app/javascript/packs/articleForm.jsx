@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import $ from 'jquery'
 import update from 'immutability-helper'
-import 'react-quill/dist/quill.snow.css'
 
 import AudienceForm from './articleForm/audienceForm'
 import TextContentForm from './articleForm/textContentForm'
@@ -12,6 +14,8 @@ import PhotoForm from './articleForm/photoForm'
 import ContentMenu from './articleForm/contentMenu'
 import DragImage from './articleForm/dragImage'
 import ajaxHelpers from './../utils/ajaxHelpers'
+import orderHelper from './../utils/articleContentHelper'
+import { fetchArticle } from '../actions/index'
 
 class ArticleForm extends Component {
   constructor(props) {
@@ -32,9 +36,10 @@ class ArticleForm extends Component {
       activeDragImage: false,
       dragContent: {},
       id: null,
-      customizationOnGoing: {status: false, trigger: null},
+      customizationOnGoing: { status: false, trigger: null },
       token: $('meta[name="csrf-token"]').attr('content')
     }
+
     this.MapFormRef = {}
     this.dragImageRef = React.createRef()
     this.contentMenuRef = React.createRef()
@@ -43,16 +48,18 @@ class ArticleForm extends Component {
   async componentDidMount() {
     if (this.props.match.params.id) {
       const article = await ajaxHelpers.ajaxCall('GET', `/articles/${this.props.match.params.id}`, {}, this.state.token)
+      this.props.fetchArticle(null, article)
 
       this.setState({
         title: article.title,
         titleValid: article.title.length > 10,
         id: article.id,
-        articleElements: this.orderArticleElements(article)
+        articleElements: orderHelper.orderArticleElements(article)
       })
     } else {
-      let data = { article: { title: "", audiencesSelection:[] }}
+      let data = { article: { title: "", audiencesSelection:[], user_id: this.props.currentUser.id }}
       const article = await ajaxHelpers.ajaxCall( 'POST', "/articles/", data, this.state.token)
+      this.props.fetchArticle(null, article)
 
       this.setState({
         title: article.title,
@@ -63,12 +70,8 @@ class ArticleForm extends Component {
     }
   }
 
-  orderArticleElements(data) {
-    return data.text_contents.concat(data.maps).concat(data.photos).sort((x, y) => x.position - y.position)
-  }
-
   handleTitleChange = (event) => {
-    this.setState({title: event.target.value, titleValid: event.target.value.length > 10})
+    this.setState({ title: event.target.value, titleValid: event.target.value.length > 10 })
   }
 
   saveTitleOnBlur = () => {
@@ -266,7 +269,7 @@ class ArticleForm extends Component {
       <div className="container article-container" onDrop={this.onDropOnContainer} onDragOver={this.onDragOver}>
 
         <AudienceForm id={this.props.match.params.id} updateArticleCompletion={this.updateArticleCompletion}
-        token={this.state.token}/>
+        token={this.state.token} article={this.props.currentArticle}/>
 
         {this.state.audienceForm &&
           <header className={`maintTitle ${this.state.titleValid ? "complete" : "incomplete"}`}>
@@ -333,4 +336,18 @@ ArticleForm.propTypes = {
   history: PropTypes.object.isRequired,
 }
 
-export default ArticleForm
+function mapStateToProps(state) {
+  return {
+    currentUser: state.currentUser,
+    currentArticle: state.currentArticle
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    { fetchArticle },
+    dispatch
+  )
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ArticleForm))

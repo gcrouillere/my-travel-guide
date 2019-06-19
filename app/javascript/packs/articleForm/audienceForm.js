@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import update from 'immutability-helper'
 import $ from 'jquery'
@@ -100,10 +102,17 @@ class AudienceForm extends Component {
 }
 
 AudienceForm.propTypes = {
-  id: PropTypes.string.isRequired,
   token: PropTypes.string.isRequired,
   updateArticleCompletion: PropTypes.func.isRequired
 }
 
-export default AudienceForm
+
+function mapStateToProps(state) {
+  return {
+    currentUser: state.currentUser,
+    currentArticle: state.currentArticle
+  }
+}
+
+export default withRouter(connect(mapStateToProps, null)(AudienceForm))
 

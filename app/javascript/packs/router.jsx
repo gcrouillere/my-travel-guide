@@ -1,13 +1,30 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom'
-import 'bootstrap/dist/css/bootstrap.css'
+import { Provider } from 'react-redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { logger } from 'redux-logger';
+import reduxPromise from 'redux-promise';
 
 import App from './app'
+import currentUserReducer from '../reducers/currentUserReducer'
+import currentArticleReducer from '../reducers/currentArticleReducer'
+
+const reducers = combineReducers({
+  currentUser: currentUserReducer,
+  currentArticle: currentArticleReducer
+})
+
+const middlewares = applyMiddleware(reduxPromise, logger);
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
-    (<Router><App/></Router>),
+    (
+      <Provider store={createStore(reducers, {}, middlewares)}>
+        <Router>
+          <App/>
+        </Router>
+      </Provider>),
     document.getElementById('root')
   )
 });

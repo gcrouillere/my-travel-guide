@@ -4,6 +4,7 @@ class Article < ApplicationRecord
   has_many :photos, -> { order('position ASC') }, dependent: :destroy
   has_many :article_audience_selections
   has_many :audience_selections, through: :article_audience_selections
+  belongs_to :user
 
   def elements_position_mapping
     self.as_json(include: {

@@ -3,6 +3,9 @@
   justify-content: center;
   align-items: center;
   position: relative;
+  border-radius: 2px;
+  padding: 25px;
+  border: 1px solid #ccc;
 
   img {
     max-width: 100%;
@@ -21,6 +24,7 @@
 
 .photoCustomization {
   overflow: hidden;
+  overflow-y: scroll;
   position: absolute;
   opacity: 0;
   z-index: 0;
@@ -36,7 +40,7 @@
     border: 1px solid #ccc;
     background: linear-gradient(to right, #fefefe, #F7F7F7);
     box-shadow: -2px 0px 5px -1px rgba(0,0,0,0.2);
-    height: 100%;
+    min-height: 100%;
     left: -100%;
     width: 100%;
     transition: all 0.3s ease-in-out;

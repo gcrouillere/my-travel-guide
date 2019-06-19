@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
+
 import $ from 'jquery'
 import update from 'immutability-helper'
+
+import mapHelper from './../../../../utils/mapHelper'
 import ajaxHelpers from './../../../../utils/ajaxHelpers'
-import tempMarkerLogo from './../../../../../assets/images/circle-full-black.svg'
-import pathStartLogo from './../../../../../assets/images/circle-black.svg'
-import pathEndLogo from './../../../../../assets/images/path-end-black.svg'
 
 class Polyline extends Component {
 
@@ -20,7 +20,8 @@ class Polyline extends Component {
 
  componentDidUpdate(prevProps) {
     if (prevProps.googleMap != this.props.googleMap) {
-      this.setState({polyline: this.props.polyline, polylineMarkers: this.props.polyline.markers}, () => { this.renderPolyline() })
+      this.setState({ polyline: this.props.polyline, polylineMarkers: this.props.polyline.markers },
+        () => { this.renderPolyline() })
     }
   }
 
@@ -36,16 +37,10 @@ class Polyline extends Component {
 
     this.state.polyline.markers.forEach((marker, index) => {
 
-      let icon = this.getPolylinePointLogo(index)
-      let tempMarker = new google.maps.Marker({
-        position: {lat: marker.lat, lng: marker.lng},
-        map: this.props.googleMap,
-        draggable: true,
-        markerIndex: index,
-        appMarker: marker,
-        icon: icon
-      })
-      this.manageDistanceInfoWindow(index, this.state.polyline.distance_displayed, this.googlePolyline, tempMarker)
+      let icon = mapHelper.getPolylinePointLogo(index, this.state.polylineMarkers)
+      let tempMarker =  mapHelper.createMarker(marker, this.props.googleMap, icon, index, true)
+      mapHelper.manageDistanceInfoWindow(index, this.state.polyline.distance_displayed, this.state.polylineMarkers,
+        this.googlePolyline, tempMarker, this.props.googleMap)
 
       tempMarker.addListener('dragend', event => {this.updatePolylinePoint(event, tempMarker)})
       tempMarker.addListener('drag', event => {this.updatePolyline(event, this.googlePolyline, tempMarker)})
@@ -60,26 +55,6 @@ class Polyline extends Component {
 
   managePolylinePoint = (event, googlePolyline, googleMarker) => {
     this.props.managePolylinePoint(event, googlePolyline, this.state.polyline, googleMarker)
-  }
-
-  getPolylinePointLogo = (index) => {
-    let icon = {}
-    if (index == 0) {
-      icon = {url: pathStartLogo, size: new google.maps.Size(24, 24), anchor: new google.maps.Point(12, 12)}
-    } else if (index == this.state.polylineMarkers.length - 1) {
-      icon = {url: pathEndLogo, size: new google.maps.Size(24, 24), anchor: new google.maps.Point(6, 23)}
-    } else {
-      icon = {url: tempMarkerLogo, size: new google.maps.Size(24, 24), anchor: new google.maps.Point(6, 6)}
-    }
-    return icon
-  }
-
-  manageDistanceInfoWindow = (index, distanceDisplayed, googlePolyline, googleMarker) => {
-    if ( distanceDisplayed && index == this.state.polylineMarkers.length - 1) {
-      let distance = Math.round(google.maps.geometry.spherical.computeLength(googlePolyline.getPath()) / 1000 * 100) / 100;
-      this.infowindow = new google.maps.InfoWindow({content: `Path length: ${distance} km`, disableAutoPan: true});
-      this.infowindow.open(this.props.googleMap, googleMarker);
-    }
   }
 
   updatePolyline = (event, googlePolyline, tempGoogleMarker) => {

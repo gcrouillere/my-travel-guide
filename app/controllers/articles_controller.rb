@@ -1,10 +1,11 @@
 class ArticlesController < ApplicationController
+  before_action :authenticate_user!
 
   def index
     @articles = Article.all.order(updated_at: :desc)
     respond_to do |format|
       format.html {render "content/home"}
-      format.json {render json: @articles.as_json(include: :text_contents)}
+      format.json {render json: @articles.as_json(include: { text_contents: {}, user: {}, audience_selections: {} })}
     end
   end
 
@@ -31,6 +32,7 @@ class ArticlesController < ApplicationController
   end
 
   def edit
+    @article = Article.find(params[:id])
     render "content/home"
   end
 
@@ -93,12 +95,12 @@ class ArticlesController < ApplicationController
 
       params
         .require(:article)
-        .permit(:title, :audience_valid)
+        .permit(:title, :audience_valid, :user_id)
         .merge(audience_selection_ids: params[:article][:audience_selection_ids].map(&:to_i).uniq)
     else
       params
         .require(:article)
-        .permit(:title, :audience_valid)
+        .permit(:title, :audience_valid, :user_id)
     end
   end
 end

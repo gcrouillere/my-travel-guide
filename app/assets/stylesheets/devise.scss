@@ -1,0 +1,19 @@
+.devise-container {
+  padding: 20px 0px;
+  .btn {
+    width: 100%;
+  }
+}
+
+.alert {
+  z-index: 4;
+  width: 100%;
+  margin: 0 !important;
+}
+
+.application-layout {
+  .alert {
+    position: fixed !important;
+    top: 56px;
+  }
+}
