@@ -265,7 +265,7 @@ class ArticleForm extends Component {
   }
 
   render() {
-
+    console.log("article render")
     return (
       <div className="container article-container" onDrop={this.onDropOnContainer} onDragOver={this.onDragOver}>
 

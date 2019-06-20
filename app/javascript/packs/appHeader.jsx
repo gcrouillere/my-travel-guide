@@ -17,7 +17,6 @@ class AppHeader extends Component {
       currentLocation: this.props.location.pathname,
       currentArticleID: this.getCurrentArticle(this.props.location.pathname)
     }
-    console.log("constructor appheader")
   }
 
   getCurrentArticle(pathname) {
@@ -60,6 +59,7 @@ class AppHeader extends Component {
   }
 
   render() {
+    console.log("appheader render")
     return(
       <div>
         <nav className="navbar navbar-light bg-dark">

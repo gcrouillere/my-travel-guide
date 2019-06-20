@@ -17,7 +17,6 @@ class ArticlesList extends Component {
       articles: [],
       token: $('meta[name="csrf-token"]').attr('content')
     }
-    console.log("constructor appheader")
   }
 
   async componentDidMount () {

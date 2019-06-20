@@ -33,7 +33,8 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.props)
+    console.log(this.props, "router props")
+    console.log("router render")
     return (
       <div>
         <Route component={AppHeader} />
