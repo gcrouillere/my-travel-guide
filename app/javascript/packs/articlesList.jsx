@@ -21,11 +21,7 @@ class ArticlesList extends Component {
 
   async componentDidMount () {
     const articles = await ajaxHelpers.ajaxCall('GET', "/articles")
-    this.setState({ articles: articles }, () => { console.log(this.state, "list did mount") })
-  }
-
-  componentDidUpdate() {
-    console.log("component didupdate")
+    this.setState({ articles: articles })
   }
 
   sanitizeAndTruncateHTML(html) {
@@ -33,8 +29,6 @@ class ArticlesList extends Component {
   }
 
   render() {
-    console.log("article list render")
-    console.log(this.state, "article list state")
     return (
       <div className="container articles-container">
         <div className="row">

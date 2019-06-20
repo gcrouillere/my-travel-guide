@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-  before_action :xx
 
   def layout_by_resource
     if devise_controller?
@@ -7,10 +6,5 @@ class ApplicationController < ActionController::Base
     else
       "application"
     end
-  end
-
-  def xx
-    puts params
-    puts request.referrer
   end
 end

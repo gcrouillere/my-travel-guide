@@ -2,7 +2,7 @@ class ArticlesController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @articles = Article.all.order(updated_at: :desc)
+    @articles = Article.all.order(updated_at: :desc).includes(:text_contents).includes(:maps).includes(:photos).includes(:audience_selections)
     respond_to do |format|
       format.html {render "content/home"}
       format.json {render json: @articles.as_json(include: { text_contents: {}, user: {}, audience_selections: {} })}
@@ -10,7 +10,7 @@ class ArticlesController < ApplicationController
   end
 
   def show
-    @article = Article.find(params[:id])
+    @article = Article.includes(:text_contents).includes(:maps).includes(:photos).includes(:audience_selections).find(params[:id])
     puts "article show"
     respond_to do |format|
       format.html { render "content/home" }
@@ -33,12 +33,12 @@ class ArticlesController < ApplicationController
   end
 
   def edit
-    @article = Article.find(params[:id])
+    @article = Article.includes(:text_contents).includes(:maps).includes(:photos).includes(:audience_selections).find(params[:id])
     render "content/home"
   end
 
   def update
-    @article = Article.find(params[:id])
+    @article = Article.includes(:text_contents).includes(:maps).includes(:photos).includes(:audience_selections).find(params[:id])
     if @article.update(article_params)
       render json: @article.as_json(include: { audience_selections: {} })
     else

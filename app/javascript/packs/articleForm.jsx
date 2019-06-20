@@ -46,7 +46,6 @@ class ArticleForm extends Component {
   }
 
   async componentDidMount() {
-    console.log(this.props)
     if (this.props.match.params.id) {
       const article = await ajaxHelpers.ajaxCall('GET', `/articles/${this.props.match.params.id}`, {}, this.state.token)
       this.props.fetchArticle(null, article)
@@ -265,7 +264,6 @@ class ArticleForm extends Component {
   }
 
   render() {
-    console.log("article render")
     return (
       <div className="container article-container" onDrop={this.onDropOnContainer} onDragOver={this.onDragOver}>
 

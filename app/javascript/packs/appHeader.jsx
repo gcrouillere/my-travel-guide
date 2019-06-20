@@ -48,7 +48,7 @@ class AppHeader extends Component {
         return(
           <div className="menu">
             <Link to={`/articles/${this.state.currentArticleID}/edit`} className="nav-link text-white">Edit article</Link>
-            <a href="/articles/" className="nav-link text-white" onClick={this.deleteArticle}>Delete Article</a>
+            <p className="nav-link text-white" onClick={this.deleteArticle}>Delete Article</p>
           </div>
         )
       }
@@ -56,7 +56,7 @@ class AppHeader extends Component {
        return(
          <div className="menu">
            <Link to={`/articles/${this.state.currentArticleID}`} className="nav-link text-white">See article</Link>
-           <a href="/articles/" className="nav-link text-white" onClick={this.deleteArticle}>Delete Article</a>
+           <p className="nav-link text-white" onClick={this.deleteArticle}>Delete Article</p>
          </div>
         )
       }
@@ -64,7 +64,6 @@ class AppHeader extends Component {
   }
 
   render() {
-    console.log("appheader render")
     return(
       <div>
         <nav className="navbar navbar-light bg-dark">
