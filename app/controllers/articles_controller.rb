@@ -11,8 +11,9 @@ class ArticlesController < ApplicationController
 
   def show
     @article = Article.find(params[:id])
+    puts "article show"
     respond_to do |format|
-      format.html {render "content/home"}
+      format.html { render "content/home" }
       format.json { render json: @article.as_json(include: {
         text_contents: { methods: :class_name },
         audience_selections: {},

@@ -21,7 +21,7 @@ class ArticlesList extends Component {
 
   async componentDidMount () {
     const articles = await ajaxHelpers.ajaxCall('GET', "/articles")
-    this.setState({ articles: articles }, () => {console.log(this.state, "list did mount")})
+    this.setState({ articles: articles }, () => { console.log(this.state, "list did mount") })
   }
 
   componentDidUpdate() {
