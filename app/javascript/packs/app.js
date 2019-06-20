@@ -23,7 +23,6 @@ class App extends Component {
 
   storeArticle() {
     const articleID = this.getCurrentArticle(this.props.location.pathname)
-    console.log(articleID)
     if (articleID) this.props.fetchArticle(articleID);
   }
 
@@ -34,16 +33,17 @@ class App extends Component {
   }
 
   render() {
+    console.log(this.props)
     return (
       <div>
         <Route component={AppHeader} />
-        {["/", "/articles"].map((path, index) =>
-          <Route key={index} exact path={path} component={ArticlesList}/>
-        )}
         {["/articles/:id/edit", "/articles/new"].map((path, index) =>
           <Route key={index} exact path={path} component={ArticleForm}/>
         )}
         <Route exact path="/articles/:id" component={Article}/>
+        {["/", "/articles"].map((path, index) =>
+          <Route key={index} exact path={path} component={ArticlesList}/>
+        )}
       </div>
     )
   }

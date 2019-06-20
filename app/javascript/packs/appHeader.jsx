@@ -17,6 +17,7 @@ class AppHeader extends Component {
       currentLocation: this.props.location.pathname,
       currentArticleID: this.getCurrentArticle(this.props.location.pathname)
     }
+    console.log("constructor appheader")
   }
 
   getCurrentArticle(pathname) {
@@ -34,7 +35,7 @@ class AppHeader extends Component {
 
   deleteArticle = async () => {
     await ajaxHelpers.ajaxCall('DELETE', `/articles/${this.state.currentArticleID}`, {}, this.state.token)
-    this.props.history.push(`/articles/`)
+    this.props.history.push("/")
   }
 
   renderLinkSet() {

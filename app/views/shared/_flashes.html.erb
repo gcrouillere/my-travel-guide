@@ -16,7 +16,7 @@
 <% end %>
 
 <script>
-  document.querySelectorAll(".alert .close").forEach(node => addEventListener('click', function() {
-    document.querySelector(".alert").remove()
+  document.querySelectorAll(".alert .close").forEach(cross => cross.addEventListener('click', function() {
+    cross.parentNode.remove()
   }))
 </script>

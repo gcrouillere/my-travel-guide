@@ -120,11 +120,15 @@ class Article extends Component {
     })
   }
 
+  handleClick = () => {
+    this.props.history.push("/")
+  }
+
   render() {
     return (
       <div className="container article-container">
 
-        <header ref={this.articleContent}>
+        <header ref={this.articleContent} onClick={this.handleClick}>
           <h1 className="article-header">{this.state.title}</h1>
         </header>
 

@@ -17,13 +17,17 @@ class ArticlesList extends Component {
       articles: [],
       token: $('meta[name="csrf-token"]').attr('content')
     }
+    console.log("constructor appheader")
   }
 
   async componentDidMount () {
     const articles = await ajaxHelpers.ajaxCall('GET', "/articles")
-    this.setState({articles: articles}, () => {console.log(this.state.articles)})
+    this.setState({ articles: articles }, () => {console.log(this.state, "list did mount")})
   }
 
+  componentDidUpdate() {
+    console.log("component didupdate")
+  }
 
   sanitizeAndTruncateHTML(html) {
     return htmlSanitizer.sanitizeAndTruncateHTML(html, 100)
@@ -31,6 +35,7 @@ class ArticlesList extends Component {
 
   render() {
     console.log("article list render")
+    console.log(this.state, "article list state")
     return (
       <div className="container articles-container">
         <div className="row">
