@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import $ from 'jquery'
 import update from 'immutability-helper'
 import ReactCrop from 'react-image-crop'
-import 'react-image-crop/lib/ReactCrop.scss'
 
 import DropZone from './formElementManagement/dropZone'
 import DragVisualElements from './formElementManagement/dragVisualElements'

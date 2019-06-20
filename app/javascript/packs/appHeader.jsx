@@ -43,18 +43,23 @@ class AppHeader extends Component {
         <Link to="/articles/new" className="nav-link text-white">Create an article</Link>
       )
     }
-    else if(this.state.currentLocation.match(/^\/articles\/\d+$/) && this.props.currentUser) {
-      return(
-        <div className="menu">
-          <Link to={`/articles/${this.state.currentArticleID}/edit`} className="nav-link text-white">Edit article</Link>
-          <a href="" className="nav-link text-white" onClick={this.deleteArticle}>Delete Article</a>
-        </div>
-      )
-    }
-    else if(this.state.currentLocation.match(/^\/articles\/\d+/)) {
-     return(
-       <a href="" className="nav-link text-white" onClick={this.deleteArticle}>Delete Article</a>
-      )
+    if (this.props.currentUser.id === this.props.currentArticle.user_id) {
+      if(this.state.currentLocation.match(/^\/articles\/\d+$/) && this.props.currentUser) {
+        return(
+          <div className="menu">
+            <Link to={`/articles/${this.state.currentArticleID}/edit`} className="nav-link text-white">Edit article</Link>
+            <a href="" className="nav-link text-white" onClick={this.deleteArticle}>Delete Article</a>
+          </div>
+        )
+      }
+      else if(this.state.currentLocation.match(/^\/articles\/\d+/)) {
+       return(
+         <div className="menu">
+           <Link to={`/articles/${this.state.currentArticleID}`} className="nav-link text-white">See article</Link>
+           <a href="" className="nav-link text-white" onClick={this.deleteArticle}>Delete Article</a>
+         </div>
+        )
+      }
     }
   }
 
@@ -83,7 +88,8 @@ AppHeader.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    currentUser: state.currentUser
+    currentUser: state.currentUser,
+    currentArticle: state.currentArticle
   }
 }
 

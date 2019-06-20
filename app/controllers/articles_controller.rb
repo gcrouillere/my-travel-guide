@@ -52,6 +52,7 @@ class ArticlesController < ApplicationController
   def destroy
     @article = Article.find(params[:id])
     @article.audience_selections = []
+    puts "#{@article.id} destroy"
     if @article.destroy
       head :no_content, status: :ok
     else

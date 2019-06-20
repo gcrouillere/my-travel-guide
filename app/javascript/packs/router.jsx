@@ -15,12 +15,17 @@ const reducers = combineReducers({
   currentArticle: currentArticleReducer
 })
 
+const initialState = {
+  currentUser: {},
+  currentArticle: {}
+}
+
 const middlewares = applyMiddleware(reduxPromise, logger);
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
     (
-      <Provider store={createStore(reducers, {}, middlewares)}>
+      <Provider store={createStore(reducers, initialState, middlewares)}>
         <Router>
           <App/>
         </Router>

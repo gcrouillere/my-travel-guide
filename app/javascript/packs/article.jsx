@@ -41,8 +41,6 @@ class Article extends Component {
       if (prevProps.currentArticle.id !== newProps.currentArticle.id) return true
     }
     if (newProps.currentArticle.title != "" && this.articleContent.current.innerText === "") return true
-    console.log(prevProps, "prevProps")
-    console.log(newProps, "newProps")
     return false
   }
 
@@ -125,7 +123,6 @@ class Article extends Component {
   }
 
   render() {
-    console.log("article render")
     return (
       <div className="container article-container">
 

@@ -5,13 +5,14 @@ export default {
 
   async ajaxCall(method, url, data, token) {
     let returnData = null;
-
+    let deleteArticle = method === 'DELETE' ? "delete" : ""
     await $.ajax({
       method: method,
       beforeSend: function AttachHeadeToRequest(xhr) { xhr.setRequestHeader('X-CSRF-Token', token); },
       url: url,
       dataType: 'JSON',
-      data: data
+      data: data,
+      delete: deleteArticle
     })
       .done((reponse) => { returnData = reponse; })
       .fail((reponse) => { console.log(reponse); });
