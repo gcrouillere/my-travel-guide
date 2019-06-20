@@ -1,24 +1,11 @@
-# README
+# My Travel Guide
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+https://my-travel-guide.herokuapp.com/
 
-Things you may want to cover:
+## A SPA with Rails + React + Redux
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+### Step 1
+Article editor including text, googleMap and photo editors. Click on "Create article" after you are logged in to enjoy !
+- Menu is on the left, just hover it
+- Photo and googleMap customization menus can be found by clicking on the "settings" icon (top left corner of each block)
+- Elements can be re-ordered by drag and drop
