@@ -118,42 +118,42 @@ class Article extends Component {
     })
   }
 
-  handleClick = () => {
-    this.props.history.push("/")
-  }
-
   render() {
     return (
       <div className="container article-container">
+        <div className="row">
+           <div className="col">
 
-        <header ref={this.articleContent} onClick={this.handleClick}>
-          <h1 className="article-header">{this.state.title}</h1>
-        </header>
+            <header ref={this.articleContent}>
+              <h1 className="article-header">{this.state.title}</h1>
+            </header>
 
-        <div className="article-content">
-          {this.state.articleElements.map(element => {
+            <div className="article-content">
+              {this.state.articleElements.map(element => {
 
-            if (element.class_name == "TextContent") {
-              return <div key={`text-${element.id}`}
-              ref={div => this.textContentDivs[element.id] = div} className="textContent"></div>
-            }
+                if (element.class_name == "TextContent") {
+                  return <div key={`text-${element.id}`}
+                  ref={div => this.textContentDivs[element.id] = div} className="textContent"></div>
+                }
 
-            if (element.class_name == "Map") {
-              return <div key={`map-${element.id}`} id={`map-${element.id}`}
-              ref={div => this.mapDivs[element.id] = div}
-              className="googleMap" style={{ width: '100%', height: `${element.height}px` }}></div>
-            }
+                if (element.class_name == "Map") {
+                  return <div key={`map-${element.id}`} id={`map-${element.id}`}
+                  ref={div => this.mapDivs[element.id] = div}
+                  className="googleMap" style={{ width: '100%', height: `${element.height}px` }}></div>
+                }
 
-            if (element.class_name == "Photo") {
-              return <div className="photo" key={`photo-${element.id}`}>
-                <img src={ photoHelpers.retrievePhotoSRC(element) } alt={ element.original_filename }
-                style={{width: `${element.css_width}%`}} />
-                { element.display_title && <p className="photo-title">{ element.original_filename }</p> }
-              </div>
-            }
-          })}
+                if (element.class_name == "Photo") {
+                  return <div className="photo" key={`photo-${element.id}`}>
+                    <img src={ photoHelpers.retrievePhotoSRC(element) } alt={ element.original_filename }
+                    style={{width: `${element.css_width}%`}} />
+                    { element.display_title && <p className="photo-title">{ element.original_filename }</p> }
+                  </div>
+                }
+              })}
+            </div>
+
+          </div>
         </div>
-
       </div>
     )
   }
