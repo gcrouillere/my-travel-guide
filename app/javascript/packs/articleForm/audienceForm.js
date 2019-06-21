@@ -79,11 +79,13 @@ class AudienceForm extends Component {
   render() {
     return(
       <div className={`audienceSelection ${this.state.continueWriting && this.state.audienceValid ? "complete" : "incomplete"}`}>
-        <h2 className="sectionLabel">For whom is the trip intended ?</h2>
-        <p className="mainTitleSub">(select all that apply)</p>
-        <div className="form-check">
+        <div className="row justify-content-sm-center">
+          <h2 className="col-12 sectionLabel">For whom is the trip intended ?</h2>
+          <p className="col-12 mainTitleSub">(select all that apply)</p>
+        </div>
+        <div className="row justify-content-sm-center form-check">
         {this.state.allowedAudienceSelections.map((category) =>
-          <div key={`${category.audience}0`}>
+          <div key={`${category.audience}0`} className="">
             <input key={`${category.audience}1`} className="form-check-input" type="checkbox" value={`${category.audience}`} id={`category-${category.id}`}
             onChange={this.updateAudienceSelection} checked={this.checkBoxTicked(category.audience)}/>
             <label key={`${category.audience}2`} className={`form-check-label ${this.checkBoxTicked(category.audience) ? "ticked" : "blank"}`} htmlFor={`category-${category.id}`}>{`${category.audience}`}</label>

@@ -34,7 +34,7 @@ class ArticlesList extends Component {
         <div className="row">
         {this.state.articles.map((article) => {
           return(
-            <div key={article.id} className="col-6 col-md-4 article-card">
+            <div key={article.id} className="col-12 col-md-6 col-lg-4 article-card">
             <Link to={`articles/${article.id}`}>
               <div className="card">
                 <div className="card-header">
@@ -48,7 +48,7 @@ class ArticlesList extends Component {
                     <div className="row justify-content-center">
                       { article.audience_selections.map(audience_selection =>
                         <label key={audience_selection.audience}
-                        className="form-check-label col-2">
+                        className="form-check-label">
                           { audience_selection.audience }
                          </label>
                       )}

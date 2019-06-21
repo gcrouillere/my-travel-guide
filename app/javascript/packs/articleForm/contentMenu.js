@@ -17,7 +17,8 @@ class ContentMenu extends Component {
       initPositionAtCreation: null,
       mapOverlayActive: false,
       photoOverlayActive: false,
-      location: ""
+      location: "",
+      mobileMenuActive: false
     }
     this.mapLocationInputRef = React.createRef();
   }
@@ -32,6 +33,7 @@ class ContentMenu extends Component {
 
   addNewTextContent = () => {
     this.props.addNewTextContent(this.props.id)
+    this.setState({ mobileMenuActive: false })
   }
 
   addNewMap = (map) => {
@@ -42,59 +44,75 @@ class ContentMenu extends Component {
 
   addNewComponentOnDrag = (event, trigger) => { this.props.addNewComponentOnDrag(event, trigger) }
 
-  abandonMapCreation = () => { this.setState({ mapOverlayActive: false }) }
+  abandonMapCreation = () => { this.setState({ mapOverlayActive: false, mobileMenuActive: false }) }
 
-  abandonPhotoCreation = () => { this.setState({ photoOverlayActive: false }) }
+  abandonPhotoCreation = () => { this.setState({ photoOverlayActive: false, mobileMenuActive: false }) }
+
+  showMobileMenu = () => { this.setState({ mobileMenuActive: true }) }
+
+  hideMobileMenu = () => { this.setState({ mobileMenuActive: false }) }
 
   render() {
 
     return(
       <div id="contentMenu" className={`contentMenu ${this.props.forceContentMenuHidding ? "disable-hover" : ""}`}>
-        <div className="buttons">
 
-          <div className="blocAddition text">
-            <div draggable className="btn btn-dark addNew" onClick={this.addNewTextContent}
-            onDragStart={(event) => this.addNewComponentOnDrag(event, "textCreation")} value="text">
-              <div draggable={false} className="addIcone"><img src={textLogo}/></div>
-              <div className="addExplain">
-                <div>Click to add text in queue</div>
-                <div>Drag to add text to a specific location</div>
+        <div className="mobile-activation" onClick={this.showMobileMenu}>Menu</div>
+
+        <div className={`menuBody ${this.state.mobileMenuActive ? "active" : ""}`}>
+
+          <div className="mobile-menu-header navbar navbar-light bg-dark">
+            <div>Choose the element to insert</div>
+            <button onClick={this.hideMobileMenu} className="close mobile-close" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div className="buttons">
+            <div className="blocAddition text">
+              <div draggable className="btn btn-dark addNew" onClick={this.addNewTextContent}
+              onDragStart={(event) => this.addNewComponentOnDrag(event, "textCreation")} value="text">
+                <div draggable={false} className="addIcone"><img src={textLogo}/></div>
+                <div className="addExplain">
+                  <div className="clickText">Click to add text in queue</div>
+                  <div className="dragText">Drag to add text to a specific location</div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="blocAddition map">
-            <div draggable className="btn btn-dark addNew" onClick={this.initAddNewMap}
-            onDragStart={(event) => this.addNewComponentOnDrag(event, "mapCreation")} value="map">
-              <div draggable={false} className="addIcone"><img src={mapLogo}/></div>
-              <div className="addExplain">
-                <div>Click to add map in queue</div>
-                <div>Drag to add map to a specific location</div>
+            <div className="blocAddition map">
+              <div draggable className="btn btn-dark addNew" onClick={this.initAddNewMap}
+              onDragStart={(event) => this.addNewComponentOnDrag(event, "mapCreation")} value="map">
+                <div draggable={false} className="addIcone"><img src={mapLogo}/></div>
+                <div className="addExplain">
+                  <div className="clickText">Click to add map in queue</div>
+                  <div className="dragText">Drag to add map to a specific location</div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="blocAddition photo">
-            <div draggable className="btn btn-dark addNew" onClick={this.initAddNewPhotoBloc}
-            onDragStart={(event) => this.addNewComponentOnDrag(event, "photoCreation")} value="photo">
-              <div draggable={false} className="addIcone"><img src={photoLogo}/></div>
-              <div className="addExplain">
-                <div>Click to add photo in queue</div>
-                <div>Drag to add photo to a specific location</div>
+            <div className="blocAddition photo-button">
+              <div draggable className="btn btn-dark addNew" onClick={this.initAddNewPhotoBloc}
+              onDragStart={(event) => this.addNewComponentOnDrag(event, "photoCreation")} value="photo">
+                <div draggable={false} className="addIcone"><img src={photoLogo}/></div>
+                <div className="addExplain">
+                  <div className="clickText">Click to add photo in queue</div>
+                  <div className="dragText">Drag to add photo to a specific location</div>
+                </div>
               </div>
             </div>
-          </div>
 
-        </div>
-        <div className="expand">
-          <div className="menu">
-            <p>M</p>
-            <p>E</p>
-            <p>N</p>
-            <p>U</p>
           </div>
-          <div className="chevron-closed">&lt;</div>
-          <div className="chevron-open">></div>
+          <div className="expand">
+            <div className="menu">
+              <p>M</p>
+              <p>E</p>
+              <p>N</p>
+              <p>U</p>
+            </div>
+            <div className="chevron-closed">&lt;</div>
+            <div className="chevron-open">></div>
+          </div>
         </div>
 
         <MapInitialCenterOverlay mapOverlayActive={this.state.mapOverlayActive} ref={this.mapLocationInputRef}

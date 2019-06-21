@@ -39,4 +39,4 @@ yarn-debug.log*
 /config/application.yml
 
 # JS config
-/app/javascript/config
+# /app/javascript/config

@@ -265,19 +265,24 @@ class ArticleForm extends Component {
 
   render() {
     return (
-      <div className="container article-container" onDrop={this.onDropOnContainer} onDragOver={this.onDragOver}>
+      <div className="container article-container-form" onDrop={this.onDropOnContainer} onDragOver={this.onDragOver}>
+
 
         <AudienceForm id={this.props.match.params.id} updateArticleCompletion={this.updateArticleCompletion}
-        token={this.state.token} article={this.props.currentArticle}/>
+            token={this.state.token} article={this.props.currentArticle}/>
 
-        {this.state.audienceForm &&
-          <header className={`maintTitle ${this.state.titleValid ? "complete" : "incomplete"}`}>
-            <h2 className="sectionLabel">{this.state.titleValid ? "Article title" : "Write Your Article Title"}</h2>
-            {!this.state.titleValid && <p className="mainTitleSub">(10 characters long minimum)</p>}
-            <input type="text" placeholder="Type here your article title" value={this.state.title}
-            onChange={this.handleTitleChange} onBlur={this.saveTitleOnBlur}/>
-          </header>
-        }
+        <div className="row">
+          <div className="col">
+            {this.state.audienceForm &&
+              <header className={`maintTitle ${this.state.titleValid ? "complete" : "incomplete"}`}>
+                <h2 className="sectionLabel">{this.state.titleValid ? "Article title" : "Write Your Article Title"}</h2>
+                {!this.state.titleValid && <p className="mainTitleSub">(10 characters long minimum)</p>}
+                <input type="text" placeholder="Type here your article title" value={this.state.title}
+                onChange={this.handleTitleChange} onBlur={this.saveTitleOnBlur}/>
+              </header>
+            }
+          </div>
+        </div>
 
         {this.state.audienceForm && this.state.titleValid &&
           <ContentMenu id={this.state.id} addNewTextContent={this.addNewTextContent} addNewMap={this.addNewMap}
@@ -287,44 +292,65 @@ class ArticleForm extends Component {
 
         {this.state.audienceForm && this.state.titleValid &&
           <div className="articleContent" >
-          <h2 className="sectionLabel">Article content</h2>
+            <div className="row">
+              <div className="col">
+                <h2 className="sectionLabel">Article content</h2>
+              </div>
+            </div>
             {this.state.articleElements.map(element => {
 
               let dropTarget = element.position == this.state.dropTarget.possibleDrop ? this.state.dropTarget : null
 
               if (element.class_name == "TextContent") {
-                return <TextContentForm key={`text${element.id}`} textContent={element}
-                dragging={this.state.dragging} draggingElement={element.position == this.state.draggingElement}
-                dropTarget={dropTarget}
-                articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
-                onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
-                onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
-                mapCustomizationOnGoing={this.state.customizationOnGoing} hideMapsCustomizations={this.hideMapsCustomizations}/>
+                return (
+                <div className="row" key={`text${element.id}`}>
+                  <div className="col" key={`text${element.id}`}>
+                    <TextContentForm key={`text${element.id}`} textContent={element}
+                    dragging={this.state.dragging} draggingElement={element.position == this.state.draggingElement}
+                    dropTarget={dropTarget}
+                    articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
+                    onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
+                    onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
+                    mapCustomizationOnGoing={this.state.customizationOnGoing} hideMapsCustomizations={this.hideMapsCustomizations}/>
+                  </div>
+                </div>
+                )
               }
               else if (element.class_name == "Map") {
-                return <MapForm key={`map${element.id}`} map={element} name={element.name}
-                dragging={this.state.dragging} draggingElement={element.position == this.state.draggingElement}
-                dropTarget={dropTarget}
-                articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
-                onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
-                onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
-                preventDraggingOnOtherElements={this.preventDraggingOnOtherElements}
-                ref={(ref) => this.MapFormRef[element.id] = ref}/>
+                return (
+                <div className="row" key={`map${element.id}`}>
+                  <div className="col" key={`map${element.id}`}>
+                    <MapForm key={`map${element.id}`} map={element} name={element.name}
+                    dragging={this.state.dragging} draggingElement={element.position == this.state.draggingElement}
+                    dropTarget={dropTarget}
+                    articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
+                    onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
+                    onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
+                    preventDraggingOnOtherElements={this.preventDraggingOnOtherElements}
+                    ref={(ref) => this.MapFormRef[element.id] = ref}/>
+                  </div>
+                </div>
+                )
               }
               else if (element.class_name == "Photo") {
-                return <PhotoForm key={`photo${element.id}`} photo={element}
-                dragging={this.state.dragging} draggingElement={element.position == this.state.draggingElement}
-                dropTarget={dropTarget}
-                articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
-                onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
-                onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
-                mapCustomizationOnGoing={this.state.customizationOnGoing} hideMapsCustomizations={this.hideMapsCustomizations}/>
+                return (
+                <div className="row" key={`photo${element.id}`}>
+                  <div className="col" key={`photo${element.id}`}>
+                    <PhotoForm key={`photo${element.id}`} photo={element}
+                    dragging={this.state.dragging} draggingElement={element.position == this.state.draggingElement}
+                    dropTarget={dropTarget}
+                    articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
+                    onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
+                    onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
+                    mapCustomizationOnGoing={this.state.customizationOnGoing} hideMapsCustomizations={this.hideMapsCustomizations}/>
+                  </div>
+                </div>
+                )
               }
             })}
              <DragImage ref={this.dragImageRef} dragContent={this.state.dragContent} activeDragImage={this.state.activeDragImage}/>
           </div>
         }
-
       </div>
     )
   }
