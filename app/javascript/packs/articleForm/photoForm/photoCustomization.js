@@ -72,14 +72,16 @@ class PhotoCustomization extends Component {
 
     return (
       <div id={`photoCustomization-${this.props.photo.id}`}
-      className={`photoCustomization ${this.props.customizationActive ? "active" : ""}`}
+      className={`photoCustomization ${this.props.customizationActive ? "active" : ""} ${this.props.cropped ?
+        "photo-cropped" :
+        (disableCrop ? "crop-disabled" : "allow-crop")}`}
       draggable onDragStart={this.onDragStart}>
         <div className="overflowContainer">
           <button onClick={this.abandonCustomization} className="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
           <h3>Photo Customization:</h3>
-          <button className={`btn btn-dark photoCustomizationBlock ${this.props.cropped ?
+          <button className={`btn btn-dark photoCustomizationBlock crop-button ${this.props.cropped ?
             "cancelCrop" :
              (disableCrop ? "disableCrop" : "crop")}`
           }

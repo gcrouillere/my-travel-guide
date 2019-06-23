@@ -44,8 +44,15 @@
   z-index: 1;
   top: 0;
   right: 0;
-  width: 30%;
-  height: 100%;
+  @media all and (min-width:871px) {
+    width: 30%;
+    height: 100%;
+  }
+  @media all and (max-width:870px) {
+    width: 100%;
+    height: 33%;
+    border-bottom: 1px solid #ccc;
+  }
   cursor: default;
   transition: all 0.3s ease-in-out;
   .overflowContainer {
@@ -55,8 +62,13 @@
     background: linear-gradient(to right, #fefefe, #F7F7F7);
     box-shadow: -2px 0px 5px -1px rgba(0,0,0,0.2);
     min-height: 100%;
-    right: -100%;
     width: 100%;
+    @media all and (min-width:871px) {
+      right: -100%;
+    }
+    @media all and (max-width:870px) {
+      top: - 100%;
+    }
     transition: all 0.3s ease-in-out;
   }
   .mapCustomizationBlock, h3, button {
@@ -99,8 +111,13 @@
   z-index: 2;
   transition: all 0.3s ease-in-out;
   .overflowContainer {
-    right: 0;
     width: 100%;
+    @media all and (min-width:871px) {
+      right: 0;
+    }
+    @media all and (max-width:870px) {
+      top: 0;
+    }
     transition: all 0.3s ease-in-out;
   }
 }

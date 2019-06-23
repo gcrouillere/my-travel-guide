@@ -32,6 +32,7 @@ export default {
       icon: icon,
       mapCenter: marker.mapCenter,
       markerIndex: index,
+      appMarker: marker
     })
   }
 }
