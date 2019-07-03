@@ -11,7 +11,7 @@ import photoHelpers from './../utils/photoHelpers'
 import orderHelper from './../utils/articleContentHelper'
 import markerLogos from './articleForm/mapForm/markerLogos'
 
-class Article extends Component {
+export class Article extends Component {
   constructor(props) {
     super(props)
     this.state = {

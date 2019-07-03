@@ -10,7 +10,7 @@ import Article from './article'
 import ArticleForm from './articleForm'
 import { fetchUser, fetchArticle} from '../actions/index'
 
-class App extends Component {
+export class App extends Component {
 
   componentWillMount() {
     this.props.fetchUser();

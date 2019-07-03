@@ -2,6 +2,135 @@
 
 exports[`Article test Suite renders component 1`] = `
 <Article
+  currentArticle={
+    Object {
+      "audience_selection_ids": Array [
+        2,
+      ],
+      "audience_selections": Array [
+        Object {
+          "audience": "Couple",
+          "created_at": "Wed, 24 Apr 2019 18:49:15 UTC +00:00",
+          "id": 2,
+          "updated_at": "Wed, 24 Apr 2019 18:49:15 UTC +00:00",
+        },
+      ],
+      "audience_valid": false,
+      "created_at": "Mon, 29 Apr 2019 07:20:32 UTC +00:00",
+      "id": 4,
+      "maps": Array [
+        Object {
+          "article_id": 4,
+          "class_name": "Map",
+          "created_at": "Mon, 29 Apr 2019 07:34:41 UTC +00:00",
+          "height": 250,
+          "id": 2,
+          "lat": 47.358852,
+          "lng": -1.94448199999999,
+          "markers": Array [
+            Object {
+              "description": "44260 Savenay, France",
+              "lat": 47.358852,
+              "lng": -1.94448199999999,
+              "logo": "markerLogo",
+              "mapCenter": true,
+            },
+            Object {
+              "created_at": "Thu, 09 May 2019 13:23:27 UTC +00:00",
+              "description": null,
+              "id": 12,
+              "lat": 47.5636458377627,
+              "lng": -0.459245093750042,
+              "logo": "markerLogo",
+              "map_id": 2,
+              "polyline_id": null,
+              "position": null,
+              "updated_at": "Thu, 09 May 2019 13:23:27 UTC +00:00",
+            },
+          ],
+          "name": "44260 Savenay, France",
+          "polylines": Array [
+            Object {
+              "created_at": "Mon, 13 May 2019 12:15:11 UTC +00:00",
+              "distance_displayed": false,
+              "id": 37,
+              "map_id": 30,
+              "markers": Array [
+                Object {
+                  "created_at": "Mon, 13 May 2019 12:15:12 UTC +00:00",
+                  "description": null,
+                  "id": 83,
+                  "lat": 41.6297274400397,
+                  "lng": 33.276193243164,
+                  "logo": null,
+                  "map_id": null,
+                  "polyline_id": 37,
+                  "position": 1,
+                  "updated_at": "Mon, 13 May 2019 12:15:12 UTC +00:00",
+                },
+                Object {
+                  "created_at": "Mon, 13 May 2019 12:15:12 UTC +00:00",
+                  "description": null,
+                  "id": 84,
+                  "lat": 41.6538450000804,
+                  "lng": 33.166329961914,
+                  "logo": null,
+                  "map_id": null,
+                  "polyline_id": 37,
+                  "position": 2,
+                  "updated_at": "Mon, 13 May 2019 12:15:12 UTC +00:00",
+                },
+              ],
+              "updated_at": "Mon, 13 May 2019 12:15:11 UTC +00:00",
+            },
+          ],
+          "position": 1,
+          "show_map_center_as_marker": true,
+          "updated_at": "Mon, 29 Apr 2019 07:34:41 UTC +00:00",
+          "zoom": 11,
+        },
+      ],
+      "photos": Array [
+        Object {
+          "article_id": 4,
+          "bytes": 1071174,
+          "class_name": "Photo",
+          "created_at": "Mon, 29 Apr 2019 07:39:39 UTC +00:00",
+          "cropped_url": null,
+          "css_height": "auto",
+          "css_width": 80,
+          "display_title": null,
+          "format": "jpg",
+          "height": null,
+          "id": 8,
+          "original_filename": "artificial-background-blue-1282170",
+          "original_height": 2667,
+          "original_width": 4000,
+          "position": 2,
+          "public_id": "vrc7darjtvbjiwwhi8n6",
+          "resource_type": "image",
+          "signature": "2ad54006f099e95bf219878113c4272056e114d3",
+          "updated_at": "Mon, 29 Apr 2019 07:39:49 UTC +00:00",
+          "url": "http://res.cloudinary.com/dbhsa0hgf/image/upload/v1556523579/vrc7darjtvbjiwwhi8n6.jpg",
+          "version": "1556523579",
+          "width": null,
+        },
+      ],
+      "text_contents": Array [
+        Object {
+          "article_id": 4,
+          "class_name": "TextContent",
+          "created_at": "Mon, 29 Apr 2019 07:34:30 UTC +00:00",
+          "id": 12,
+          "position": 0,
+          "text": "Text content is not empty",
+          "updated_at": "Mon, 29 Apr 2019 07:34:30 UTC +00:00",
+        },
+      ],
+      "title": "My 10 characters long article title",
+      "updated_at": "Mon, 29 Apr 2019 07:34:24 UTC +00:00",
+    }
+  }
   match={
     Object {
       "params": Object {
@@ -13,17 +142,53 @@ exports[`Article test Suite renders component 1`] = `
   <div
     className="container article-container"
   >
-    <header
-      className="text-center"
-    >
-      <h1>
-        My 10 characters long article title
-      </h1>
-    </header>
     <div
-      id="articleTextContents"
+      className="row"
     >
-      Text content is not empty
+      <div
+        className="col"
+      >
+        <header>
+          <h1
+            className="article-header"
+          >
+            My 10 characters long article title
+          </h1>
+        </header>
+        <div
+          className="article-content"
+        >
+          <div
+            className="textContent"
+            key="text-12"
+          />
+          <div
+            className="googleMap"
+            id="map-2"
+            key="map-2"
+            style={
+              Object {
+                "height": "250px",
+                "width": "100%",
+              }
+            }
+          />
+          <div
+            className="photo"
+            key="photo-8"
+          >
+            <img
+              alt="artificial-background-blue-1282170"
+              src="http://res.cloudinary.com/dbhsa0hgf/image/upload/v1556523579/vrc7darjtvbjiwwhi8n6.jpg"
+              style={
+                Object {
+                  "width": "80%",
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </Article>

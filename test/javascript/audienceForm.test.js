@@ -9,7 +9,7 @@ import toJson from 'enzyme-to-json';
 import audienceSelection from './__mocks__/audienceSelection'
 import article from './__mocks__/fakeArticle.json'
 import updatedArticle from './__mocks__/fakeArticleFedWithText.json'
-import AudienceForm from '../../app/javascript/packs/articleForm/audienceForm'
+import { AudienceForm } from '../../app/javascript/packs/articleForm/audienceForm'
 import ajaxHelpers from '../../app/javascript/utils/ajaxHelpers'
 
 jest.mock('../../app/javascript/utils/ajaxHelpers', () => jest.fn())
@@ -35,7 +35,9 @@ describe('AudienceForm test suite', () => {
 let updateArticleCompletion = jest.fn()
 
   it('renders component', async () => {
-    const audienceFormTree = mount(<AudienceForm id={1} updateArticleCompletion={updateArticleCompletion}/>)
+    const audienceFormTree = mount(
+      <AudienceForm id={1} updateArticleCompletion={updateArticleCompletion}/>
+    )
     await audienceFormTree.instance().componentDidMount()
     audienceFormTree.update()
 

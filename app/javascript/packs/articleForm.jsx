@@ -17,7 +17,7 @@ import ajaxHelpers from './../utils/ajaxHelpers'
 import orderHelper from './../utils/articleContentHelper'
 import { fetchArticle } from '../actions/index'
 
-class ArticleForm extends Component {
+export class ArticleForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -79,7 +79,7 @@ class ArticleForm extends Component {
   }
 
   addNewTextContent = async (id, initPositionAtCreation = undefined) => {
-    const textContent = {text_content: {text: "", article_id: id, position: this.state.articleElements.length}}
+    const textContent = { text_content: { text: "", article_id: id, position: this.state.articleElements.length } }
 
     await ajaxHelpers.ajaxCall('POST', "/text_contents", textContent, this.state.token)
 

@@ -8,7 +8,7 @@ import $ from 'jquery'
 
 import ajaxHelpers from './../../utils/ajaxHelpers'
 
-class AudienceForm extends Component {
+export class AudienceForm extends Component {
 
   constructor(props) {
     super(props)
@@ -39,7 +39,6 @@ class AudienceForm extends Component {
       { audience_selection_ids: newSelectionIDS.length == 0 ? [""] : newSelectionIDS,
       audience_valid: newSelectionIDS.length > 0 }
     }
-
     const article = await ajaxHelpers.ajaxCall('PUT', `/articles/${this.props.id}`, data, this.props.token)
 
     this.setState({

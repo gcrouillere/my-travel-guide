@@ -2,7 +2,7 @@
 
 exports[`PhotoCustomization tests renders component 1`] = `
 <div
-  className="photoCustomization "
+  className="photoCustomization  crop-disabled"
   draggable={true}
   id="photoCustomization-8"
   onDragStart={[Function]}
@@ -25,7 +25,7 @@ exports[`PhotoCustomization tests renders component 1`] = `
       Photo Customization:
     </h3>
     <button
-      className="btn btn-dark photoCustomizationBlock disableCrop"
+      className="btn btn-dark photoCustomizationBlock crop-button disableCrop"
       disabled={true}
       onClick={[Function]}
     >

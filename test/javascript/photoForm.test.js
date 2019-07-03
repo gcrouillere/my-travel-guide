@@ -30,24 +30,24 @@ describe('PhotoForm test suite', () => {
         id={photo.id} mapCustomizationOnGoing={false}/>)
 
   it('initiates photo resizes on function call', () => {
-    wrapper.instance().photoContentRef = { current: { clientWidth: 100 }}
-    wrapper.instance().initResize({ screenX: 0 })
+    wrapper.instance().photoContentRef = { current: { clientWidth: 900 }}
+    wrapper.instance().initResize({ screenX: 450 })
 
-    expect(wrapper.state().resizeOrigin).toEqual(0)
+    expect(wrapper.state().resizeOrigin).toEqual(450)
     expect(wrapper.state().initialPhotoWidth).toEqual(80)
-    expect(wrapper.state().maxWidth).toEqual(100)
+    expect(wrapper.state().maxWidth).toEqual(900)
   })
 
   it('resizes photo on function call', () => {
-    wrapper.instance().resizeOnMove({ screenX: 10 })
+    wrapper.instance().resizeOnMove({ screenX: 460 })
 
-    expect(wrapper.state().photo.css_width).toEqual(90)
+    expect(wrapper.state().photo.css_width).toBeCloseTo(81.111)
   })
 
   it('updates photo on resize stop', async () => {
     await wrapper.instance().stopResizing()
 
-    expect(wrapper.state().photo.css_width).toEqual(90)
+    expect(wrapper.state().photo.css_width).toBeCloseTo(81.111)
   })
 
   it('displays photo customization on click and strore crop', () => {

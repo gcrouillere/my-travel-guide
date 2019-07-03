@@ -53,7 +53,6 @@ class ContentMenu extends Component {
   hideMobileMenu = () => { this.setState({ mobileMenuActive: false }) }
 
   render() {
-
     return(
       <div id="contentMenu" className={`contentMenu ${this.props.forceContentMenuHidding ? "disable-hover" : ""}`}>
 

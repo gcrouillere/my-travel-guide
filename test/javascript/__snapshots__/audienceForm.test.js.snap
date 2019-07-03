@@ -42,20 +42,25 @@ exports[`AudienceForm test suite renders component 1`] = `
   <div
     className="audienceSelection incomplete"
   >
-    <h2
-      className="sectionLabel"
-    >
-      For whom is the trip intended ?
-    </h2>
-    <p
-      className="mainTitleSub"
-    >
-      (select all that apply)
-    </p>
     <div
-      className="form-check"
+      className="row justify-content-sm-center"
+    >
+      <h2
+        className="col-12 sectionLabel"
+      >
+        For whom is the trip intended ?
+      </h2>
+      <p
+        className="col-12 mainTitleSub"
+      >
+        (select all that apply)
+      </p>
+    </div>
+    <div
+      className="row justify-content-sm-center form-check"
     >
       <div
+        className=""
         key="Couple0"
       >
         <input
@@ -76,6 +81,7 @@ exports[`AudienceForm test suite renders component 1`] = `
         </label>
       </div>
       <div
+        className=""
         key="Friends0"
       >
         <input

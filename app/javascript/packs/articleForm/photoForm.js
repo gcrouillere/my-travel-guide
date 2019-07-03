@@ -54,7 +54,6 @@ class PhotoForm extends Component {
     minPCWidth = (pictureRatio * 330) / this.state.maxWidth * 100
     maxPCWidth = this.state.photo.original_width / this.state.maxWidth > 1 ? 100 : this.state.photo.original_width / this.state.maxWidth * 100
     newWidth = this.state.initialPhotoWidth + ((event.screenX - this.state.resizeOrigin) / this.state.maxWidth) * 100
-
     validWidth = newWidth > maxPCWidth  ? maxPCWidth : (newWidth < minPCWidth ? minPCWidth : newWidth)
 
     let newPhotoState = update(this.state.photo, { css_width: { $set: validWidth }})

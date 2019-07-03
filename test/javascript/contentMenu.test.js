@@ -26,7 +26,7 @@ describe('ContentMenu test suite', () => {
     addNewPhotoBloc={addNewPhotoBloc} addNewMap={addNewMap} id={1} addNewComponentOnDrag={addNewComponentOnDrag}/>)
 
   it('displays photo overlay on click', () => {
-    wrapper.find('.buttons .photo .addNew').simulate('click')
+    wrapper.find('.buttons .photo-button .addNew').simulate('click')
     expect(wrapper.find(PhotoInitialFileOverlay).prop('photoOverlayActive')).toEqual(true)
   })
 

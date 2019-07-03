@@ -94,6 +94,9 @@ exports[`TextContentForm test suite renders component 1`] = `
               "indent": "+1",
             },
           ],
+          Array [
+            "link",
+          ],
         ],
       }
     }

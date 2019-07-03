@@ -74,7 +74,7 @@ exports[`PhotoForm test suite renders component 1`] = `
       </button>
     </div>
     <div
-      className="photoCustomization "
+      className="photoCustomization  crop-disabled"
       draggable={true}
       id="photoCustomization-8"
       onDragStart={[Function]}
@@ -97,8 +97,8 @@ exports[`PhotoForm test suite renders component 1`] = `
           Photo Customization:
         </h3>
         <button
-          className="btn btn-dark photoCustomizationBlock crop"
-          disabled={false}
+          className="btn btn-dark photoCustomizationBlock crop-button disableCrop"
+          disabled={true}
           onClick={[Function]}
         >
           Crop
@@ -184,6 +184,8 @@ exports[`PhotoForm test suite renders component 1`] = `
       className="photo-2 original"
       crop={
         Object {
+          "height": 0,
+          "width": 0,
           "x": 0,
           "y": 0,
         }

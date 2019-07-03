@@ -125,6 +125,7 @@ exports[`MapForm test suite renders component 1`] = `
       <button
         className="btn btn-dark mapCustomizationBlock startPath"
         disabled={false}
+        id="marker"
         onClick={[Function]}
       >
         Add a Marker
@@ -132,6 +133,7 @@ exports[`MapForm test suite renders component 1`] = `
       <button
         className="btn btn-dark mapCustomizationBlock startPath"
         disabled={false}
+        id="path"
         onClick={[Function]}
       >
         Add a Path

@@ -6,127 +6,167 @@ exports[` 1`] = `
   id="contentMenu"
 >
   <div
-    className="buttons"
+    className="mobile-activation"
+    onClick={[Function]}
   >
-    <div
-      className="blocAddition text"
-    >
-      <div
-        className="btn btn-dark addNew"
-        draggable={true}
-        onClick={[Function]}
-        onDragStart={[Function]}
-        value="text"
-      >
-        <div
-          className="addIcone"
-          draggable={false}
-        >
-          <img
-            src="test-file-stub"
-          />
-        </div>
-        <div
-          className="addExplain"
-        >
-          <div>
-            Click to add text in queue
-          </div>
-          <div>
-            Drag to add text to a specific location
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      className="blocAddition map"
-    >
-      <div
-        className="btn btn-dark addNew"
-        draggable={true}
-        onClick={[Function]}
-        onDragStart={[Function]}
-        value="map"
-      >
-        <div
-          className="addIcone"
-          draggable={false}
-        >
-          <img
-            src="test-file-stub"
-          />
-        </div>
-        <div
-          className="addExplain"
-        >
-          <div>
-            Click to add map in queue
-          </div>
-          <div>
-            Drag to add map to a specific location
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      className="blocAddition photo"
-    >
-      <div
-        className="btn btn-dark addNew"
-        draggable={true}
-        onClick={[Function]}
-        onDragStart={[Function]}
-        value="photo"
-      >
-        <div
-          className="addIcone"
-          draggable={false}
-        >
-          <img
-            src="test-file-stub"
-          />
-        </div>
-        <div
-          className="addExplain"
-        >
-          <div>
-            Click to add photo in queue
-          </div>
-          <div>
-            Drag to add photo to a specific location
-          </div>
-        </div>
-      </div>
-    </div>
+    Menu
   </div>
   <div
-    className="expand"
+    className="menuBody "
   >
     <div
-      className="menu"
+      className="mobile-menu-header navbar navbar-light bg-dark"
     >
-      <p>
-        M
-      </p>
-      <p>
-        E
-      </p>
-      <p>
-        N
-      </p>
-      <p>
-        U
-      </p>
+      <div>
+        Choose the element to insert
+      </div>
+      <button
+        aria-label="Close"
+        className="close mobile-close"
+        onClick={[Function]}
+      >
+        <span
+          aria-hidden="true"
+        >
+          ×
+        </span>
+      </button>
     </div>
     <div
-      className="chevron-closed"
+      className="buttons"
     >
-      &lt;
+      <div
+        className="blocAddition text"
+      >
+        <div
+          className="btn btn-dark addNew"
+          draggable={true}
+          onClick={[Function]}
+          onDragStart={[Function]}
+          value="text"
+        >
+          <div
+            className="addIcone"
+            draggable={false}
+          >
+            <img
+              src="test-file-stub"
+            />
+          </div>
+          <div
+            className="addExplain"
+          >
+            <div
+              className="clickText"
+            >
+              Click to add text in queue
+            </div>
+            <div
+              className="dragText"
+            >
+              Drag to add text to a specific location
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="blocAddition map"
+      >
+        <div
+          className="btn btn-dark addNew"
+          draggable={true}
+          onClick={[Function]}
+          onDragStart={[Function]}
+          value="map"
+        >
+          <div
+            className="addIcone"
+            draggable={false}
+          >
+            <img
+              src="test-file-stub"
+            />
+          </div>
+          <div
+            className="addExplain"
+          >
+            <div
+              className="clickText"
+            >
+              Click to add map in queue
+            </div>
+            <div
+              className="dragText"
+            >
+              Drag to add map to a specific location
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="blocAddition photo-button"
+      >
+        <div
+          className="btn btn-dark addNew"
+          draggable={true}
+          onClick={[Function]}
+          onDragStart={[Function]}
+          value="photo"
+        >
+          <div
+            className="addIcone"
+            draggable={false}
+          >
+            <img
+              src="test-file-stub"
+            />
+          </div>
+          <div
+            className="addExplain"
+          >
+            <div
+              className="clickText"
+            >
+              Click to add photo in queue
+            </div>
+            <div
+              className="dragText"
+            >
+              Drag to add photo to a specific location
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div
-      className="chevron-open"
+      className="expand"
     >
-      &gt;
+      <div
+        className="menu"
+      >
+        <p>
+          M
+        </p>
+        <p>
+          E
+        </p>
+        <p>
+          N
+        </p>
+        <p>
+          U
+        </p>
+      </div>
+      <div
+        className="chevron-closed"
+      >
+        &lt;
+      </div>
+      <div
+        className="chevron-open"
+      >
+        &gt;
+      </div>
     </div>
   </div>
   <div

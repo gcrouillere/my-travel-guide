@@ -2,25 +2,29 @@
 
 exports[`Article Form without content renders a blank article form without crashing 1`] = `
 <div
-  className="container article-container"
+  className="container article-container-form"
   onDragOver={[Function]}
   onDrop={[Function]}
 >
   <div
     className="audienceSelection incomplete"
   >
-    <h2
-      className="sectionLabel"
-    >
-      For whom is the trip intended ?
-    </h2>
-    <p
-      className="mainTitleSub"
-    >
-      (select all that apply)
-    </p>
     <div
-      className="form-check"
+      className="row justify-content-sm-center"
+    >
+      <h2
+        className="col-12 sectionLabel"
+      >
+        For whom is the trip intended ?
+      </h2>
+      <p
+        className="col-12 mainTitleSub"
+      >
+        (select all that apply)
+      </p>
+    </div>
+    <div
+      className="row justify-content-sm-center form-check"
     />
     <button
       className="btn btn-dark AudienceSubmit"
@@ -28,6 +32,13 @@ exports[`Article Form without content renders a blank article form without crash
     >
       Continue writing
     </button>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="col"
+    />
   </div>
 </div>
 `;
