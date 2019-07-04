@@ -9,7 +9,6 @@ const fetchUser = jest.fn(() => {
 })
 
 const fetchArticle = jest.fn((articleId, articleParam) => {
-  console.log("fetchArticle")
   return {
     type: 'FETCH_ARTICLE',
     payload: article

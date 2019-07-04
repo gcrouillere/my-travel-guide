@@ -1,0 +1,96 @@
+.articlesFilter .audienceFilter {
+  .form-check {
+    label {
+      padding: 5px;
+    }
+  }
+}
+
+.audienceFilter.audienceSelection {
+  margin: 10px auto;
+}
+
+.stringFilter {
+  position: relative;
+  width: 52%;
+  @media all and (max-width:768px) {
+    width: 82%;
+  }
+  margin: 10px auto 30px auto !important;
+  .stringFilterInput {
+    padding: 5px;
+    outline: none;
+    border-radius: 30px;
+    width: 100%;
+    text-align: center;
+    border: 1px solid #ccc;
+    text-shadow: 0px 1px 0px rgba(0,0,0,0.2);
+    background: white;
+  }
+}
+
+.stringFilter.ticked span:after {
+  position: absolute;
+  top: -4px; bottom: -4px;
+  left: -4px; right: -4px;
+  background: linear-gradient(to right, #343a40, #00bf8f);
+  opacity: 1;
+  content: '';
+  z-index: -1;
+  border-radius: 30px;
+  transition: all 0.3s ease-in-out;
+}
+.stringFilter.blank span:after {
+  position: absolute;
+  top: -4px; bottom: -4px;
+  left: -4px; right: -4px;
+  background: linear-gradient(to right, #343a40, #00bf8f);
+  opacity: 0;
+  content: '';
+  z-index: -1;
+  border-radius: 30px;
+  transition: all 0.3s ease-in-out;
+}
+
+.filters {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  .mapRow {
+    height: 100%;
+  }
+  .mapRow.hide {
+    display: none;
+  }
+  .googleMap {
+    height: 100%;
+    width: 100%;
+  }
+  .listSwitch {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+    .switchView {
+      margin: 8px;
+      cursor: pointer;
+      padding: 1px;
+      width: 33px;
+      height: 33px;
+      border-radius: 50%;
+      background: white;
+      color: white;
+      box-shadow: 0 0 20px rgba(0,0,0,.2);
+      text-shadow: 1px 1px 1px rgba(0,0,0,0.6);
+      border: 2px solid white;
+    }
+  }
+}
+.filters.full {
+  height: calc(100vh - 76px);
+  padding-bottom: 20px;
+}
+.listOnMap {
+  width: 100%
+}

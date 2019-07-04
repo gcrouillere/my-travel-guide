@@ -6,6 +6,13 @@ class Article < ApplicationRecord
   has_many :audience_selections, through: :article_audience_selections
   belongs_to :user
 
+  include AlgoliaSearch
+
+  algoliasearch do
+    attribute :title
+    add_attribute :article_id
+  end
+
   def elements_position_mapping
     self.as_json(include: {
         text_contents: { methods: :class_name },
@@ -15,5 +22,9 @@ class Article < ApplicationRecord
       .select {|k, v| v != []}
       .map {|k, v| v.map {|e| [e["class_name"], e["id"], e["position"]] }}
       .flatten(1)
+  end
+
+  def article_id
+    self.id
   end
 end

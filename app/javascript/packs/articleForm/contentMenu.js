@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import update from 'immutability-helper'
 
 import MapInitialCenterOverlay from './contentMenu/mapInitialCenterOverlay'
 import PhotoInitialFileOverlay from './contentMenu/photoInitialFileOverlay'

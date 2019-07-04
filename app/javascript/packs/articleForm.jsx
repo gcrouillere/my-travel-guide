@@ -267,7 +267,6 @@ export class ArticleForm extends Component {
     return (
       <div className="container article-container-form" onDrop={this.onDropOnContainer} onDragOver={this.onDragOver}>
 
-
         <AudienceForm id={this.props.match.params.id} updateArticleCompletion={this.updateArticleCompletion}
             token={this.state.token} article={this.props.currentArticle}/>
 

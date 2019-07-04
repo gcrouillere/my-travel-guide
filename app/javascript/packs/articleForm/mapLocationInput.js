@@ -40,7 +40,7 @@ class MapLocationInput extends Component {
   handleAutoComplete = async (userInput) => {
     const place = this.autocomplete.getPlace();
     let map = { }
-
+    console.log(place)
     if (place.geometry) {
       map = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng(), name: place.formatted_address }
     } else {

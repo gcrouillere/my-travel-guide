@@ -2,10 +2,17 @@ class ArticlesController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @articles = Article.all.order(updated_at: :desc).includes(:text_contents).includes(:maps).includes(:photos).includes(:audience_selections)
+    @articles = Article.all.order(updated_at: :desc).includes(:text_contents).includes(:maps).includes(:photos).includes(:audience_selections).includes(:user)
+    filter_by_audience if params[:audience_selection]
+    filter_by_article_ids if params[:article_ids]
     respond_to do |format|
       format.html {render "content/home"}
-      format.json {render json: @articles.as_json(include: { text_contents: {}, user: {}, audience_selections: {} })}
+      format.json {render json: @articles.as_json(include: {
+        text_contents: {},
+        user: {},
+        audience_selections: {},
+        maps: { methods: :class_name, include: { markers: {} } }
+      })}
     end
   end
 
@@ -104,5 +111,15 @@ class ArticlesController < ApplicationController
         .require(:article)
         .permit(:title, :audience_valid, :user_id)
     end
+  end
+
+  def filter_by_audience
+    ids = params[:audience_selection].split(",").map(&:to_i)
+    @articles = @articles.joins(:audience_selections).where("audience_selections.id IN (?)", ids)
+  end
+
+  def filter_by_article_ids
+    ids = params[:article_ids].split(",").map(&:to_i)
+    @articles = @articles.where(id: ids)
   end
 end
