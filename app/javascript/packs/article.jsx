@@ -25,6 +25,8 @@ export class Article extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.checkUpdate(prevProps, this.props)) {
+      console.log(prevProps, "prevProps")
+      console.log(this.props, "newprops")
       this.setState({
         articleElements: orderHelper.orderArticleElements(this.props.currentArticle),
         title: this.props.currentArticle.title
@@ -38,9 +40,12 @@ export class Article extends Component {
   checkUpdate(prevProps, newProps) {
     if (!prevProps.currentArticle && newProps) return true
     if (prevProps.currentArticle) {
+       console.log(prevProps.currentArticle.id !== newProps.currentArticle.id)
       if (prevProps.currentArticle.id !== newProps.currentArticle.id) return true
     }
-    if (newProps.currentArticle.title != "" && this.articleContent.current.innerText === "") return true
+    if (newProps.currentArticle.title &&
+        newProps.currentArticle.title != "" &&
+        this.articleContent.current.innerText === "") return true
     return false
   }
 

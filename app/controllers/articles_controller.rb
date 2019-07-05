@@ -1,13 +1,15 @@
 class ArticlesController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, only: [:new, :show, :edit]
 
   def index
     @articles = Article.all.order(updated_at: :desc).includes(:text_contents).includes(:maps).includes(:photos).includes(:audience_selections).includes(:user)
     filter_by_audience if params[:audience_selection]
     filter_by_article_ids if params[:article_ids]
+
+    @audience_selection = AudienceSelection.all.order(updated_at: :desc)
     respond_to do |format|
-      format.html {render "content/home"}
-      format.json {render json: @articles.as_json(include: {
+      format.html { render "index" }
+      format.json { render json: @articles.as_json(include: {
         text_contents: {},
         user: {},
         audience_selections: {},
@@ -17,16 +19,18 @@ class ArticlesController < ApplicationController
   end
 
   def show
+    @audience_selection = AudienceSelection.all.order(updated_at: :desc)
     @article = Article.includes(:text_contents).includes(:maps).includes(:photos).includes(:audience_selections).find(params[:id])
-    puts "article show"
+    @article = @article.as_json(include: {
+      text_contents: { methods: :class_name },
+      audience_selections: {},
+      maps:{ methods: :class_name, include: { markers: {}, polylines: { include: { markers: {} } } } },
+      photos:{ methods: :class_name }
+    })
+
     respond_to do |format|
       format.html { render "content/home" }
-      format.json { render json: @article.as_json(include: {
-        text_contents: { methods: :class_name },
-        audience_selections: {},
-        maps:{ methods: :class_name, include: { markers: {}, polylines: { include: { markers: {} } } } },
-        photos:{ methods: :class_name }
-      })}
+      format.json { render json: @article }
     end
   end
 

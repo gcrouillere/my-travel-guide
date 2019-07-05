@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users
-  root to: "content#home"
+  root to: "articles#index"
 
   resources :articles
   resources :audience_selections

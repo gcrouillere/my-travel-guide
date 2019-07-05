@@ -32,7 +32,12 @@ export class App extends Component {
     .filter(x => typeof(x) === "number")[0]
   }
 
+  locationNeedRedirect() {
+    return !(/^\/(article\/?)?$|users/.test(this.props.location.pathname))
+  }
+
   render() {
+    if(this.props.currentUser === null && this.locationNeedRedirect()) return window.location.href = `${window.origin}/users/sign_in`
     return (
       <div>
         <Route component={AppHeader} />
@@ -47,6 +52,11 @@ export class App extends Component {
     )
   }
 }
+function mapStateToProps(state) {
+  return {
+    currentUser: state.currentUser
+  }
+}
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
@@ -55,4 +65,4 @@ function mapDispatchToProps(dispatch) {
   )
 }
 
-export default withRouter(connect(null, mapDispatchToProps)(App))
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))

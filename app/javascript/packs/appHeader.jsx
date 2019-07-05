@@ -2,11 +2,14 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom'
+import  { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import $ from 'jquery'
 
 import ajaxHelpers from '../utils/ajaxHelpers'
+import { fetchUser } from '../actions/index'
 
 class AppHeader extends Component {
 
@@ -92,4 +95,11 @@ function mapStateToProps(state) {
   }
 }
 
-export default withRouter(connect(mapStateToProps, null)(AppHeader))
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    { fetchUser },
+    dispatch
+  )
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AppHeader))
