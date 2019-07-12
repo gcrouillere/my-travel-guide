@@ -55,7 +55,7 @@ class ContentMenu extends Component {
     return(
       <div id="contentMenu" className={`contentMenu ${this.props.forceContentMenuHidding ? "disable-hover" : ""}`}>
 
-        <div className="mobile-activation" onClick={this.showMobileMenu}>Menu</div>
+        <div className="mobile-activation content" onClick={this.showMobileMenu}>Menu</div>
 
         <div className={`menuBody ${this.state.mobileMenuActive ? "active" : ""}`}>
 

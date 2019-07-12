@@ -50,6 +50,7 @@ class MapCustomization extends Component {
     this.setState({markerOnConstruction: false})
     this.props.preventCustomizationMix()
     this.props.updateMapDataList(newMarker, "markers", "add")
+    this.props.abandonCustomization()
   }
 
   initPolyLine = async (event) => {
@@ -132,15 +133,18 @@ class MapCustomization extends Component {
     const polyline = await ajaxHelpers.ajaxCall('GET', `/polylines/${this.state.polyline.id}`)
     this.setState({polyline: polyline})
     this.props.updateMapDataList(this.state.polyline, "polylines", "add")
+    this.props.abandonCustomization()
   }
 
   deleteEmptyPolyline = async () => {
     await ajaxHelpers.ajaxCall('DELETE', `/polylines/${this.state.polyline.id}`, this.props.token)
     this.setState({polyline: null})
+    this.props.abandonCustomization()
   }
 
   showCenterAsMarker = (event) => {
     this.props.updateMap({show_map_center_as_marker: event.target.value == "true"})
+    this.props.abandonCustomization()
   }
 
   render() {

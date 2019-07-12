@@ -38,37 +38,39 @@
 
 .mapCustomization, .markerCustomization, .polylineCustomization {
   overflow: hidden;
-  overflow-y: scroll;
-  position: absolute;
-  opacity: 0;
-  z-index: 1;
-  top: 0;
-  right: 0;
-  @media all and (min-width:871px) {
+  @media all and (min-width:769px) {
+    overflow-y: scroll;
+    position: absolute;
+    opacity: 0;
+    z-index: 1;
+    top: 0;
+    right: 0;
     width: 30%;
     height: 100%;
   }
-  @media all and (max-width:870px) {
-    width: 100%;
-    height: 33%;
-    border-bottom: 1px solid #ccc;
-    border-top: 1px solid #ccc;
+  @media all and (max-width:768px) {
+    height: 0;
+    // width: 100%;
+    // height: 33%;
+    // border-bottom: 1px solid #ccc;
+    // border-top: 1px solid #ccc;
   }
   cursor: default;
   transition: all 0.3s ease-in-out;
   .overflowContainer {
-    position: absolute;
     padding: 20px;
-    border: 1px solid #ccc;
     background: linear-gradient(to right, #fefefe, #F7F7F7);
     box-shadow: -2px 0px 5px -1px rgba(0,0,0,0.2);
     min-height: 100%;
     width: 100%;
-    @media all and (min-width:871px) {
+    @media all and (min-width:769px) {
+      position: absolute;
+      border: 1px solid #ccc;
       right: -100%;
+      min-height: 100%;
     }
-    @media all and (max-width:870px) {
-      top: - 100%;
+    @media all and (max-width:768px) {
+      // top: - 100%;
     }
     transition: all 0.3s ease-in-out;
   }
@@ -76,7 +78,9 @@
     display: block;
   }
   button.close {
-    position: absolute;
+    @media all and (min-width:769px) {
+      position: absolute;
+    }
     top: 6px;
     right: 10px;
     font-size: 1.5rem;
@@ -111,13 +115,16 @@
   opacity: 1;
   z-index: 2;
   transition: all 0.3s ease-in-out;
+  height: 100%;
   .overflowContainer {
     width: 100%;
-    @media all and (min-width:871px) {
+    @media all and (min-width:769px) {
       right: 0;
     }
-    @media all and (max-width:870px) {
-      top: 0;
+    @media all and (max-width:768px) {
+      border-top: 1px solid #ccc;
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
     }
     transition: all 0.3s ease-in-out;
   }

@@ -7,6 +7,14 @@ import orderHelper from '../../utils/articleContentHelper'
 
 class ValidationMenu extends Component {
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      mobileMenuActive: false,
+      articleValid: false
+    }
+  }
+
   static validations = {
     outputs: {
       textContentPresence: ["Text present", "At least one text box"],
@@ -46,17 +54,21 @@ class ValidationMenu extends Component {
     this.updateArticleValidity()
   }
 
+  componentDidMount = () => {
+    this.updateArticleValidity()
+  }
+
   updateArticleValidity = async () => {
     const article = await ajaxHelpers.ajaxCall('GET', `/articles/${this.props.id}`, {}, {})
     const articleElements = orderHelper.orderArticleElements(article)
-
     const article_valid = Object.keys(ValidationMenu.validations.outputs).every( fname =>
       ValidationMenu.validations.functions[fname](articleElements))
+
+    this.setState({ articleValid:  article_valid })
     ajaxHelpers.ajaxCall('PUT', `/articles/${this.props.id}`, { article: { article_valid: article_valid }}, this.props.token)
   }
 
   coverAllValidations = () => {
-    this.updateArticleValidity()
     return Object.keys(ValidationMenu.validations.outputs).map( fname =>
       ValidationMenu.validations.functions[fname](this.props.articleElements) ?
       <p key={fname} className="valid">{ ValidationMenu.validations.outputs[fname][0] }</p> :
@@ -64,10 +76,25 @@ class ValidationMenu extends Component {
     )
   }
 
+  showMobileMenu = () => { this.setState({ mobileMenuActive: true }) }
+
+  hideMobileMenu = () => { this.setState({ mobileMenuActive: false }) }
+
   render() {
     return(
       <div id="validationMenu" className="validationMenu">
-        <div className="menuBody">
+
+      <div className="mobile-activation validation" style={{background: `${this.state.articleValid ? "#b8c7b5" : "#e3a496"}`}}
+        onClick={this.showMobileMenu}>Check</div>
+
+        <div className={`menuBody ${this.state.mobileMenuActive ? "active" : ""}`}>
+
+          <div className="mobile-menu-header navbar navbar-light bg-dark">
+            <div>Article status</div>
+            <button onClick={this.hideMobileMenu} className="close mobile-close" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
 
           <div className="expand validation">
             <div className="chevron-closed">></div>

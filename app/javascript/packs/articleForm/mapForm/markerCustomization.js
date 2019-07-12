@@ -34,14 +34,14 @@ class MarkerCustomization extends Component {
     }
   }
 
-  hideMarkerCustomization = () => { this.setState({markerCustomizationActive: false}) }
+  hideMarkerCustomization = () => { this.setState({ markerCustomizationActive: false }) }
 
-  handleDescription = (event) => {this.setState({description: event.target.value})}
+  handleDescription = (event) => { this.setState({ description: event.target.value }) }
 
   saveDescription = (event) => {
     this.state.googleMarker.mapCenter ?
-      this.props.updateMap({name: this.state.description}) :
-      this.updateMarker({description: this.state.description})
+      this.props.updateMap({ name: this.state.description }) :
+      this.updateMarker({ description: this.state.description })
   }
 
   logoChange = (event) => {
@@ -57,7 +57,7 @@ class MarkerCustomization extends Component {
       this.props.token
     )
 
-    this.setState({googleMarker: null, marker: null, logo: null, markerCustomizationActive: false})
+    this.setState({ googleMarker: null, marker: null, logo: null, markerCustomizationActive: false })
     this.props.updateMapDataList(newMarker, "markers", "change")
   }
 
@@ -68,7 +68,7 @@ class MarkerCustomization extends Component {
       {},
       this.props.token
     )
-    this.setState({googleMarker: null, marker: null, logo: null, markerCustomizationActive: false})
+    this.setState({ googleMarker: null, marker: null, logo: null, markerCustomizationActive: false })
     this.props.updateMapDataList(deletedMarker, "markers", "delete")
   }
 

@@ -130,7 +130,6 @@ class ArticlesController < ApplicationController
   end
 
   def filter_by_user
-    # binding.pry
     if params[:email]
       email = params[:email]
       @articles = @articles.joins(:user).where("users.email = ?", email)

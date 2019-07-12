@@ -60,7 +60,7 @@
     cursor: move;
     .dragLogo, .dragTop, .dragDown, .contentDelete, .resizeLogo, .tuneLogo {
       opacity: 1;
-      z-index: 1000;
+      z-index: 2;
     }
     .mapBloc {
       border-radius: 0px;

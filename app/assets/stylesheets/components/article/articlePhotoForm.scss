@@ -1,7 +1,9 @@
 .photoContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @media all and (min-width:769px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   position: relative;
   border-radius: 2px;
   padding: 25px;
@@ -18,6 +20,11 @@
     max-height: unset !important;
   }
 
+  .ReactCrop {
+    display: block;
+    margin: 0 auto;
+  }
+
   .ReactCrop.cropped {
     .ReactCrop__crop-selection {
       display: none;
@@ -27,37 +34,39 @@
 
 .photoCustomization {
   overflow: hidden;
-  overflow-y: scroll;
-  position: absolute;
-  opacity: 0;
-  z-index: 0;
-  top: 0;
-  left: 0;
-  @media all and (min-width:871px) {
-    width: 30%;
+  @media all and (min-width:769px) {
+    overflow-y: scroll;
+    position: absolute;
+    opacity: 0;
+    z-index: 0;
+    top: 0;
+    left: 0;
     height: 100%;
+    width: 30%;
   }
-  @media all and (max-width:870px) {
-    width: 100%;
-    height: 40%;
-    border-bottom: 1px solid #ccc;
+  @media all and (max-width:768px) {
+    height: 0;
   }
-  height: 100%;
+  // @media all and (max-width:870px) {
+  //   width: 100%;
+  //   height: 40%;
+  // }
+
   cursor: default;
   transition: all 0.3s ease-in-out;
   .overflowContainer {
-    position: absolute;
     padding: 20px;
-    border: 1px solid #ccc;
     background: linear-gradient(to right, #fefefe, #F7F7F7);
     box-shadow: -2px 0px 5px -1px rgba(0,0,0,0.2);
-    min-height: 100%;
     width: 100%;
-    @media all and (min-width:871px) {
+    min-height: 100%;
+    @media all and (min-width:769px) {
+      position: absolute;
+      border: 1px solid #ccc;
       left: -100%;
     }
-    @media all and (max-width:870px) {
-      top: - 100%;
+    @media all and (max-width:768px) {
+      // top: - 100%;
     }
     transition: all 0.3s ease-in-out;
   }
@@ -65,7 +74,9 @@
     display: block;
   }
   button.close {
-    position: absolute;
+    @media all and (min-width:769px) {
+      position: absolute;
+    }
     top: 6px;
     right: 10px;
     font-size: 1.5rem;
@@ -97,13 +108,14 @@
   opacity: 1;
   z-index: 2;
   transition: all 0.3s ease-in-out;
+  height: 100%;
   .overflowContainer {
     width: 100%;
-    @media all and (min-width:871px) {
+    @media all and (min-width:769px) {
       left: 0;
     }
-    @media all and (max-width:870px) {
-      top: 0;
+    @media all and (max-width:768px) {
+      border-bottom: 1px solid #ccc;
     }
     transition: all 0.3s ease-in-out;
   }

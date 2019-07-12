@@ -10,7 +10,6 @@ import DragVisualElements from './formElementManagement/dragVisualElements'
 import DeleteButton from './formElementManagement/deleteButton'
 import ElementResize from './formElementManagement/elementResize'
 import PhotoCustomization from './photoForm/photoCustomization'
-import ProcessingOverlay from './photoForm/processingOverlay'
 import ajaxHelpers from './../../utils/ajaxHelpers'
 import photoHelpers from './../../utils/photoHelpers'
 import mainHelpers from './../../utils/mainHelpers'
@@ -148,7 +147,6 @@ class PhotoForm extends Component {
         <DeleteButton deleteElement={this.deleteElement}/>
         <DropZone area={"before"} onDrop={this.onDrop} dropTarget={this.props.dropTarget}/>
         <div className="photoContainer">
-          <ProcessingOverlay processing={this.state.processing}/>
           <PhotoCustomization photo={this.state.photo} cropped={this.state.cropped} crop={this.state.crop}
           customizationActive={this.state.customizationActive} abandonCustomization={this.abandonCustomization}
           updatePhoto={this.updatePhoto} getPhotoNode={this.getPhotoNode}/>
