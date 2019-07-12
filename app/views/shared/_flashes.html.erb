@@ -19,4 +19,8 @@
   document.querySelectorAll(".alert .close").forEach(cross => cross.addEventListener('click', function() {
     cross.parentNode.remove()
   }))
+
+  setTimeout(function() {
+    document.querySelectorAll(".alert .close").forEach(cross => cross.parentNode.remove())
+  }, 3000)
 </script>

@@ -12,6 +12,7 @@ import TextContentForm from './articleForm/textContentForm'
 import MapForm from './articleForm/mapForm'
 import PhotoForm from './articleForm/photoForm'
 import ContentMenu from './articleForm/contentMenu'
+import ValidationMenu from './articleForm/validationMenu'
 import DragImage from './articleForm/dragImage'
 import ajaxHelpers from './../utils/ajaxHelpers'
 import orderHelper from './../utils/articleContentHelper'
@@ -212,6 +213,14 @@ export class ArticleForm extends Component {
     this.setState(module)
   }
 
+  moveUp = async (id, position) => {
+    await this.updateElementPosition(id, position, position - 1)
+  }
+
+  moveDown = async (id, position) => {
+    await this.updateElementPosition(id, position, position + 1)
+  }
+
   async updateElementPosition(id, initPosition, targetPosition) {
     let data = {
       article: this.state.id,
@@ -284,9 +293,12 @@ export class ArticleForm extends Component {
         </div>
 
         {this.state.audienceForm && this.state.titleValid &&
-          <ContentMenu id={this.state.id} addNewTextContent={this.addNewTextContent} addNewMap={this.addNewMap}
-          addNewPhotoBloc={this.addNewPhotoBloc} addNewComponentOnDrag={this.addNewComponentOnDrag} ref={this.contentMenuRef}
-          elementsCount={this.state.articleElements.length} forceContentMenuHidding={this.state.forceContentMenuHidding}/>
+          <div className="menus">
+            <ContentMenu id={this.state.id} addNewTextContent={this.addNewTextContent} addNewMap={this.addNewMap}
+            addNewPhotoBloc={this.addNewPhotoBloc} addNewComponentOnDrag={this.addNewComponentOnDrag} ref={this.contentMenuRef}
+            elementsCount={this.state.articleElements.length} forceContentMenuHidding={this.state.forceContentMenuHidding}/>
+            <ValidationMenu articleElements={this.state.articleElements} token={this.state.token} id={this.state.id}/>
+          </div>
         }
 
         {this.state.audienceForm && this.state.titleValid &&
@@ -310,7 +322,8 @@ export class ArticleForm extends Component {
                     articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
                     onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                     onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
-                    mapCustomizationOnGoing={this.state.customizationOnGoing} hideMapsCustomizations={this.hideMapsCustomizations}/>
+                    mapCustomizationOnGoing={this.state.customizationOnGoing} hideMapsCustomizations={this.hideMapsCustomizations}
+                    moveUp={this.moveUp} moveDown={this.moveDown}/>
                   </div>
                 </div>
                 )
@@ -326,6 +339,7 @@ export class ArticleForm extends Component {
                     onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                     onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
                     preventDraggingOnOtherElements={this.preventDraggingOnOtherElements}
+                    moveUp={this.moveUp} moveDown={this.moveDown}
                     ref={(ref) => this.MapFormRef[element.id] = ref}/>
                   </div>
                 </div>
@@ -341,7 +355,8 @@ export class ArticleForm extends Component {
                     articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
                     onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                     onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
-                    mapCustomizationOnGoing={this.state.customizationOnGoing} hideMapsCustomizations={this.hideMapsCustomizations}/>
+                    mapCustomizationOnGoing={this.state.customizationOnGoing} hideMapsCustomizations={this.hideMapsCustomizations}
+                    moveUp={this.moveUp} moveDown={this.moveDown}/>
                   </div>
                 </div>
                 )

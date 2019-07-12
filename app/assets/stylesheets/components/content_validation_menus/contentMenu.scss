@@ -88,12 +88,27 @@
   }
 
   .contentMenu {
+    left: -256px;
+    z-index: 4;
+    &:hover {
+      left: 0px;
+    }
+  }
+
+  .validationMenu {
+    right: -250px;
+    z-index: 3;
+    &:hover {
+      right: 0;
+    }
+  }
+
+  .contentMenu, .validationMenu {
     text-align: center;
     padding: 10px 0px;
     position: fixed;
     border: 1px solid rgba(0,0,0,.05);
     box-shadow: 1px 0px 6px 1px rgba(0,0,0,0.1);
-    left: -256px;
     .chevron-open {
       display: block;
     }
@@ -101,7 +116,6 @@
       display: none;
     }
     &:hover {
-      left: 0px;
       .chevron-closed {
         display: block;
         width: 78px;
@@ -114,7 +128,6 @@
       }
     }
     top: 0;
-    z-index: 2;
     background-color: #F7F7F7;
     height: 100vh;
     display: flex;
@@ -124,6 +137,7 @@
       display: flex;
       justify-content: center;
       flex-direction: column;
+      min-width: 262px;
       padding: 50px 10px 0px 10px;
 
       .blocAddition {
@@ -155,10 +169,17 @@
       width: 100%;
     }
 
+    .expand.content {
+      background: linear-gradient(to right, #F7F7F7, #fefefe);
+    }
+
+    .expand.validation {
+      background: linear-gradient(to left, #F7F7F7, #fefefe);
+    }
+
     .expand {
       display: flex;
       align-items: center;
-      background: linear-gradient(to right, #F7F7F7, #fefefe);
       cursor: pointer;
       height: 105%;
       position: relative;
@@ -218,9 +239,16 @@
       }
     }
 
+    @media all and (max-width:500px) {
+      .custom-file-label {
+        color: transparent;
+      }
+    }
+
     .mapOverlayTitle {
       font-size: 2em;
       margin-bottom: 10px;
+      text-align: center;
     }
     .mapOverlaydescription {
       font-size: 1.2em;
@@ -233,6 +261,12 @@
       top: 76px;
       right: 35px;
       font-size: 2.5rem;
+    }
+    @media all and (max-width:870px) {
+      button.close {
+        top: 10px;
+        right: 10px;
+      }
     }
     .mapLocation {
       width: 100%;

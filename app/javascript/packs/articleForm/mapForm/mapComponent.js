@@ -59,15 +59,23 @@ class MapComponent extends Component {
   }
 
   initResize = (event) => {
-    this.setState({resizeOrigin: event.screenY, initialMapHeight: this.state.map.height});
+    const yOrigin = event.touches ? event.touches[0].screenY : event.screenY
+    this.setState({ resizeOrigin: yOrigin, initialMapHeight: this.state.map.height });
+
     onmousemove = (event) => { this.resizeOnMove(event) }
     onmouseup = () => { this.stopResizing() }
+
+    ontouchmove = (event) => { this.resizeOnMove(event) }
+    ontouchend  = () => { this.stopResizing() }
   }
 
   resizeOnMove(event) {
       let newHeight, validHeight = null
-      newHeight = (this.state.initialMapHeight + (event.screenY - this.state.resizeOrigin))
+      const yMove = event.touches ? event.touches[0].screenY : event.screenY
+
+      newHeight = (this.state.initialMapHeight + (yMove - this.state.resizeOrigin))
       validHeight = newHeight < 250 ? 250 : newHeight
+
       let updatedMap = update(this.state.map, {height: {$set: validHeight}})
       this.setState({map: updatedMap})
   }

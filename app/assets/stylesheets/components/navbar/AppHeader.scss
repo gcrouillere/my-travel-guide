@@ -1,12 +1,21 @@
 .navbar {
   box-shadow: 0 4px 6px rgba(50,50,93,0.11), 0 1px 3px rgba(0,0,0,0.08);
-  z-index: 3;
+  z-index: 5;
   .menu {
     display: flex;
     justify-content: center;
     p {
       margin: 0;
       cursor: pointer;
+    }
+    .nav-link {
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+       @media all and (max-width:768px) {
+        font-size: 12px;
+       }
     }
   }
 }

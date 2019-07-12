@@ -29,7 +29,8 @@ class ArticlesList extends Component {
   }
 
   async componentDidMount () {
-    await this.props.fetchArticles()
+    const articlesScope = /^\/users\/\d+\/articles$/.test(this.props.location.pathname) ? this.props.currentUser : undefined
+    await this.props.fetchArticles(articlesScope)
     this.props.mapArticlesToMarkers(this.props.articles)
     this.initMap()
   }
@@ -38,7 +39,7 @@ class ArticlesList extends Component {
     this.map = new google.maps.Map(document.getElementById('articlesListMap'), {
       center: { lat: 20, lng: 0 },
       zoom: 2,
-      mapTypeControl: true,
+      mapTypeControl: false,
       zoomControl: true,
       zoomControlOptions: { position: google.maps.ControlPosition.LEFT_CENTER },
       scaleControl: false,
@@ -82,7 +83,7 @@ class ArticlesList extends Component {
               <img className="switchView seeEarth" onClick={this.changeListView} src={earthLogo} value="earth"/>
               <img className="switchView seeList" onClick={this.changeListView} src={listLogo} value="list" />
             </div>
-            <ArticlesListFilter audiencesSelection={this.props.audiencesSelection} initMap={this.initMap}/>
+            <ArticlesListFilter {...this.props} audiencesSelection={this.props.audiencesSelection} initMap={this.initMap}/>
 
               <div className={`row mapRow ${this.state.view === 'earth' ? "show" : "hide"}`}>
                 <div className="listOnMap">
@@ -96,9 +97,9 @@ class ArticlesList extends Component {
           {this.props.articles.map((article) => {
             return(
               <div key={article.id} className="col-12 col-md-6 col-lg-4 article-card">
-              <Link to={`articles/${article.id}`}>
+              <Link to={`/articles/${article.id}`}>
                 <div className="card">
-                  <div className="card-header">
+                  <div className={`card-header ${article.article_valid ? "complete" : "incomplete"}`}>
                     <p className="card-title">{article.title}</p>
                   </div>
                   <div className="card-body">

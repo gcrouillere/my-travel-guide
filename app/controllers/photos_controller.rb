@@ -11,7 +11,6 @@ class PhotosController < ApplicationController
   def create
     @photos = Photo.new(photo_params_at_create)
     if @photos.save
-      # binding.pry
       render json: @photos.as_json(methods: :class_name)
     else
       render json: @photos.errors, status: :unprocessable_entity

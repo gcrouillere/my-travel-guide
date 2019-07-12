@@ -9,7 +9,6 @@ import { bindActionCreators } from 'redux';
 import $ from 'jquery'
 
 import ajaxHelpers from '../utils/ajaxHelpers'
-import { fetchUser } from '../actions/index'
 
 class AppHeader extends Component {
 
@@ -41,7 +40,16 @@ class AppHeader extends Component {
   }
 
   renderLinkSet() {
-    if (this.state.currentLocation.match(/^\/$|^\/articles$/)) {
+    if (this.props.currentUser && this.state.currentLocation.match(/^\/$|^\/articles$|^\/users\/\d+\/articles$/)) {
+      return(
+        <div className="menu">
+          <Link to="/articles/new" className="nav-link text-white">Create an article</Link>
+          <Link to={`/users/${this.props.currentUser.id}/articles`} className="nav-link text-white">Your articles</Link>
+          <Link to="/articles" className="nav-link text-white">All articles</Link>
+        </div>
+      )
+    }
+    if (this.state.currentLocation.match(/^\/$|^\/articles$|^\/users\/\d+\/articles$/)) {
       return(
         <Link to="/articles/new" className="nav-link text-white">Create an article</Link>
       )
@@ -51,7 +59,7 @@ class AppHeader extends Component {
         return(
           <div className="menu">
             <Link to={`/articles/${this.state.currentArticleID}/edit`} className="nav-link text-white">Edit article</Link>
-            <p className="nav-link text-white" onClick={this.deleteArticle}>Delete Article</p>
+            <p className="nav-link text-white" onClick={this.deleteArticle}>Delete article</p>
           </div>
         )
       }
@@ -59,7 +67,7 @@ class AppHeader extends Component {
        return(
          <div className="menu">
            <Link to={`/articles/${this.state.currentArticleID}`} className="nav-link text-white">See article</Link>
-           <p className="nav-link text-white" onClick={this.deleteArticle}>Delete Article</p>
+           <p className="nav-link text-white" onClick={this.deleteArticle}>Delete article</p>
          </div>
         )
       }
@@ -95,11 +103,4 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(
-    { fetchUser },
-    dispatch
-  )
-}
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AppHeader))
+export default withRouter(connect(mapStateToProps, null)(AppHeader))

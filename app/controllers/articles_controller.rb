@@ -5,7 +5,8 @@ class ArticlesController < ApplicationController
     @articles = Article.all.order(updated_at: :desc).includes(:text_contents).includes(:maps).includes(:photos).includes(:audience_selections).includes(:user)
     filter_by_audience if params[:audience_selection]
     filter_by_article_ids if params[:article_ids]
-
+    filter_by_user
+    puts params
     @audience_selection = AudienceSelection.all.order(updated_at: :desc)
     respond_to do |format|
       format.html { render "index" }
@@ -44,6 +45,7 @@ class ArticlesController < ApplicationController
   end
 
   def edit
+    @audience_selection = AudienceSelection.all.order(updated_at: :desc)
     @article = Article.includes(:text_contents).includes(:maps).includes(:photos).includes(:audience_selections).find(params[:id])
     render "content/home"
   end
@@ -108,12 +110,12 @@ class ArticlesController < ApplicationController
 
       params
         .require(:article)
-        .permit(:title, :audience_valid, :user_id)
+        .permit(:title, :audience_valid, :article_valid, :user_id)
         .merge(audience_selection_ids: params[:article][:audience_selection_ids].map(&:to_i).uniq)
     else
       params
         .require(:article)
-        .permit(:title, :audience_valid, :user_id)
+        .permit(:title, :audience_valid, :article_valid, :user_id)
     end
   end
 
@@ -125,5 +127,15 @@ class ArticlesController < ApplicationController
   def filter_by_article_ids
     ids = params[:article_ids].split(",").map(&:to_i)
     @articles = @articles.where(id: ids)
+  end
+
+  def filter_by_user
+    # binding.pry
+    if params[:email]
+      email = params[:email]
+      @articles = @articles.joins(:user).where("users.email = ?", email)
+    else
+      @articles = @articles.where(article_valid: true)
+    end
   end
 end

@@ -11,7 +11,6 @@ class TextContentsController < ApplicationController
   def create
     @text_content = TextContent.new(text_content_params_at_create)
     if @text_content.save
-      # binding.pry
       render json: @text_content.as_json(methods: :class_name)
     else
       render json: @text_content.errors, status: :unprocessable_entity

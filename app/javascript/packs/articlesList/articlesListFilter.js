@@ -29,9 +29,10 @@ class ArticlesListFilter extends Component {
     const clickedID = parseInt(event.target.id.split("-")[1])
     const newSelection =  this.manageAudience(clickedID)
     const IDSArray = newSelection.map(x => x.id).length === 0 ? null : newSelection.map(x => x.id)
-    const filterParams = update(this.state.filterParams, { audience_selection: { $set:  IDSArray }})
+    let filterParams = update(this.state.filterParams, { audience_selection: { $set:  IDSArray }})
+    filterParams = this.updateFilterParamsWithUser(filterParams)
 
-    this.setState({filterParams: filterParams})
+    this.setState({ filterParams: filterParams })
     await this.props.fetchArticles(filterParams)
     this.props.mapArticlesToMarkers(this.props.articles)
     this.props.initMap()
@@ -69,10 +70,20 @@ class ArticlesListFilter extends Component {
     })
 
     await promise.then(value => filterParams = value)
+    this.updateFilterParamsWithUser(filterParams)
     this.setState({ filterParams: filterParams, query_string: query.length > 2 })
     await this.props.fetchArticles(filterParams)
     this.props.mapArticlesToMarkers(this.props.articles)
     this.props.initMap()
+  }
+
+  updateFilterParamsWithUser(filterParams) {
+    if ( /^\/users\/\d+\/articles$/.test(this.props.location.pathname) ) {
+      const user = this.props.currentUser.email
+      return update(filterParams, { email: { $set:  user }})
+    } else {
+      return filterParams
+    }
   }
 
   render() {

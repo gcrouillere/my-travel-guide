@@ -16,7 +16,8 @@ export class Article extends Component {
     super(props)
     this.state = {
       articleElements: [],
-      title: ""
+      title: "",
+      clientWidth: document.body.clientWidth
     }
     this.textContentDivs = {}
     this.mapDivs = {}
@@ -25,8 +26,6 @@ export class Article extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.checkUpdate(prevProps, this.props)) {
-      console.log(prevProps, "prevProps")
-      console.log(this.props, "newprops")
       this.setState({
         articleElements: orderHelper.orderArticleElements(this.props.currentArticle),
         title: this.props.currentArticle.title
@@ -40,7 +39,6 @@ export class Article extends Component {
   checkUpdate(prevProps, newProps) {
     if (!prevProps.currentArticle && newProps) return true
     if (prevProps.currentArticle) {
-       console.log(prevProps.currentArticle.id !== newProps.currentArticle.id)
       if (prevProps.currentArticle.id !== newProps.currentArticle.id) return true
     }
     if (newProps.currentArticle.title &&
@@ -123,6 +121,8 @@ export class Article extends Component {
     })
   }
 
+  definePhotoWidth = (photo) => { return this.state.clientWidth >= 768 ? photo.css_width : 100}
+
   render() {
     return (
       <div className="container article-container">
@@ -150,7 +150,7 @@ export class Article extends Component {
                 if (element.class_name == "Photo") {
                   return <div className="photo" key={`photo-${element.id}`}>
                     <img src={ photoHelpers.retrievePhotoSRC(element) } alt={ element.original_filename }
-                    style={{width: `${element.css_width}%`}} />
+                    style={{width: `${this.definePhotoWidth(element)}%`}} />
                     { element.display_title && <p className="photo-title">{ element.original_filename }</p> }
                   </div>
                 }

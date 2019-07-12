@@ -1,6 +1,6 @@
 .textContentInput, .mapInput, .photoInput {
   position: relative;
-  .contentDelete, .dragLogo, .resizeLogo, .tuneLogo {
+  .contentDelete, .dragLogo, .dragTop, .dragDown, .resizeLogo, .tuneLogo {
     position: absolute;
     background: #343a40;
     color: white;
@@ -10,6 +10,7 @@
     height: 20px;
     border: none;
     opacity: 0;
+    z-index: auto;
     img {
       display: block;
       width: 100%;
@@ -22,6 +23,16 @@
   }
   .dragLogo {
     top: -24px;
+    left: 0px;
+    cursor: move;
+  }
+  .dragTop {
+    top: -24px;
+    left: 0px;
+    cursor: move;
+  }
+  .dragDown {
+    bottom: -24px;
     left: 0px;
     cursor: move;
   }
@@ -47,8 +58,9 @@
     box-shadow: 0px 0px 0px 3px #343a40;
     border-radius: 0 0 1px 1px;
     cursor: move;
-    .dragLogo, .contentDelete, .resizeLogo, .tuneLogo {
+    .dragLogo, .dragTop, .dragDown, .contentDelete, .resizeLogo, .tuneLogo {
       opacity: 1;
+      z-index: 1000;
     }
     .mapBloc {
       border-radius: 0px;

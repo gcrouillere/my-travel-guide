@@ -1,0 +1,12 @@
+.validationMenu {
+  .buttons {
+    .valid {
+      color: #00bf8f;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+    .not-valid {
+      color: #ffb908;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    }
+  }
+}

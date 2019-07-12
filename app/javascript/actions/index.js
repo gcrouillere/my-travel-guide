@@ -44,7 +44,6 @@ export function fetchArticles(requestObject) {
     const params = filterRequestObject(requestObject)
     url.search = new URLSearchParams(params)
   }
-
   let promise = fetch(url, {
     headers: {
       'Accept': 'application/json',
@@ -78,5 +77,6 @@ function filterRequestObject(object) {
   Object.keys(object).forEach(key => {
     if(object[key]) filteredObject[key] = object[key]
   })
+
   return filteredObject
 }

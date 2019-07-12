@@ -8,7 +8,7 @@ default: &default
 
   # Additional paths webpack should lookup modules
   # ['app/assets', 'engine/foo/app/assets']
-  resolved_paths: ['app/assets/stylesheets', 'app/assets/images']
+  resolved_paths: ['app/assets/stylesheets', 'app/assets/images', 'node_modules/quill/assets/icon']
 
   # Reload manifest.json on all requests so we reload latest compiled packs
   cache_manifest: false

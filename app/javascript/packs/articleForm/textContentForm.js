@@ -25,12 +25,6 @@ class TextContentForm extends Component {
     ],
   }
 
-  formats = [
-    'header',
-    'bold', 'italic', 'underline', 'strike', 'blockquote',
-    'list', 'bullet', 'indent',
-  ]
-
   handleChange = (value) => {
     this.setState({textContent: value})
   }
@@ -51,17 +45,32 @@ class TextContentForm extends Component {
     this.props.onDragStart(event, this.props.id, this.props.position, this.props.textContent)
   }
 
-  onDragOver = (event) => {this.props.onDragOver(event, this.props.id, this.props.position)}
+  onDragOver = (event) => {
+    this.props.onDragOver(event, this.props.id, this.props.position)
+  }
 
-  onDragEnter = (event) => {this.props.onDragEnter(event, this.props.id, this.props.position)}
+  onDragEnter = (event) => {
+    this.props.onDragEnter(event, this.props.id, this.props.position)}
 
-  onDragLeave = (event) => {this.props.onDragLeave(event, this.props.id, this.props.position)}
+  onDragLeave = (event) => {
+    this.props.onDragLeave(event, this.props.id, this.props.position)}
 
-  onDrop = (event) => {this.props.onDrop(event, this.props.id, this.props.position)}
+  onDrop = (event) => {
+    this.props.onDrop(event, this.props.id, this.props.position)}
 
   preventTextAreaDragging = (event) => {
     event.preventDefault()
     event.stopPropagation()
+  }
+
+  initMoveUp = () => {
+    this.props.hideMapsCustomizations()
+    this.props.moveUp(this.props.id, this.props.position)
+  }
+
+  initMoveDown = () => {
+    this.props.hideMapsCustomizations()
+    this.props.moveDown(this.props.id, this.props.position)
   }
 
   render() {
@@ -71,15 +80,19 @@ class TextContentForm extends Component {
       className={`textContentInput ${this.props.dragging ? "dragging" : ""} ${this.props.draggingElement ? "draggingElement" : ""}`}
       draggable={!this.props.mapCustomizationOnGoing.status}
       onDragStart={this.onDragStart}
+      onTouchStart={this.onTouchStart}
+      onTouchEnd={this.onTouchEnd}
+      onTouchCancel={this.onTouchCancel}
+      onTouchMove={this.onTouchMove}
       onDragOver={this.onDragOver}
       onDragEnter={this.onDragEnter}
       onDragLeave={this.onDragLeave}
       onDrop={this.onDrop}>
-        <DragVisualElements />
+        <DragVisualElements initMoveDown={this.initMoveDown} initMoveUp={this.initMoveUp}/>
         <DeleteButton deleteElement={this.deleteElement}/>
         <DropZone area={"before"} onDrop={this.onDrop} dropTarget={this.props.dropTarget}/>
         <ReactQuill value={this.state.textContent} onBlur={this.saveOnBlur} onChange={this.handleChange} modules={this.modules}
-        formats={this.formats} draggable={true} onDragStart={this.preventTextAreaDragging}/>
+        draggable={true} onDragStart={this.preventTextAreaDragging}/>
         <DropZone area={"after"} onDrop={this.onDrop} dropTarget={this.props.dropTarget}/>
       </div>
     )

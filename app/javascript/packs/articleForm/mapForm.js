@@ -81,6 +81,18 @@ class MapForm extends Component {
     this.hideMarkerCustomization()
   }
 
+  initMoveUp = () => {
+    this.markerCustomizationRef.current.hideMarkerCustomization()
+    this.polylineCustomizationRef.current.hidePolylineCustomization()
+    this.props.moveUp(this.props.id, this.props.position)
+  }
+
+  initMoveDown = () => {
+    this.polylineCustomizationRef.current.hidePolylineCustomization()
+    this.markerCustomizationRef.current.hideMarkerCustomization()
+    this.props.moveDown(this.props.id, this.props.position)
+  }
+
   render() {
 
 
@@ -96,7 +108,8 @@ class MapForm extends Component {
 
         <DeleteButton deleteElement={this.deleteElement}/>
 
-        <DragVisualElements map={this.state.map} activeCustomization={this.activeCustomization}/>
+        <DragVisualElements map={this.state.map} activeCustomization={this.activeCustomization}
+        initMoveDown={this.initMoveDown} initMoveUp={this.initMoveUp}/>
 
         <DropZone area={"before"} onDrop={this.onDrop} dropTarget={this.props.dropTarget}/>
 

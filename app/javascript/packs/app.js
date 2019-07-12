@@ -27,9 +27,10 @@ export class App extends Component {
   }
 
   getCurrentArticle(pathname) {
-    return pathname.split("/")
-    .map(x => /^\d+$/.test(x) ? parseInt(x) : x)
-    .filter(x => typeof(x) === "number")[0]
+    if(/\/articles\/\d+/.test(pathname))
+      return pathname.split("/")
+        .map(x => /^\d+$/.test(x) ? parseInt(x) : x)
+        .filter(x => typeof(x) === "number")[0]
   }
 
   locationNeedRedirect() {
@@ -44,8 +45,10 @@ export class App extends Component {
         {["/articles/:id/edit", "/articles/new"].map((path, index) =>
           <Route key={index} exact path={path} component={ArticleForm}/>
         )}
-        <Route exact path="/articles/:id" component={Article}/>
-        {["/", "/articles"].map((path, index) =>
+        {["/articles/:id", "/users/:id/articles/:id"].map((path, index) =>
+          <Route key={index} exact path={path} component={Article}/>)
+        }
+        {["/", "/articles", "/users/:id/articles"].map((path, index) =>
           <Route key={index} exact path={path} component={ArticlesList}/>
         )}
       </div>

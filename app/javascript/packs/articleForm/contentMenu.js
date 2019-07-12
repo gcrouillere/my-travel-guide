@@ -101,7 +101,7 @@ class ContentMenu extends Component {
             </div>
 
           </div>
-          <div className="expand">
+          <div className="expand content">
             <div className="menu">
               <p>M</p>
               <p>E</p>

@@ -13,6 +13,7 @@ import PhotoCustomization from './photoForm/photoCustomization'
 import ProcessingOverlay from './photoForm/processingOverlay'
 import ajaxHelpers from './../../utils/ajaxHelpers'
 import photoHelpers from './../../utils/photoHelpers'
+import mainHelpers from './../../utils/mainHelpers'
 
 class PhotoForm extends Component {
 
@@ -30,30 +31,38 @@ class PhotoForm extends Component {
         y: 0,
         height: 0,
         width: 0
-      }
+      },
+      clientWidth: document.body.clientWidth
     }
     this.photoRef = React.createRef()
     this.photoContentRef = React.createRef()
   }
 
   initResize = (event) => {
+    const xOrigin = event.touches ? event.touches[0].screenX : event.screenX
     this.setState({
-      resizeOrigin: event.screenX,
+      resizeOrigin: xOrigin,
       initialPhotoWidth: this.state.photo.css_width,
       maxWidth: this.photoContentRef.current.clientWidth
     })
 
-    onmousemove = (event) => { this.resizeOnMove(event) }
-    onmouseup = () => { this.stopResizing() }
+    if (mainHelpers.isTouchDevice()) {
+      ontouchmove = (event) => { this.resizeOnMove(event) }
+      ontouchend  = () => { this.stopResizing() }
+    } else {
+      onmousemove = (event) => { this.resizeOnMove(event) }
+      onmouseup = () => { this.stopResizing() }
+    }
   }
 
   resizeOnMove = (event) => {
+    const xMove = event.touches ? event.touches[0].screenX : event.screenX
     let newWidth, validWidth, pictureRatio, minPCWidth, maxPCWidth = null
 
     pictureRatio = this.state.photo.original_width / this.state.photo.original_height
     minPCWidth = (pictureRatio * 330) / this.state.maxWidth * 100
     maxPCWidth = this.state.photo.original_width / this.state.maxWidth > 1 ? 100 : this.state.photo.original_width / this.state.maxWidth * 100
-    newWidth = this.state.initialPhotoWidth + ((event.screenX - this.state.resizeOrigin) / this.state.maxWidth) * 100
+    newWidth = this.state.initialPhotoWidth + ((xMove - this.state.resizeOrigin) / this.state.maxWidth) * 100
     validWidth = newWidth > maxPCWidth  ? maxPCWidth : (newWidth < minPCWidth ? minPCWidth : newWidth)
 
     let newPhotoState = update(this.state.photo, { css_width: { $set: validWidth }})
@@ -61,9 +70,15 @@ class PhotoForm extends Component {
   }
 
   stopResizing = () => {
-    onmousemove = null;
+    if (mainHelpers.isTouchDevice()) {
+      ontouchmove = null;
+      ontouchend = null;
+    } else {
+      onmousemove = null;
+      onmouseup = null
+    }
+
     this.updatePhoto({css_width: this.state.photo.css_width})
-    onmouseup = null;
   }
 
   updatePhoto = async (photoCharacteristics) => {
@@ -106,6 +121,18 @@ class PhotoForm extends Component {
 
   activeCustomization = () => { this.setState({ customizationActive: true }) }
 
+  definePhotoWidth = () => { return this.state.clientWidth >= 768 ? this.state.photo.css_width : 100 }
+
+  initMoveUp = () => {
+    this.props.hideMapsCustomizations()
+    this.props.moveUp(this.props.id, this.props.position)
+  }
+
+  initMoveDown = () => {
+    this.props.hideMapsCustomizations()
+    this.props.moveDown(this.props.id, this.props.position)
+  }
+
   render() {
     return (
       <div id={`content-${this.props.position}`}
@@ -116,7 +143,8 @@ class PhotoForm extends Component {
       onDragEnter={this.onDragEnter}
       onDragLeave={this.onDragLeave}
       onDrop={this.onDrop}>
-        <DragVisualElements photo={this.state.photo} activeCustomization={this.activeCustomization}/>
+        <DragVisualElements photo={this.state.photo} activeCustomization={this.activeCustomization}
+        initMoveDown={this.initMoveDown} initMoveUp={this.initMoveUp}/>
         <DeleteButton deleteElement={this.deleteElement}/>
         <DropZone area={"before"} onDrop={this.onDrop} dropTarget={this.props.dropTarget}/>
         <div className="photoContainer">
@@ -127,7 +155,7 @@ class PhotoForm extends Component {
           <ElementResize initResize={this.initResize} direction="horizontal"/>
           <ReactCrop
           className={`photo-${this.props.position} ${this.state.cropped ? "cropped" : "original"}`} src={this.state.src} alt=""
-          style={{width: `${this.state.photo.css_width}%`}}
+          style={{width: `${this.definePhotoWidth()}%`}}
           crop={this.state.crop} onChange={this.onCropChange} ref={this.photoRef}/>
         </div>
         <DropZone area={"after"} onDrop={this.onDrop} dropTarget={this.props.dropTarget}/>

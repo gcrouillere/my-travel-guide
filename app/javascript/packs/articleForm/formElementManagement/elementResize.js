@@ -7,9 +7,12 @@ import resizeHorizontalLogo from './../../../../assets/images/resize-horizontal-
 
 class ElementResize extends Component {
 
-    constructor(props) {
-      super(props)
+  constructor(props) {
+    super(props)
+    this.state = {
+      clientWidth: document.body.clientWidth
     }
+  }
 
   preventDragging = (event) => {
     event.preventDefault()
@@ -23,14 +26,14 @@ class ElementResize extends Component {
   }
 
   render() {
-
-    return (
-      <div className="elementResize" onDragStart={this.preventDragging} onMouseDown={this.initResize}>
+    return this.state.clientWidth >= 768 || this.props.direction == "vertical" ?
+    (
+      <div className="elementResize" onDragStart={this.preventDragging} onMouseDown={this.initResize} onTouchStart={this.initResize}>
         <div className={`resizeLogo ${this.props.direction}`}>
           <img src={this.props.direction == "vertical" ? resizeLogo : resizeHorizontalLogo}/>
         </div>
       </div>
-    )
+    ) : null
   }
 }
 

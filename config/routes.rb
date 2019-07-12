@@ -10,5 +10,10 @@ Rails.application.routes.draw do
   resources :markers
   resources :photos
 
+  resources :users, only: [:show] do
+    resources :articles, only: [:index, :show]
+  end
+
+
   post '/articles/element_position_update', to: "articles#element_position_update"
 end
