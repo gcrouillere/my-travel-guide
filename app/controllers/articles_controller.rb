@@ -11,7 +11,7 @@ class ArticlesController < ApplicationController
     respond_to do |format|
       format.html { render "index" }
       format.json { render json: @articles.as_json(include: {
-        text_contents: {},
+        text_contents: { methods: :class_name },
         user: {},
         audience_selections: {},
         maps: { methods: :class_name, include: { markers: {} } }

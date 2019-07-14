@@ -3,7 +3,7 @@ class TextContent < ApplicationRecord
 
   include AlgoliaSearch
 
-  algoliasearch do
+  algoliasearch auto_index: false, auto_remove: false do
     attribute :text
     add_attribute :text_sanitized
     add_attribute :article_id

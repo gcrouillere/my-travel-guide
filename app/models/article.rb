@@ -8,7 +8,7 @@ class Article < ApplicationRecord
 
   include AlgoliaSearch
 
-  algoliasearch do
+  algoliasearch auto_index: false, auto_remove: false do
     attribute :title
     add_attribute :article_id
   end
