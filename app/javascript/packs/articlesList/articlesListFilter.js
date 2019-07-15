@@ -39,6 +39,10 @@ class ArticlesListFilter extends Component {
     }, 400)
   }
 
+  componentWillMount() {
+    this.props.setFilterParams({ audience_selection: null, article_ids: null })
+  }
+
   updateAudienceSelection = async (event) => {
     const clickedID = parseInt(event.target.id.split("-")[1])
     const newSelection =  this.manageAudience(clickedID)
