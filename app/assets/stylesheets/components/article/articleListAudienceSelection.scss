@@ -1,5 +1,9 @@
 .articleList-audienceSelection {
   align-items: center;
+  min-height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   label {
     background: linear-gradient(to right, #fefefe, #F7F7F7);

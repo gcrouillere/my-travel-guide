@@ -13,14 +13,29 @@
     min-height: 75px;
     display: flex;
     justify-content: center;
+    align-items: center;
+    background: linear-gradient(to bottom, #dae0e6, #f2f4f5);
+    @media all and (max-width: 575px) {
+      padding: 8px;
+    }
     p {
+      text-shadow: 0 1px 0px rgba(0, 0, 0, 0.2);
+      font-weight: 500;
       width: 100%;
-      flex: 1 0 auto;
       margin: auto 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      // min-height: 48px;
+      /* line-height: 21px; */
+      /* max-height: 65px; */
     }
   }
   .card-header.incomplete {
     background: #ebb565;
+    background: linear-gradient(to bottom, #f2c583, #ffe6c2);
   }
 
   .card {
@@ -33,7 +48,15 @@
   }
 
   .card-body p {
-    min-height: 72px;
+    font-weight: 100;
+    min-height: 96px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    /* line-height: 21px; */
+    /* max-height: 65px; */
   }
 
   a {

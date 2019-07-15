@@ -17,12 +17,26 @@ class ArticlesListFilter extends Component {
     this.queries = [ { indexName: 'Article' }, { indexName: 'TextContent' } ]
     this.state = {
       filterParams: {},
-      query_string: false
+      query_string: false,
+      spinnerActive: true,
     }
+    this.spinnerRef = React.createRef();
+    this.listSizeRef = React.createRef();
   }
 
   checkBoxTicked = (audienceName) => {
     return this.props.currentAudienceSelection.findIndex(x => x.audience === audienceName) > -1
+  }
+
+  componentDidUpdate() {
+    setTimeout( () => {
+      this.spinnerRef.current.classList.add("active");
+      this.listSizeRef.current.classList.remove("active")
+    }, 0)
+    setTimeout( () => {
+      this.spinnerRef.current.classList.remove("active");
+      this.listSizeRef.current.classList.add("active")
+    }, 400)
   }
 
   updateAudienceSelection = async (event) => {
@@ -90,6 +104,7 @@ class ArticlesListFilter extends Component {
 
     return(
       <div className="articlesFilter">
+        <p className="filterHeader">Filter Articles</p>
         <div className="audienceFilter audienceSelection">
           <div className="row justify-content-sm-center form-check">
           {this.props.audiencesSelection.map((category) =>
@@ -108,6 +123,10 @@ class ArticlesListFilter extends Component {
           <input type="text" className={`stringFilterInput`}
           onChange={this.searchString} placeholder="looking for something ?"/>
           <span></span>
+        </div>
+        <div className="listInfo">
+          <div ref={this.spinnerRef} className="spinner-border text-secondary"  role="status"></div>
+          <p ref={this.listSizeRef}>{`Displaying ${this.props.articles.length} articles`}</p>
         </div>
       </div>
     )

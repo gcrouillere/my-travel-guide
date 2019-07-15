@@ -24,7 +24,8 @@ class ArticlesList extends Component {
     this.state = {
       markers: [],
       googleMap: null,
-      view: "list"
+      view: "list",
+      earthView: false
     }
   }
 
@@ -71,7 +72,7 @@ class ArticlesList extends Component {
   }
 
   changeListView = (event) => {
-    return this.setState({ view: event.target.getAttribute("value") })
+    return this.setState({ view: event.target.getAttribute("value"), earthView: !this.state.earthView })
   }
 
   render() {
@@ -80,8 +81,10 @@ class ArticlesList extends Component {
 
           <div className={`filters ${this.state.view === 'earth' ? "full" : "auto"}`}>
             <div className="listSwitch">
-              <img className="switchView seeEarth" onClick={this.changeListView} src={earthLogo} value="earth"/>
-              <img className="switchView seeList" onClick={this.changeListView} src={listLogo} value="list" />
+              <img className={`switchView seeEarth ${this.state.earthView ? "" : "active"}`}
+              onClick={this.changeListView} src={earthLogo} value="earth"/>
+              <img className={`switchView seeList ${this.state.earthView ? "active" : ""}`}
+              onClick={this.changeListView} src={listLogo} value="list" />
             </div>
             <ArticlesListFilter {...this.props} audiencesSelection={this.props.audiencesSelection} initMap={this.initMap}/>
 
@@ -96,7 +99,7 @@ class ArticlesList extends Component {
           <div className={`row listRow ${this.state.view === 'list' ? "show" : "hide"}`}>
           {this.props.articles.map((article) => {
             return(
-              <div key={article.id} className="col-12 col-md-6 col-lg-4 article-card">
+              <div key={article.id} className="col-6 col-md-6 col-lg-4 article-card">
               <Link to={`/articles/${article.id}`}>
                 <div className="card">
                   <div className={`card-header ${article.article_valid ? "complete" : "incomplete"}`}>
