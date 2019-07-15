@@ -3,6 +3,7 @@ export const FETCH_ARTICLE = 'FETCH_ARTICLE';
 export const UPDATE_AUDIENCE_SELECTION = 'UPDATE_AUDIENCE_SELECTION';
 export const FETCH_ARTICLES = 'FETCH_ARTICLES';
 export const FETCH_MARKERS = 'FETCH_MARKERS';
+export const SET_FILTER_PARAMS = 'SET_FILTER_PARAMS';
 
 export function fetchUser() {
   const user = JSON.parse(document.getElementById("root").getAttribute("data-user"))
@@ -44,6 +45,7 @@ export function fetchArticles(requestObject) {
     const params = filterRequestObject(requestObject)
     url.search = new URLSearchParams(params)
   }
+
   let promise = fetch(url, {
     headers: {
       'Accept': 'application/json',
@@ -69,6 +71,13 @@ export function mapArticlesToMarkers(articles) {
   return {
     type: 'FETCH_MARKERS',
     payload: markers
+  }
+}
+
+export function setFilterParams(filterParams) {
+  return {
+  type: 'SET_FILTER_PARAMS',
+  payload: filterParams
   }
 }
 

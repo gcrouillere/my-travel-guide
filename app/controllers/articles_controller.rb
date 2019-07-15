@@ -6,7 +6,8 @@ class ArticlesController < ApplicationController
     filter_by_audience if params[:audience_selection]
     filter_by_article_ids if params[:article_ids]
     filter_by_user
-    puts params
+    filter_by_lat_lng if params[:mapBounds]
+    limit_articles_to_display
     @audience_selection = AudienceSelection.all.order(updated_at: :desc)
     respond_to do |format|
       format.html { render "index" }
@@ -130,11 +131,25 @@ class ArticlesController < ApplicationController
   end
 
   def filter_by_user
-    if params[:email]
-      email = params[:email]
+    if params[:user]
+      email = params[:user]
       @articles = @articles.joins(:user).where("users.email = ?", email)
     else
       @articles = @articles.where(article_valid: true)
     end
+  end
+
+  def filter_by_lat_lng
+    map_bounds = params[:mapBounds].split(",").map(&:to_i)
+    southLat = map_bounds[0]
+    southLng = map_bounds[1]
+    northLat = map_bounds[2]
+    northLng = map_bounds[3]
+
+    @articles = @articles.joins(:maps).where("maps.lat > ? AND maps.lng > ? AND maps.lat < ? AND maps.lng < ?", southLat, southLng, northLat, northLng)
+  end
+
+  def limit_articles_to_display
+    @articles = @articles.limit(50)
   end
 end

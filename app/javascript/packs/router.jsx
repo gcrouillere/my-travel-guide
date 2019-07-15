@@ -12,6 +12,7 @@ import currentArticleReducer from '../reducers/currentArticleReducer'
 import currentAudienceSelectionReducer from '../reducers/currentAudienceSelectionReducer'
 import articlesReducer from '../reducers/articlesReducer'
 import mapCentersMarkersReducer from '../reducers/mapCentersMarkersReducer'
+import filterParamsReducer from '../reducers/filterParamsReducer'
 
 
 const reducers = combineReducers({
@@ -20,7 +21,8 @@ const reducers = combineReducers({
   currentAudienceSelection: currentAudienceSelectionReducer,
   audiencesSelection: (state = null, action) => state,
   articles: articlesReducer,
-  mapCentersMarkers: mapCentersMarkersReducer
+  mapCentersMarkers: mapCentersMarkersReducer,
+  filterParams: filterParamsReducer
 })
 
 const initialState = {
@@ -29,7 +31,8 @@ const initialState = {
   audiencesSelection: JSON.parse(document.getElementById("root").getAttribute("data-audiences")),
   currentAudienceSelection: [],
   articles: [],
-  mapCentersMarkers: []
+  mapCentersMarkers: [],
+  filterParams: { article_ids: null, user: null, mapBounds: null, audience_selection: null }
 }
 
 const middlewares = applyMiddleware(reduxPromise, logger);

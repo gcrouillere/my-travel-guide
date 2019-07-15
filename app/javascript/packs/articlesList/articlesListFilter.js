@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import algoliasearch from 'algoliasearch'
 import update from 'immutability-helper'
 
-import { updateAudienceSelection, fetchArticles, mapArticlesToMarkers } from '../../actions/index'
+import { updateAudienceSelection, fetchArticles, mapArticlesToMarkers, setFilterParams} from '../../actions/index'
 import { ALGOLIAKEYS } from '../../config/config';
 
 class ArticlesListFilter extends Component {
@@ -43,11 +43,10 @@ class ArticlesListFilter extends Component {
     const clickedID = parseInt(event.target.id.split("-")[1])
     const newSelection =  this.manageAudience(clickedID)
     const IDSArray = newSelection.map(x => x.id).length === 0 ? null : newSelection.map(x => x.id)
-    let filterParams = update(this.state.filterParams, { audience_selection: { $set:  IDSArray }})
-    filterParams = this.updateFilterParamsWithUser(filterParams)
+    let filterParams = { audience_selection: IDSArray, user: this.props.updateFilterParamsWithUser() }
 
-    this.setState({ filterParams: filterParams })
-    await this.props.fetchArticles(filterParams)
+    await this.props.setFilterParams(filterParams)
+    await this.props.fetchArticles(this.props.filterParams)
     this.props.mapArticlesToMarkers(this.props.articles)
     this.props.initMap()
     this.props.updateAudienceSelection(newSelection)
@@ -76,29 +75,28 @@ class ArticlesListFilter extends Component {
           if (err) return reject(err);
 
           const IDSArray = results.map(x => x.hits.map(x => x.article_id)).flat()
-          return resolve(update(this.state.filterParams, { article_ids: { $set:  IDSArray }}))
+          return resolve({
+            article_ids: IDSArray,
+            user: this.props.updateFilterParamsWithUser()
+          })
         })
       } else {
-        return resolve(update(this.state.filterParams, { article_ids: { $set:  null }}))
+        return resolve({
+          article_ids: null,
+          user: this.props.updateFilterParamsWithUser()
+        })
       }
     })
 
     await promise.then(value => filterParams = value)
-    this.updateFilterParamsWithUser(filterParams)
-    this.setState({ filterParams: filterParams, query_string: query.length > 2 })
-    await this.props.fetchArticles(filterParams)
+    this.setState({ query_string: query.length > 2 })
+    await this.props.setFilterParams(filterParams)
+    await this.props.fetchArticles(this.props.filterParams)
     this.props.mapArticlesToMarkers(this.props.articles)
     this.props.initMap()
   }
 
-  updateFilterParamsWithUser(filterParams) {
-    if ( /^\/users\/\d+\/articles$/.test(this.props.location.pathname) ) {
-      const user = this.props.currentUser.email
-      return update(filterParams, { email: { $set:  user }})
-    } else {
-      return filterParams
-    }
-  }
+
 
   render() {
 
@@ -137,13 +135,14 @@ function mapStateToProps(state) {
   return {
     audiencesSelection: state.audiencesSelection,
     currentAudienceSelection: state.currentAudienceSelection,
-    articles: state.articles
+    articles: state.articles,
+    filterParams: state.filterParams
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    { updateAudienceSelection, fetchArticles, mapArticlesToMarkers },
+    { updateAudienceSelection, fetchArticles, mapArticlesToMarkers, setFilterParams },
     dispatch
   )
 }

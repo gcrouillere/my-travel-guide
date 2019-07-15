@@ -41,11 +41,17 @@ class AppHeader extends Component {
 
   renderLinkSet() {
     if (this.props.currentUser && this.state.currentLocation.match(/^\/$|^\/articles$|^\/users\/\d+\/articles$/)) {
+      const publicArticles = this.state.currentLocation.match(/^\/$|^\/articles$/) ? "active" : ""
+      const userArticles = this.state.currentLocation.match(/^\/users\/\d+\/articles$/) ? "active" : ""
       return(
         <div className="menu">
           <Link to="/articles/new" className="nav-link text-white">Create an article</Link>
-          <Link to={`/users/${this.props.currentUser.id}/articles`} className="nav-link text-white">Your articles</Link>
-          <Link to="/articles" className="nav-link text-white">All articles</Link>
+          <Link to={`/users/${this.props.currentUser.id}/articles`} className={`nav-link text-white ${userArticles}`}>
+            Your articles
+          </Link>
+          <Link to="/articles" className={`nav-link text-white ${publicArticles}`}>
+            Public articles
+          </Link>
         </div>
       )
     }

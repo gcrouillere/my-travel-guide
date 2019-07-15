@@ -16,7 +16,7 @@ import markerLogos from './articleForm/mapForm/markerLogos'
 import earthLogo from './../../assets/images/earth.svg'
 import listLogo from './../../assets/images/list.svg'
 import mapHelper from './../utils/mapHelper'
-import { fetchArticles, mapArticlesToMarkers } from '../actions/index'
+import { fetchArticles, mapArticlesToMarkers, setFilterParams } from '../actions/index'
 
 class ArticlesList extends Component {
   constructor(props) {
@@ -25,21 +25,28 @@ class ArticlesList extends Component {
       markers: [],
       googleMap: null,
       view: "list",
-      earthView: false
+      earthView: false,
+      zoom: 3,
+      previousCenter: null
     }
   }
 
   async componentDidMount () {
-    const articlesScope = /^\/users\/\d+\/articles$/.test(this.props.location.pathname) ? this.props.currentUser : undefined
-    await this.props.fetchArticles(articlesScope)
+    const email = /^\/users\/\d+\/articles$/.test(this.props.location.pathname) ? this.props.currentUser.email : null
+    await this.props.setFilterParams({ user: email })
+    await this.props.fetchArticles(this.props.filterParams)
     this.props.mapArticlesToMarkers(this.props.articles)
-    this.initMap()
+    this.setState({ previousCenter: this.calculateMapCenter(this.props.mapCentersMarkers) })
+  }
+
+  componentWillMount() {
+    this.props.setFilterParams({ mapBounds: null })
   }
 
   initMap = () => {
-    this.map = new google.maps.Map(document.getElementById('articlesListMap'), {
-      center: { lat: 20, lng: 0 },
-      zoom: 2,
+    this.map =  new google.maps.Map(document.getElementById('articlesListMap'), {
+      zoom: this.state.zoom,
+      center: this.calculateMapCenter(this.props.mapCentersMarkers),
       mapTypeControl: false,
       zoomControl: true,
       zoomControlOptions: { position: google.maps.ControlPosition.LEFT_CENTER },
@@ -47,12 +54,14 @@ class ArticlesList extends Component {
       streetViewControl: false,
       fullscreenControl: false,
       styles: [ { "featureType": "poi.business", "stylers": [{ "visibility": "off" }] } ]
-    });
+    })
+    this.markerBounds = new google.maps.LatLngBounds();
 
     this.props.mapCentersMarkers.forEach( marker => {
-
       const icon = markerLogos[marker.logo].url
       const googleMarker = mapHelper.createMarker(marker, this.map, icon, null, false)
+      this.markerBounds.extend(googleMarker.position)
+
       googleMarker.addListener('click', event => { this.handleArticleSelect(event, googleMarker) })
 
       if (marker.description) {
@@ -61,6 +70,41 @@ class ArticlesList extends Component {
       }
     })
 
+    this.map.addListener('zoom_changed', event => { this.changeMapBounds(event, this.map) })
+    this.map.addListener('dragend', event => { this.changeMapBounds(event, this.map) })
+  }
+
+  calculateMapCenter = (mapCentersMarkers) => {
+    if (mapCentersMarkers.length > 0 ) {
+      let minLat, minLng, maxLat, maxLng
+      let latitudes = mapCentersMarkers.map(marker => marker.lat)
+      let longitudes = mapCentersMarkers.map(marker => marker.lng)
+
+      maxLat = Math.max(...latitudes)
+      minLat = Math.min(...latitudes)
+      maxLng = Math.max(...longitudes)
+      minLng = Math.min(...longitudes)
+      const center = { lat: (maxLat + minLat) / 2, lng: (maxLng + minLng) / 2 }
+      this.setState({ previousCenter: center})
+      return center
+    } else {
+      return this.state.previousCenter
+    }
+  }
+
+  changeMapBounds = async (event, googleMap) => {
+    this.setState({ zoom: googleMap.getZoom(), previousCenter: googleMap.getCenter() })
+    let googleMapBounds = googleMap.getBounds();
+    const southLat = googleMapBounds.getSouthWest().lat();
+    const southLng = googleMapBounds.getSouthWest().lng();
+    const northLat = googleMapBounds.getNorthEast().lat();
+    const northLng = googleMapBounds.getNorthEast().lng();
+    const mapBounds = { mapBounds: [southLat, southLng, northLat, northLng], user: this.updateFilterParamsWithUser() }
+
+    await this.props.setFilterParams(mapBounds)
+    await this.props.fetchArticles(this.props.filterParams)
+    this.props.mapArticlesToMarkers(this.props.articles)
+    this.initMap()
   }
 
   handleArticleSelect = (event, googleMarker) => {
@@ -72,7 +116,16 @@ class ArticlesList extends Component {
   }
 
   changeListView = (event) => {
+    this.initMap()
     return this.setState({ view: event.target.getAttribute("value"), earthView: !this.state.earthView })
+  }
+
+  updateFilterParamsWithUser = (filterParams) => {
+    if ( /^\/users\/\d+\/articles$/.test(this.props.location.pathname) ) {
+      return this.props.currentUser.email
+    } else {
+      return null
+    }
   }
 
   render() {
@@ -86,7 +139,8 @@ class ArticlesList extends Component {
               <img className={`switchView seeList ${this.state.earthView ? "active" : ""}`}
               onClick={this.changeListView} src={listLogo} value="list" />
             </div>
-            <ArticlesListFilter {...this.props} audiencesSelection={this.props.audiencesSelection} initMap={this.initMap}/>
+            <ArticlesListFilter {...this.props} audiencesSelection={this.props.audiencesSelection} initMap={this.initMap}
+            updateFilterParamsWithUser={this.updateFilterParamsWithUser}/>
 
               <div className={`row mapRow ${this.state.view === 'earth' ? "show" : "hide"}`}>
                 <div className="listOnMap">
@@ -135,13 +189,14 @@ function mapStateToProps(state) {
     currentUser: state.currentUser,
     audiencesSelection: state.audiencesSelection,
     articles: state.articles,
-    mapCentersMarkers: state.mapCentersMarkers
+    mapCentersMarkers: state.mapCentersMarkers,
+    filterParams: state.filterParams
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    { fetchArticles, mapArticlesToMarkers},
+    { fetchArticles, mapArticlesToMarkers, setFilterParams},
     dispatch
   )
 }

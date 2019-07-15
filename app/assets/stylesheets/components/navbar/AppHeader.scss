@@ -14,8 +14,14 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      padding: 0;
+      margin: auto 5px;
+      width: auto;
        @media all and (max-width:768px) {
         font-size: 12px;
+       }
+       &.active {
+        border-bottom: 1px solid white;
        }
     }
   }

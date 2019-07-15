@@ -33,12 +33,12 @@ export class App extends Component {
         .filter(x => typeof(x) === "number")[0]
   }
 
-  locationNeedRedirect() {
+  locationNeedsRedirect() {
     return !(/^\/(article\/?)?$|users/.test(this.props.location.pathname))
   }
 
   render() {
-    if(this.props.currentUser === null && this.locationNeedRedirect()) return window.location.href = `${window.origin}/users/sign_in`
+    if(this.props.currentUser === null && this.locationNeedsRedirect()) return window.location.href = `${window.origin}/users/sign_in`
     return (
       <div>
         <Route component={AppHeader} />
