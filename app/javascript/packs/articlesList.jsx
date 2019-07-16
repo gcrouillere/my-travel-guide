@@ -27,7 +27,7 @@ class ArticlesList extends Component {
       view: "list",
       earthView: false,
       zoom: 2,
-      previousCenter: null
+      previousCenter: { lat: 0, lng: 0 }
     }
   }
 
@@ -58,15 +58,17 @@ class ArticlesList extends Component {
     this.markerBounds = new google.maps.LatLngBounds();
 
     this.props.mapCentersMarkers.forEach( marker => {
-      const icon = markerLogos[marker.logo].url
-      const googleMarker = mapHelper.createMarker(marker, this.map, icon, null, false)
-      this.markerBounds.extend(googleMarker.position)
+      if (marker.id) {
+        const icon = markerLogos[marker.logo].url
+        const googleMarker = mapHelper.createMarker(marker, this.map, icon, null, false)
+        this.markerBounds.extend(googleMarker.position)
 
-      googleMarker.addListener('click', event => { this.handleArticleSelect(event, googleMarker) })
+        googleMarker.addListener('click', event => { this.handleArticleSelect(event, googleMarker) })
 
-      if (marker.description) {
-        const infowindow = new google.maps.InfoWindow({content: marker.description, disableAutoPan: true});
-        infowindow.open(this.map, googleMarker);
+        if (marker.description) {
+          const infowindow = new google.maps.InfoWindow({content: marker.description, disableAutoPan: true});
+          infowindow.open(this.map, googleMarker);
+        }
       }
     })
 
@@ -76,15 +78,17 @@ class ArticlesList extends Component {
 
   calculateMapCenter = (mapCentersMarkers) => {
     if (mapCentersMarkers.length > 0 ) {
+      console.log(mapCentersMarkers)
       let minLat, minLng, maxLat, maxLng
-      let latitudes = mapCentersMarkers.map(marker => marker.lat)
-      let longitudes = mapCentersMarkers.map(marker => marker.lng)
+      let latitudes = mapCentersMarkers.map(marker => marker.lat).filter(x => x !== undefined)
+      let longitudes = mapCentersMarkers.map(marker => marker.lng).filter(x => x !== undefined)
 
       maxLat = Math.max(...latitudes)
       minLat = Math.min(...latitudes)
       maxLng = Math.max(...longitudes)
       minLng = Math.min(...longitudes)
-      const center = { lat: (maxLat + minLat) / 2, lng: (maxLng + minLng) / 2 }
+      const center = { lat: (maxLat + minLat) / 2 || 0, lng: (maxLng + minLng) / 2 || 0 }
+
       this.setState({ previousCenter: center})
       return center
     } else {
