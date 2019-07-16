@@ -140,13 +140,17 @@ class ArticlesController < ApplicationController
   end
 
   def filter_by_lat_lng
-    map_bounds = params[:mapBounds].split(",").map(&:to_i)
+    map_bounds = params[:mapBounds].split(",").map(&:to_f)
     southLat = map_bounds[0]
     southLng = map_bounds[1]
     northLat = map_bounds[2]
     northLng = map_bounds[3]
 
-    @articles = @articles.joins(:maps).where("maps.lat > ? AND maps.lng > ? AND maps.lat < ? AND maps.lng < ?", southLat, southLng, northLat, northLng)
+    if northLng < southLng
+      @articles = @articles.joins(:maps).where("maps.lat > ? AND maps.lat < ?", southLat, northLat).where("maps.lng > ? OR maps.lng < ?", southLng, northLng)
+   else
+      @articles = @articles.joins(:maps).where("maps.lat > ? AND maps.lng > ? AND maps.lat < ? AND maps.lng < ?", southLat, southLng, northLat, northLng)
+    end
   end
 
   def limit_articles_to_display

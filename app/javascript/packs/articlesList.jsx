@@ -26,7 +26,7 @@ class ArticlesList extends Component {
       googleMap: null,
       view: "list",
       earthView: false,
-      zoom: 3,
+      zoom: 2,
       previousCenter: null
     }
   }
