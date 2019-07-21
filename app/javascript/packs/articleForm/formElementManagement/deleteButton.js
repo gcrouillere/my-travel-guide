@@ -10,9 +10,11 @@ class DeleteButton extends Component {
   render() {
 
     return (
+      this.props.active ?
       <div onClick={this.deleteElement} className="contentDelete">
         <img src={deleteLogo}/>
       </div>
+      : null
     )
   }
 }

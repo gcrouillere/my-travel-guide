@@ -4,9 +4,11 @@ import PropTypes from 'prop-types'
 
 import MapInitialCenterOverlay from './contentMenu/mapInitialCenterOverlay'
 import PhotoInitialFileOverlay from './contentMenu/photoInitialFileOverlay'
+import MixedContentInitialOverlay from './contentMenu/mixedContentInitialOverlay'
 import mapLogo from './../../../assets/images/map-white.svg'
 import textLogo from './../../../assets/images/write-white.svg'
 import photoLogo from './../../../assets/images/see-white.svg'
+import mixedContentLogo from './../../../assets/images/mixed-content-white.svg'
 
 class ContentMenu extends Component {
 
@@ -16,6 +18,7 @@ class ContentMenu extends Component {
       initPositionAtCreation: null,
       mapOverlayActive: false,
       photoOverlayActive: false,
+      mixedContentOverlayActive: false,
       location: "",
       mobileMenuActive: false
     }
@@ -30,22 +33,34 @@ class ContentMenu extends Component {
     this.setState({ photoOverlayActive: true, initPositionAtCreation: initPositionAtCreation })
   }
 
+  initAddNewMixedContentBloc = (initPositionAtCreation = undefined) => {
+    this.setState({ mixedContentOverlayActive: true, initPositionAtCreation: initPositionAtCreation })
+  }
+
   addNewTextContent = () => {
     this.props.addNewTextContent(this.props.id)
     this.setState({ mobileMenuActive: false })
   }
 
-  addNewMap = (map) => {
-    this.props.addNewMap(this.props.id, map, this.state.initPositionAtCreation)
+  addNewMap = (map) => { this.props.addNewMap(this.props.id, map, this.state.initPositionAtCreation) }
+
+  addNewMixedContent = (selectedContents) => {
+    this.setState({ mixedContentOverlayActive: false })
+    this.props.addNewMixedContent(selectedContents, this.state.initPositionAtCreation)
   }
 
-  addNewPhotoBloc = (data) => { this.props.addNewPhotoBloc(data, this.state.initPositionAtCreation) }
+  addNewPhotoBloc = (data) => {
+    this.abandonPhotoCreation()
+    this.props.addNewPhotoBloc(data, this.state.initPositionAtCreation)
+  }
 
   addNewComponentOnDrag = (event, trigger) => { this.props.addNewComponentOnDrag(event, trigger) }
 
   abandonMapCreation = () => { this.setState({ mapOverlayActive: false, mobileMenuActive: false }) }
 
   abandonPhotoCreation = () => { this.setState({ photoOverlayActive: false, mobileMenuActive: false }) }
+
+  abandonMixedContentCreation = () => { this.setState({ mixedContentOverlayActive: false, mobileMenuActive: false }) }
 
   showMobileMenu = () => { this.setState({ mobileMenuActive: true }) }
 
@@ -100,6 +115,17 @@ class ContentMenu extends Component {
               </div>
             </div>
 
+            <div className="blocAddition mixedContent-button">
+              <div draggable className="btn btn-dark addNew" onClick={this.initAddNewMixedContentBloc}
+              onDragStart={(event) => this.addNewComponentOnDrag(event, "mixedContentCreation")} value="mixedContent">
+                <div draggable={false} className="addIcone"><img src={mixedContentLogo}/></div>
+                <div className="addExplain">
+                  <div className="clickText">Click to add mix in queue</div>
+                  <div className="dragText">Drag to add mix to a specific location</div>
+                </div>
+              </div>
+            </div>
+
           </div>
           <div className="expand content">
             <div className="menu">
@@ -117,6 +143,8 @@ class ContentMenu extends Component {
         abandonMapCreation={this.abandonMapCreation} addNewMap={this.addNewMap}/>
         <PhotoInitialFileOverlay photoOverlayActive={this.state.photoOverlayActive} addNewPhotoBloc={this.addNewPhotoBloc}
         abandonPhotoCreation={this.abandonPhotoCreation}/>
+        <MixedContentInitialOverlay mixedContentOverlayActive={this.state.mixedContentOverlayActive} addNewMixedContent={this.addNewMixedContent}
+        abandonMixedContentCreation={this.abandonMixedContentCreation} />
       </div>
     )
   }

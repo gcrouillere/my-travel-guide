@@ -32,6 +32,19 @@
   }
 }
 
+.double-content-elements .photoContainer {
+  padding: 0px;
+  flex-direction: column;
+  height: 100%;
+  .mixedPhoto {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position-y: center;
+    background-position-x: center;
+  }
+}
+
 .photoCustomization {
   overflow: hidden;
   @media all and (min-width:769px) {

@@ -10,6 +10,7 @@ import Marker from './mapComponent/marker'
 import Polyline from './mapComponent/polyline'
 import ElementResize from './../formElementManagement/elementResize'
 import ajaxHelpers from './../../../utils/ajaxHelpers'
+import mainHelpers from './../../../utils/mainHelpers'
 
 class MapComponent extends Component {
 
@@ -62,11 +63,13 @@ class MapComponent extends Component {
     const yOrigin = event.touches ? event.touches[0].screenY : event.screenY
     this.setState({ resizeOrigin: yOrigin, initialMapHeight: this.state.map.height });
 
-    onmousemove = (event) => { this.resizeOnMove(event) }
-    onmouseup = () => { this.stopResizing() }
-
-    ontouchmove = (event) => { this.resizeOnMove(event) }
-    ontouchend  = () => { this.stopResizing() }
+    if (mainHelpers.isTouchDevice()) {
+      ontouchmove = (event) => { this.resizeOnMove(event) }
+      ontouchend  = () => { this.stopResizing() }
+    } else {
+      onmousemove = (event) => { this.resizeOnMove(event) }
+      onmouseup = () => { this.stopResizing() }
+    }
   }
 
   resizeOnMove(event) {
@@ -130,7 +133,7 @@ class MapComponent extends Component {
 
     return (
       <div className="mapBloc">
-        <ElementResize initResize={this.initResize} direction="vertical"/>
+        <ElementResize initResize={this.initResize} direction="vertical" active={this.props.active}/>
         <MapLocationInput id={this.props.map.id} location={this.state.map.name} handleMap={this.handleMap}/>
         <div id={`map${this.state.map.id}`} className="googleMap" style={{ width: '100%', height: `${this.state.map.height}px` }}
         onMouseDown={this.onMouseDown}>

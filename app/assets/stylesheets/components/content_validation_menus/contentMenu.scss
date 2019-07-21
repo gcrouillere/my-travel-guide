@@ -224,7 +224,7 @@
   }
 }
 
-.mapInitialCenterOverlay, .photoInitialFileOverlay {
+.mapInitialCenterOverlay, .mixedContentInitialOverlay, .photoInitialFileOverlay {
     z-index: 5;
     background: #fafafa;
     opacity: 0;
@@ -287,7 +287,7 @@
     }
   }
 
-  .mapInitialCenterOverlay.active, .photoInitialFileOverlay.active {
+  .mapInitialCenterOverlay.active, .mixedContentInitialOverlay.active, .photoInitialFileOverlay.active {
     opacity: 1;
     visibility: visible;
     transition: all 0.3s ease-in-out;

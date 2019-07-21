@@ -78,7 +78,7 @@ class ArticlesList extends Component {
 
   calculateMapCenter = (mapCentersMarkers) => {
     if (mapCentersMarkers.length > 0 ) {
-      console.log(mapCentersMarkers)
+
       let minLat, minLng, maxLat, maxLng
       let latitudes = mapCentersMarkers.map(marker => marker.lat).filter(x => x !== undefined)
       let longitudes = mapCentersMarkers.map(marker => marker.lng).filter(x => x !== undefined)

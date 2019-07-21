@@ -1,4 +1,4 @@
-.textContentInput, .mapInput, .photoInput {
+.textContentInput, .mapInput, .photoInput, .doubleContentInput {
   position: relative;
   .contentDelete, .dragLogo, .dragTop, .dragDown, .resizeLogo, .tuneLogo {
     position: absolute;
@@ -43,7 +43,7 @@
   }
   .resizeLogo {
     bottom: -24px;
-    left: calc(50% - 12px);
+    left: calc(50% - 10px);
   }
   .resizeLogo.vertical {
     cursor: ns-resize;
@@ -53,7 +53,8 @@
   }
 }
 
-.textContentInput:not(.dragging) , .mapInput:not(.dragging), .photoInput:not(.dragging) {
+.col > .textContentInput:not(.dragging) , .col > .mapInput:not(.dragging),
+.col > .photoInput:not(.dragging), .col > .doubleContentInput:not(.dragging) {
   &:hover {
     box-shadow: 0px 0px 0px 3px #343a40;
     border-radius: 0 0 1px 1px;

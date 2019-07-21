@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_05_132547) do
+ActiveRecord::Schema.define(version: 2019_07_17_114940) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,15 @@ ActiveRecord::Schema.define(version: 2019_07_05_132547) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "double_contents", force: :cascade do |t|
+    t.integer "position"
+    t.integer "height"
+    t.bigint "article_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["article_id"], name: "index_double_contents_on_article_id"
+  end
+
   create_table "maps", force: :cascade do |t|
     t.integer "zoom"
     t.string "name"
@@ -51,7 +60,9 @@ ActiveRecord::Schema.define(version: 2019_07_05_132547) do
     t.bigint "article_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "double_content_id"
     t.index ["article_id"], name: "index_maps_on_article_id"
+    t.index ["double_content_id"], name: "index_maps_on_double_content_id"
   end
 
   create_table "markers", force: :cascade do |t|
@@ -89,7 +100,9 @@ ActiveRecord::Schema.define(version: 2019_07_05_132547) do
     t.bigint "article_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "double_content_id"
     t.index ["article_id"], name: "index_photos_on_article_id"
+    t.index ["double_content_id"], name: "index_photos_on_double_content_id"
   end
 
   create_table "polylines", force: :cascade do |t|
@@ -106,7 +119,9 @@ ActiveRecord::Schema.define(version: 2019_07_05_132547) do
     t.bigint "article_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "double_content_id"
     t.index ["article_id"], name: "index_text_contents_on_article_id"
+    t.index ["double_content_id"], name: "index_text_contents_on_double_content_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -124,10 +139,14 @@ ActiveRecord::Schema.define(version: 2019_07_05_132547) do
   add_foreign_key "article_audience_selections", "articles"
   add_foreign_key "article_audience_selections", "audience_selections"
   add_foreign_key "articles", "users"
+  add_foreign_key "double_contents", "articles"
   add_foreign_key "maps", "articles"
+  add_foreign_key "maps", "double_contents"
   add_foreign_key "markers", "maps"
   add_foreign_key "markers", "polylines"
   add_foreign_key "photos", "articles"
+  add_foreign_key "photos", "double_contents"
   add_foreign_key "polylines", "maps"
   add_foreign_key "text_contents", "articles"
+  add_foreign_key "text_contents", "double_contents"
 end

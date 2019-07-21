@@ -26,7 +26,7 @@ class ElementResize extends Component {
   }
 
   render() {
-    return this.state.clientWidth >= 768 || this.props.direction == "vertical" ?
+    return this.state.clientWidth >= 768 || this.props.direction == "vertical" && this.props.active ?
     (
       <div className="elementResize" onDragStart={this.preventDragging} onMouseDown={this.initResize} onTouchStart={this.initResize}>
         <div className={`resizeLogo ${this.props.direction}`}>

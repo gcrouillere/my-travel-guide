@@ -102,8 +102,10 @@ class PhotoForm extends Component {
   onCropChange = (crop) => {  this.setState({ crop, customizationActive: true }) }
 
   onDragStart = (event) => {
-    this.props.hideMapsCustomizations()
-    this.props.onDragStart(event, this.props.id, this.props.position, this.props.photo)
+    if (this.props.draggable) {
+      this.props.hideMapsCustomizations()
+      this.props.onDragStart(event, this.props.id, this.props.position, this.props.photo)
+    }
   }
 
   onDragOver = (event) => { this.props.onDragOver(event, this.props.id, this.props.position) }
@@ -136,27 +138,38 @@ class PhotoForm extends Component {
     return (
       <div id={`content-${this.props.position}`}
       className={`photoInput ${this.props.dragging ? "dragging" : ""} ${this.props.draggingElement ? "draggingElement" : ""}`}
-      draggable={!this.props.mapCustomizationOnGoing.status} ref={this.photoContentRef}
+      draggable={!this.props.mapCustomizationOnGoing.status && this.props.draggable} ref={this.photoContentRef}
       onDragStart={this.onDragStart}
       onDragOver={this.onDragOver}
       onDragEnter={this.onDragEnter}
       onDragLeave={this.onDragLeave}
       onDrop={this.onDrop}>
         <DragVisualElements photo={this.state.photo} activeCustomization={this.activeCustomization}
-        initMoveDown={this.initMoveDown} initMoveUp={this.initMoveUp}/>
-        <DeleteButton deleteElement={this.deleteElement}/>
-        <DropZone area={"before"} onDrop={this.onDrop} dropTarget={this.props.dropTarget}/>
+        initMoveDown={this.initMoveDown} initMoveUp={this.initMoveUp} active={this.props.draggable}/>
+        <DeleteButton deleteElement={this.deleteElement} active={this.props.draggable}/>
+        <DropZone area={"before"} onDrop={this.onDrop} dropTarget={this.props.dropTarget} active={this.props.draggable}/>
         <div className="photoContainer">
+        { this.props.draggable ?
           <PhotoCustomization photo={this.state.photo} cropped={this.state.cropped} crop={this.state.crop}
           customizationActive={this.state.customizationActive} abandonCustomization={this.abandonCustomization}
           updatePhoto={this.updatePhoto} getPhotoNode={this.getPhotoNode}/>
-          <ElementResize initResize={this.initResize} direction="horizontal"/>
+          : null
+        }
+        { this.props.draggable ?
+          <ElementResize initResize={this.initResize} direction="horizontal" active={this.props.draggable}/>
+          : null
+        }
+        { this.props.draggable ?
           <ReactCrop
           className={`photo-${this.props.position} ${this.state.cropped ? "cropped" : "original"}`} src={this.state.src} alt=""
           style={{width: `${this.definePhotoWidth()}%`}}
           crop={this.state.crop} onChange={this.onCropChange} ref={this.photoRef}/>
+          : <div className="mixedPhoto" style={{ backgroundImage: `url(${this.state.src})`}}>
+              <img className="mixedPhotoMobile"src={this.state.src} alt=""/>
+            </div>
+        }
         </div>
-        <DropZone area={"after"} onDrop={this.onDrop} dropTarget={this.props.dropTarget}/>
+        <DropZone area={"after"} onDrop={this.onDrop} dropTarget={this.props.dropTarget} active={this.props.draggable}/>
       </div>
     )
   }
@@ -166,16 +179,16 @@ PhotoForm.propTypes = {
   photo: PropTypes.object.isRequired,
   id: PropTypes.number.isRequired,
   articleId: PropTypes.number.isRequired,
-  position: PropTypes.number.isRequired,
+  position: PropTypes.number,
   token: PropTypes.string.isRequired,
-  onDragStart: PropTypes.func.isRequired,
-  onDragOver: PropTypes.func.isRequired,
-  onDragEnter: PropTypes.func.isRequired,
-  onDragLeave: PropTypes.func.isRequired,
-  onDrop: PropTypes.func.isRequired,
-  deleteElement: PropTypes.func.isRequired,
+  onDragStart: PropTypes.func,
+  onDragOver: PropTypes.func,
+  onDragEnter: PropTypes.func,
+  onDragLeave: PropTypes.func,
+  onDrop: PropTypes.func,
+  deleteElement: PropTypes.func,
   mapCustomizationOnGoing: PropTypes.object,
-  hideMapsCustomizations: PropTypes.func.isRequired,
+  hideMapsCustomizations: PropTypes.func,
   draggingElement: PropTypes.bool,
   dragging: PropTypes.bool,
   dropTarget: PropTypes.object

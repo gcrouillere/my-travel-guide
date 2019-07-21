@@ -1,0 +1,50 @@
+.article-container-form {
+  .double-content-elements {
+    display: flex;
+    justify-content: center;
+    .photoInput, .mapInput, .textContentInput {
+      margin: 0;
+      width: 50%;
+    }
+    .photoInput {
+      .mixedPhotoMobile {
+        display: none;
+      }
+    }
+    .textContentInput {
+      display: flex;
+      flex-direction: column;
+      .quill {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        .ql-toolbar.ql-snow {
+          height: auto;
+        }
+        .ql-container.ql-snow {
+          height: auto;
+          flex: 1 0 auto;
+        }
+      }
+    }
+  }
+
+  @media all and (max-width:500px) {
+    .elementResize {
+      display: none;
+    }
+    .double-content-elements {
+      display: block;
+      height: auto !important;
+      .photoInput, .mapInput, .textContentInput {
+          width: 100%;
+      }
+      .photoInput {
+        background-image: none !important;
+        .mixedPhotoMobile {
+         display: block;
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 .article-container-form {
   position: relative;
   margin-top: 40px;
+  margin-bottom: 30px;
   padding-right: 30px !important;
   padding-left: 30px !important;
   @media all and (max-width:768px) {
@@ -27,16 +28,11 @@
     margin-top: 0 !important;
   }
 
-  .mapInput {
-    margin: 30px 0;
-  }
-
-  .photoInput {
+  .mapInput, .photoInput, .textContentInput, .doubleContentInput {
     margin: 30px 0;
   }
 
   .textContentInput {
-    margin: 30px 0;
     .ql-container {
       border-radius: 0px 0px 2px 2px;
 
