@@ -165,8 +165,8 @@ class MapComponent extends Component {
 
 MapComponent.propTypes = {
   map: PropTypes.object.isRequired,
-  polylines: PropTypes.array.isRequired,
-  markers: PropTypes.array.isRequired,
+  polylines: PropTypes.array,
+  markers: PropTypes.array,
   token: PropTypes.string.isRequired,
   customizationOnGoing: PropTypes.object.isRequired,
   manageMarker: PropTypes.func.isRequired,

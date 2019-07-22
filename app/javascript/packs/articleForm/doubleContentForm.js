@@ -21,9 +21,12 @@ class DoubleContentForm extends Component {
       doubleContent: this.props.doubleContent,
       resizeOrigin: null,
       initialContentHeight: null,
-      textHeight: 0
+      textHeight: this.props.doubleContent.height,
     }
-    this.textContentRef = []
+  }
+
+  componentDidMount() {
+
   }
 
   onDragStart = (event) => {
@@ -75,11 +78,12 @@ class DoubleContentForm extends Component {
     const yMove = event.touches ? event.touches[0].screenY : event.screenY
 
     newHeight = (this.state.initialContentHeight + (yMove - this.state.resizeOrigin))
-    validHeight = newHeight < 250 ? 250 : (this.state.textHeight <  newHeight ? newHeight : this.state.textHeight)
+    validHeight = this.state.textHeight > 250 ?
+      (this.state.textHeight <  newHeight ? newHeight : this.state.textHeight) :
+      (newHeight < 250 ? 250 : newHeight)
 
-
-    let updatedDoubleContent = update(this.state.doubleContent, {height: {$set: validHeight}})
-    this.setState({doubleContent: updatedDoubleContent})
+    let updatedDoubleContent = update(this.state.doubleContent, { height: { $set: validHeight }})
+    this.setState({ doubleContent: updatedDoubleContent })
   }
 
   stopResizing() {
@@ -91,7 +95,7 @@ class DoubleContentForm extends Component {
 
   reportNewTextHeight = (newHeight) => {
     this.setState({ textHeight: newHeight })
-    if (newHeight > 250) this.updateDoubleContent({ height: newHeight })
+    if (newHeight > this.state.doubleContent.height) this.updateDoubleContent({ height: newHeight })
   }
 
   async updateDoubleContent(doubleContentCharacteristics) {
@@ -133,30 +137,26 @@ class DoubleContentForm extends Component {
               dragging={false} draggingElement={false} dropTarget={null} position={text_content.position}
               onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
               onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={null} moveUp={null} moveDown={null}
-              reportNewTextHeight={this.reportNewTextHeight} doubleContentHeight={this.state.doubleContent.height}
-              ref={ comp => this.textContentRef[`pos${index}`] = comp }/>
+              reportNewTextHeight={this.reportNewTextHeight} doubleContentHeight={this.state.doubleContent.height} />
             }
             if (type[0] === "Map") {
               const map = this.props.doubleContent.maps[index] || this.props.doubleContent.maps[0]
-              return <MapForm key={`map${map.id}`} map={map} name={map.name}
-              dragging={this.state.dragging} draggingElement={map.position == this.state.draggingElement}
-              dropTarget={dropTarget}
-              articleId={this.state.id} position={map.position} id={map.id} token={this.state.token}
+              return <MapForm key={`map${map.id}`} map={map} name={map.name} draggable={false}
+              position={map.position} id={map.id} token={this.props.token}
+              dragging={false} draggingElement={false} dropTarget={null}
               onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
-              onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
-              preventDraggingOnOtherElements={this.preventDraggingOnOtherElements}
-              moveUp={this.moveUp} moveDown={this.moveDown}
-              ref={(ref) => this.MapFormRef[map.id] = ref}/>
+              onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={null} moveUp={null} moveDown={null}
+              preventDraggingOnOtherElements={null}/>
+              // ref={(ref) => this.MapFormRef[map.id] = ref}
             }
             if (type[0] === "Photo") {
               const photo = this.props.doubleContent.photos[index] || this.props.doubleContent.photos[0]
               return <PhotoForm key={`photo${photo.id}`} photo={photo} draggable={false}
               mapCustomizationOnGoing={{ status: false, trigger: null }} hideMapsCustomizations={this.hideMapsCustomizations}
-              id={photo.id} articleId={this.props.id} token={this.props.token}
+              id={photo.id} token={this.props.token}
               dragging={false} draggingElement={false} dropTarget={null} position={photo.position}
-              onDragStart={null} onDragOver={null} onDragEnter={null}
-              onDragLeave={null} onDrop={null} deleteElement={null}
-              moveUp={null} moveDown={null}/>
+              onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
+              onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={null} moveUp={null} moveDown={null} />
             }
           })}
         </div>

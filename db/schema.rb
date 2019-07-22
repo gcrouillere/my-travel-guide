@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 2019_07_17_114940) do
 
   create_table "double_contents", force: :cascade do |t|
     t.integer "position"
-    t.integer "height"
+    t.integer "height", default: 300
     t.bigint "article_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

@@ -14,9 +14,14 @@ class TextContentForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      textContent: this.props.textContent.text
+      textContent: this.props.textContent.text,
+      textContentHeight: null
     }
     this.textContentRef = React.createRef();
+  }
+
+  componentDidMount() {
+    this.setState({ textContentHeight: this.textContentRef.current.clientHeight })
   }
 
   modules = {
@@ -30,16 +35,14 @@ class TextContentForm extends Component {
 
   handleChange = (value) => {
     this.setState({textContent: value})
-    this.updateHeightOnChange()
-  }
 
-  updateHeightOnChange = () => {
-    const toolBarHeight = document.querySelector(`#content-${this.props.position} .ql-toolbar.ql-snow `).offsetHeight
-    const containerHeight = Array.from(document.querySelectorAll(`#content-${this.props.position} .ql-container.ql-snow .ql-editor`))
+    const toolBarHeight = document.querySelector(`#content-${this.props.position} .ql-toolbar`).offsetHeight
+    const textBodyHeight = Array.from(document.querySelectorAll(`#content-${this.props.position} .ql-editor > *`))
       .map(x => x.offsetHeight).reduce((acc, x) => acc + x)
-    const textContentHeight = toolBarHeight + containerHeight
+    // eventually add container padding + 1px to round up toolbar height
+    const newHeight = toolBarHeight + textBodyHeight + 24 + 1
 
-    if (this.props.reportNewTextHeight) this.props.reportNewTextHeight(textContentHeight)
+    if (this.props.reportNewTextHeight) this.props.reportNewTextHeight(newHeight)
   }
 
   saveOnBlur = () => {
@@ -86,6 +89,7 @@ class TextContentForm extends Component {
   }
 
   render() {
+
     return (
       <div id={`content-${this.props.position}`} ref={this.textContentRef}
       className={`textContentInput ${this.props.dragging ? "dragging" : ""} ${this.props.draggingElement ? "draggingElement" : ""}`}
@@ -116,11 +120,11 @@ TextContentForm.propTypes = {
   articleId: PropTypes.number,
   position: PropTypes.number,
   token: PropTypes.string.isRequired,
-  onDragStart: PropTypes.func,
-  onDragOver: PropTypes.func,
-  onDragEnter: PropTypes.func,
-  onDragLeave: PropTypes.func,
-  onDrop: PropTypes.func,
+  onDragStart: PropTypes.func.isRequired,
+  onDragOver: PropTypes.func.isRequired,
+  onDragEnter: PropTypes.func.isRequired,
+  onDragLeave: PropTypes.func.isRequired,
+  onDrop: PropTypes.func.isRequired,
   deleteElement: PropTypes.func,
   hideMapsCustomizations: PropTypes.func,
   mapCustomizationOnGoing: PropTypes.object,

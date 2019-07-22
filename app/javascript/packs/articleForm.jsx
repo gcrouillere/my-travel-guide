@@ -131,9 +131,8 @@ export class ArticleForm extends Component {
     Object.keys(selectedContents).forEach(box => {
       const controller = `${selectedContents[box].text.toLowerCase()}`
       let data = { [controller]: selectedContents[box].content }
-      console.log(data)
       const newdata = update(data, { [controller]: { double_content_id: { $set: doubleContent.id }, position: { $set:  box.split("")[3] - 1 }}})
-      console.log(newdata)
+
       ajaxHelpers.ajaxCall('POST', `/${controller}s`, newdata, this.state.token)
     })
 
@@ -224,7 +223,7 @@ export class ArticleForm extends Component {
   }
 
   preventDraggingOnOtherElements = (trigger) => {
-    this.setState({customizationOnGoing: {status: !this.state.customizationOnGoing.status, trigger: trigger}})
+    this.setState({customizationOnGoing: { status: !this.state.customizationOnGoing.status, trigger: trigger }})
   }
 
   updateArticleCompletion = (module) => {
@@ -358,8 +357,7 @@ export class ArticleForm extends Component {
                   <div className="col" key={`map${element.id}`}>
                     <MapForm key={`map${element.id}`} map={element} name={element.name}
                     dragging={this.state.dragging} draggingElement={element.position == this.state.draggingElement}
-                    dropTarget={dropTarget} draggable={true}
-                    articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
+                    dropTarget={dropTarget} draggable={true} position={element.position} id={element.id} token={this.state.token}
                     onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                     onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
                     preventDraggingOnOtherElements={this.preventDraggingOnOtherElements}
@@ -376,7 +374,7 @@ export class ArticleForm extends Component {
                     <PhotoForm key={`photo${element.id}`} photo={element}
                     dragging={this.state.dragging} draggingElement={element.position == this.state.draggingElement}
                     dropTarget={dropTarget} draggable={true}
-                    articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
+                    position={element.position} id={element.id} token={this.state.token}
                     onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                     onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
                     mapCustomizationOnGoing={this.state.customizationOnGoing} hideMapsCustomizations={this.hideMapsCustomizations}
@@ -398,7 +396,8 @@ export class ArticleForm extends Component {
                     onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
                     mapCustomizationOnGoing={this.state.customizationOnGoing} hideMapsCustomizations={this.hideMapsCustomizations}
                     moveUp={this.moveUp} moveDown={this.moveDown}
-                    ref={(ref) => { if (element.maps) this.MapFormRef[element.maps[0]] = ref }}/>
+                    // ref={(ref) => { if (element.maps) this.MapFormRef[element.maps[0]] = ref }}
+                    />
                   </div>
                 </div>
                 )

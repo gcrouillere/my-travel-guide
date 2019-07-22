@@ -146,7 +146,6 @@ class MapForm extends Component {
 
 MapForm.propTypes = {
   id: PropTypes.number.isRequired,
-  articleId: PropTypes.number.isRequired,
   position: PropTypes.number.isRequired,
   map: PropTypes.object.isRequired,
   token: PropTypes.string.isRequired,
@@ -155,8 +154,8 @@ MapForm.propTypes = {
   onDragEnter: PropTypes.func.isRequired,
   onDragLeave: PropTypes.func.isRequired,
   onDrop: PropTypes.func.isRequired,
-  deleteElement: PropTypes.func.isRequired,
-  preventDraggingOnOtherElements: PropTypes.func.isRequired,
+  deleteElement: PropTypes.func,
+  preventDraggingOnOtherElements: PropTypes.func,
   draggingElement: PropTypes.bool.isRequired,
   dragging: PropTypes.bool.isRequired,
   dropTarget: PropTypes.object

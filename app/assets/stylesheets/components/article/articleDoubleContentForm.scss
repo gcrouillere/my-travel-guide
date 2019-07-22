@@ -11,6 +11,17 @@
         display: none;
       }
     }
+    .mapInput {
+      .mapBloc {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        .googleMap {
+          height: auto;
+          flex: 1 0 auto;
+        }
+      }
+    }
     .textContentInput {
       display: flex;
       flex-direction: column;
