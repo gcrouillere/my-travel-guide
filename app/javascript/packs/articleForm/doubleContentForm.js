@@ -79,7 +79,7 @@ class DoubleContentForm extends Component {
 
     newHeight = (this.state.initialContentHeight + (yMove - this.state.resizeOrigin))
     validHeight = this.state.textHeight > 250 ?
-      (this.state.textHeight <  newHeight ? newHeight : this.state.textHeight) :
+      (this.state.textHeight < newHeight ? newHeight : this.state.textHeight) :
       (newHeight < 250 ? 250 : newHeight)
 
     let updatedDoubleContent = update(this.state.doubleContent, { height: { $set: validHeight }})
@@ -106,6 +106,10 @@ class DoubleContentForm extends Component {
     )
 
     this.setState({ doubleContent: updatedContent })
+  }
+
+  preventDraggingOnOtherElements = (trigger) => {
+    this.props.preventDraggingOnOtherElements(trigger)
   }
 
   render() {
@@ -146,8 +150,7 @@ class DoubleContentForm extends Component {
               dragging={false} draggingElement={false} dropTarget={null}
               onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
               onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={null} moveUp={null} moveDown={null}
-              preventDraggingOnOtherElements={null}/>
-              // ref={(ref) => this.MapFormRef[map.id] = ref}
+              preventDraggingOnOtherElements={this.preventDraggingOnOtherElements}/>
             }
             if (type[0] === "Photo") {
               const photo = this.props.doubleContent.photos[index] || this.props.doubleContent.photos[0]

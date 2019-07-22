@@ -32,10 +32,6 @@ class MixedContentInitialOverlay extends Component {
     this.props.abandonMixedContentCreation()
   }
 
-  addNewMixedContentBLoc = () => {
-    this.props.addNewMixedContentBLoc()
-  }
-
   onDragStart = (event) => {
     const src = event.target.attributes.src.nodeValue
     const text = event.target.attributes.text.nodeValue
@@ -98,6 +94,10 @@ class MixedContentInitialOverlay extends Component {
   }
 
   addNewMixedContent = () => {
+    this.setState({ selectedContents: {
+        box1: { src: null, text: null, content: {} },
+        box2: { src: null, text: null, content: {} },
+    }})
     this.props.addNewMixedContent(this.state.selectedContents)
   }
 

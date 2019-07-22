@@ -98,7 +98,7 @@ class MapForm extends Component {
   render() {
 
     return (
-      <div id={`content-${this.props.position}`}
+      <div id={`map-content-${this.props.id}`}
         className={`mapInput ${this.props.dragging ? "dragging" : ""} ${this.props.draggingElement ? "draggingElement" : ""}`}
         draggable={!this.state.customizationOnGoing.status && this.props.draggable}
         onDragStart={this.onDragStart}

@@ -15,13 +15,11 @@ class TextContentForm extends Component {
     super(props)
     this.state = {
       textContent: this.props.textContent.text,
-      textContentHeight: null
     }
-    this.textContentRef = React.createRef();
   }
 
   componentDidMount() {
-    this.setState({ textContentHeight: this.textContentRef.current.clientHeight })
+    this.adjustHeight()
   }
 
   modules = {
@@ -33,16 +31,19 @@ class TextContentForm extends Component {
     ],
   }
 
-  handleChange = (value) => {
-    this.setState({textContent: value})
-
-    const toolBarHeight = document.querySelector(`#content-${this.props.position} .ql-toolbar`).offsetHeight
-    const textBodyHeight = Array.from(document.querySelectorAll(`#content-${this.props.position} .ql-editor > *`))
+  adjustHeight = () => {
+    const toolBarHeight = document.querySelector(`#text-content-${this.props.id} .ql-toolbar`).offsetHeight
+    const textBodyHeight = Array.from(document.querySelectorAll(`#text-content-${this.props.id} .ql-editor > *`))
       .map(x => x.offsetHeight).reduce((acc, x) => acc + x)
     // eventually add container padding + 1px to round up toolbar height
     const newHeight = toolBarHeight + textBodyHeight + 24 + 1
 
     if (this.props.reportNewTextHeight) this.props.reportNewTextHeight(newHeight)
+  }
+
+  handleChange = (value) => {
+    this.setState({textContent: value})
+    this.adjustHeight()
   }
 
   saveOnBlur = () => {
@@ -91,7 +92,7 @@ class TextContentForm extends Component {
   render() {
 
     return (
-      <div id={`content-${this.props.position}`} ref={this.textContentRef}
+      <div id={`text-content-${this.props.id}`} ref={this.textContentRef}
       className={`textContentInput ${this.props.dragging ? "dragging" : ""} ${this.props.draggingElement ? "draggingElement" : ""}`}
       draggable={!this.props.mapCustomizationOnGoing.status && this.props.draggable}
       onDragStart={this.onDragStart}

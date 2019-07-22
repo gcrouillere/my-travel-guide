@@ -136,7 +136,7 @@ class PhotoForm extends Component {
 
   render() {
     return (
-      <div id={`content-${this.props.position}`}
+      <div id={`photo-content-${this.props.id}`}
       className={`photoInput ${this.props.dragging ? "dragging" : ""} ${this.props.draggingElement ? "draggingElement" : ""}`}
       draggable={!this.props.mapCustomizationOnGoing.status && this.props.draggable} ref={this.photoContentRef}
       onDragStart={this.onDragStart}

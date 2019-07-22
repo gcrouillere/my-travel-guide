@@ -21,7 +21,6 @@ class PhotosController < ApplicationController
     @photos = Photo.find(params[:id])
     @deleted_photo = @photos.as_json(methods: :class_name)
     if @photos.destroy
-      Cloudinary::Api.delete_resources([@deleted_photo["public_id"]])
       render json: @deleted_photo, status: :ok
     else
       render json: @photos.errors, status: :unprocessable_entity

@@ -123,15 +123,23 @@ export class ArticleForm extends Component {
     this.updatePositionAfterCreation(initPositionAtCreation, this.state.id)
   }
 
-  // TODO
   addNewMixedContent = async (selectedContents, initPositionAtCreation) => {
     const doubleContentData = { double_content: { article_id: this.state.id, position: this.state.articleElements.length }}
     const doubleContent = await ajaxHelpers.ajaxCall('POST', "/double_contents", doubleContentData, this.state.token)
 
     Object.keys(selectedContents).forEach(box => {
+      let mapZoom
       const controller = `${selectedContents[box].text.toLowerCase()}`
+      if (controller === "map") {
+        mapZoom = selectedContents[box].content.lat == 0 && selectedContents[box].content.lng == 0 ? 1 : 11
+      }
+
       let data = { [controller]: selectedContents[box].content }
-      const newdata = update(data, { [controller]: { double_content_id: { $set: doubleContent.id }, position: { $set:  box.split("")[3] - 1 }}})
+      const newdata = update(data, { [controller]: {
+        double_content_id: { $set: doubleContent.id },
+        position: { $set:  box.split("")[3] - 1 },
+        zoom: { $set:  mapZoom }
+      }})
 
       ajaxHelpers.ajaxCall('POST', `/${controller}s`, newdata, this.state.token)
     })
@@ -209,6 +217,8 @@ export class ArticleForm extends Component {
       await this.addNewTextContent(this.state.id, position)
     } else if (event.dataTransfer.getData("type") == "photoCreation") {
       this.contentMenuRef.current.initAddNewPhotoBloc(position)
+    } else if (event.dataTransfer.getData("type") == "mixedContentCreation") {
+      this.contentMenuRef.current.initAddNewMixedContentBloc(position)
     }
   }
 
@@ -395,7 +405,7 @@ export class ArticleForm extends Component {
                     onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                     onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
                     mapCustomizationOnGoing={this.state.customizationOnGoing} hideMapsCustomizations={this.hideMapsCustomizations}
-                    moveUp={this.moveUp} moveDown={this.moveDown}
+                    moveUp={this.moveUp} moveDown={this.moveDown} preventDraggingOnOtherElements={this.preventDraggingOnOtherElements}
                     // ref={(ref) => { if (element.maps) this.MapFormRef[element.maps[0]] = ref }}
                     />
                   </div>
