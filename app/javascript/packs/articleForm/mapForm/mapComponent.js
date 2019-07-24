@@ -129,13 +129,23 @@ class MapComponent extends Component {
     event.stopPropagation()
   }
 
+  defineHeight = () => {
+    if (document.body.clientWidth < 768 || this.props.active) {
+      return `${this.state.map.height}px`
+    } else {
+      return "auto"
+    }
+  }
+
   render() {
 
     return (
       <div className="mapBloc">
-        <ElementResize initResize={this.initResize} direction="vertical" active={this.props.active}/>
+        { document.body.clientWidth < 768 &&
+          <ElementResize initResize={this.initResize} direction="vertical" active={this.props.draggable}/>
+        }
         <MapLocationInput id={this.props.map.id} location={this.state.map.name} handleMap={this.handleMap}/>
-        <div id={`map${this.state.map.id}`} className="googleMap" style={{ width: '100%', height: `${this.state.map.height}px` }}
+        <div id={`map${this.state.map.id}`} className="googleMap" style={{ width: '100%', height: `${this.defineHeight()}` }}
         onMouseDown={this.onMouseDown}>
           {this.state.showCenterAsMarker &&
             <Marker googleMap={this.state.googleMap} map={this.state.map}

@@ -9,6 +9,7 @@ import ajaxHelpers from './../../utils/ajaxHelpers'
 import DropZone from './formElementManagement/dropZone'
 import DragVisualElements from './formElementManagement/dragVisualElements'
 import DeleteButton from './formElementManagement/deleteButton'
+import ShowSecondContentButton from './formElementManagement/showSecondContentButton'
 
 class TextContentForm extends Component {
   constructor(props) {
@@ -89,11 +90,15 @@ class TextContentForm extends Component {
     this.props.moveDown(this.props.id, this.props.position)
   }
 
+  activateSecondContent = () => { this.props.activateSecondContent(this.state.active) }
+
   render() {
 
     return (
       <div id={`text-content-${this.props.id}`} ref={this.textContentRef}
-      className={`textContentInput ${this.props.dragging ? "dragging" : ""} ${this.props.draggingElement ? "draggingElement" : ""}`}
+      style={{ minHeight: `${this.props.height - 2}px` }}
+      className={`textContentInput ${this.props.dragging ? "dragging" : ""} ${this.props.draggingElement ? "draggingElement" : ""}
+      ${!this.props.draggable && this.props.position === 0 ? "firstContent" : "secondContent"}`}
       draggable={!this.props.mapCustomizationOnGoing.status && this.props.draggable}
       onDragStart={this.onDragStart}
       onTouchStart={this.onTouchStart}
@@ -104,6 +109,9 @@ class TextContentForm extends Component {
       onDragEnter={this.onDragEnter}
       onDragLeave={this.onDragLeave}
       onDrop={this.onDrop}>
+        { !this.props.draggable &&
+          <ShowSecondContentButton activateSecondContent={this.activateSecondContent}/>
+        }
         <DragVisualElements initMoveDown={this.initMoveDown} initMoveUp={this.initMoveUp} active={this.props.draggable}/>
         <DeleteButton deleteElement={this.deleteElement} active={this.props.draggable}/>
         <DropZone area={"before"} onDrop={this.onDrop} dropTarget={this.props.dropTarget} active={this.props.draggable}/>

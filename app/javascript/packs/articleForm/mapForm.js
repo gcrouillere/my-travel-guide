@@ -8,6 +8,7 @@ import MapComponent from './mapForm/mapComponent'
 import MapCustomization from './mapForm/mapCustomization'
 import MarkerCustomization from './mapForm/markerCustomization'
 import PolylineCustomization from './mapForm/polylineCustomization'
+import ShowSecondContentButton from './formElementManagement/showSecondContentButton'
 
 class MapForm extends Component {
 
@@ -95,17 +96,25 @@ class MapForm extends Component {
     this.props.moveDown(this.props.id, this.props.position)
   }
 
+  activateSecondContent = () => { this.props.activateSecondContent(this.state.active) }
+
   render() {
 
     return (
       <div id={`map-content-${this.props.id}`}
-        className={`mapInput ${this.props.dragging ? "dragging" : ""} ${this.props.draggingElement ? "draggingElement" : ""}`}
+        className={`mapInput ${this.props.dragging ? "dragging" : ""} ${this.props.draggingElement ? "draggingElement" : ""}
+        ${!this.props.draggable && this.props.position === 0 ? "firstContent" : "secondContent"}`}
+        style={{ height: `${!this.props.height - 69}px`}}
         draggable={!this.state.customizationOnGoing.status && this.props.draggable}
         onDragStart={this.onDragStart}
         onDragOver={this.onDragOver}
         onDragEnter={this.onDragEnter}
         onDragLeave={this.onDragLeave}
         onDrop={this.onDrop}>
+
+        { !this.props.draggable &&
+          <ShowSecondContentButton activateSecondContent={this.activateSecondContent}/>
+        }
 
         <DeleteButton deleteElement={this.deleteElement} active={this.props.draggable}/>
 

@@ -5,6 +5,7 @@
 }
 
 .photoContainer {
+  background: white;
   @media all and (min-width:769px) {
     display: flex;
     justify-content: center;
@@ -48,6 +49,9 @@
     background-size: cover;
     background-position-y: center;
     background-position-x: center;
+    @media all and (max-width:768px) {
+      background-image: none !important;
+    }
   }
 }
 

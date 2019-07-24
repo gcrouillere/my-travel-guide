@@ -128,20 +128,24 @@ export class ArticleForm extends Component {
     const doubleContent = await ajaxHelpers.ajaxCall('POST', "/double_contents", doubleContentData, this.state.token)
 
     Object.keys(selectedContents).forEach(box => {
-      let mapZoom
       const controller = `${selectedContents[box].text.toLowerCase()}`
-      if (controller === "map") {
-        mapZoom = selectedContents[box].content.lat == 0 && selectedContents[box].content.lng == 0 ? 1 : 11
-      }
 
       let data = { [controller]: selectedContents[box].content }
-      const newdata = update(data, { [controller]: {
+      data = update(data, { [controller]: {
         double_content_id: { $set: doubleContent.id },
         position: { $set:  box.split("")[3] - 1 },
-        zoom: { $set:  mapZoom }
       }})
 
-      ajaxHelpers.ajaxCall('POST', `/${controller}s`, newdata, this.state.token)
+      if (controller === "map") {
+        let mapZoom
+        mapZoom = selectedContents[box].content.lat == 0 && selectedContents[box].content.lng == 0 ? 1 : 11
+        data = update(data, { [controller]: {
+          zoom: { $set:  mapZoom },
+          height: { $set: 250 }
+        }})
+      }
+
+      ajaxHelpers.ajaxCall('POST', `/${controller}s`, data, this.state.token)
     })
 
     this.updatePositionAfterCreation(initPositionAtCreation, this.state.id)
@@ -406,7 +410,6 @@ export class ArticleForm extends Component {
                     onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
                     mapCustomizationOnGoing={this.state.customizationOnGoing} hideMapsCustomizations={this.hideMapsCustomizations}
                     moveUp={this.moveUp} moveDown={this.moveDown} preventDraggingOnOtherElements={this.preventDraggingOnOtherElements}
-                    // ref={(ref) => { if (element.maps) this.MapFormRef[element.maps[0]] = ref }}
                     />
                   </div>
                 </div>

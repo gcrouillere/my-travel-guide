@@ -4,6 +4,9 @@
     justify-content: center;
     border: 1px solid #ccc;
     border-radius: 2px;
+    .showSecondContentButton {
+      display: none;
+    }
     .photoInput, .mapInput, .textContentInput {
       margin: 0;
       width: 50%;
@@ -43,15 +46,17 @@
   }
   .double-content-elements > div:nth-of-type(2) {
     border-right: 1px solid #ccc;
+    @media all and (max-width:767px) {
+      border-right: none
+    }
   }
 
-  @media all and (max-width:500px) {
-    .elementResize {
-      display: none;
-    }
+  @media all and (max-width:767px) {
     .double-content-elements {
-      display: block;
+      display: flex;
+      flex-direction: column;
       height: auto !important;
+      position: relative;
       .photoInput, .mapInput, .textContentInput {
           width: 100%;
       }
@@ -60,6 +65,32 @@
         .mixedPhotoMobile {
          display: block;
         }
+      }
+      .showSecondContentButton {
+        display: block;
+      }
+    }
+
+    .double-content-elements {
+      height: 100%;
+      .firstContent {
+        display: block;
+      }
+      .secondContent {
+        display: none;
+      }
+      .quill, .photoContainer, .mapBloc {
+        height: 100%;
+        width: 100%;
+      }
+    }
+    .double-content-elements.active {
+      display: block;
+      .firstContent {
+        display: none;
+      }
+      .secondContent {
+        display: block;
       }
     }
   }

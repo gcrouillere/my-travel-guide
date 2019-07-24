@@ -10,6 +10,7 @@ import DragVisualElements from './formElementManagement/dragVisualElements'
 import DeleteButton from './formElementManagement/deleteButton'
 import ElementResize from './formElementManagement/elementResize'
 import PhotoCustomization from './photoForm/photoCustomization'
+import ShowSecondContentButton from './formElementManagement/showSecondContentButton'
 import ajaxHelpers from './../../utils/ajaxHelpers'
 import photoHelpers from './../../utils/photoHelpers'
 import mainHelpers from './../../utils/mainHelpers'
@@ -134,16 +135,24 @@ class PhotoForm extends Component {
     this.props.moveDown(this.props.id, this.props.position)
   }
 
+  activateSecondContent = () => { this.props.activateSecondContent(this.state.active) }
+
   render() {
     return (
       <div id={`photo-content-${this.props.id}`}
-      className={`photoInput ${this.props.dragging ? "dragging" : ""} ${this.props.draggingElement ? "draggingElement" : ""}`}
+      className={`photoInput ${this.props.dragging ? "dragging" : ""} ${this.props.draggingElement ? "draggingElement" : ""}
+      ${!this.props.draggable && this.props.position === 0 ? "firstContent" : "secondContent"}`}
       draggable={!this.props.mapCustomizationOnGoing.status && this.props.draggable} ref={this.photoContentRef}
       onDragStart={this.onDragStart}
       onDragOver={this.onDragOver}
       onDragEnter={this.onDragEnter}
       onDragLeave={this.onDragLeave}
       onDrop={this.onDrop}>
+
+        { !this.props.draggable &&
+          <ShowSecondContentButton activateSecondContent={this.activateSecondContent}/>
+        }
+
         <DragVisualElements photo={this.state.photo} activeCustomization={this.activeCustomization}
         initMoveDown={this.initMoveDown} initMoveUp={this.initMoveUp} active={this.props.draggable}/>
         <DeleteButton deleteElement={this.deleteElement} active={this.props.draggable}/>

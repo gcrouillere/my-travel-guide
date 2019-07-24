@@ -3,21 +3,27 @@ import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
 import $ from 'jquery'
+import update from 'immutability-helper'
 
 import ajaxHelpers from './../utils/ajaxHelpers'
 import mapHelper from './../utils/mapHelper'
 import photoHelpers from './../utils/photoHelpers'
 import orderHelper from './../utils/articleContentHelper'
 import markerLogos from './articleForm/mapForm/markerLogos'
+import ShowSecondContentButton from './articleForm/formElementManagement/showSecondContentButton'
 
 export class Article extends Component {
   constructor(props) {
     super(props)
     this.state = {
       articleElements: [],
+      maps: [],
+      texts: [],
       title: "",
-      clientWidth: document.body.clientWidth
+      clientWidth: document.body.clientWidth,
+      doubleContentActives: {}
     }
     this.textContentDivs = {}
     this.mapDivs = {}
@@ -28,12 +34,24 @@ export class Article extends Component {
     if (this.checkUpdate(prevProps, this.props)) {
       this.setState({
         articleElements: orderHelper.orderArticleElements(this.props.currentArticle),
-        title: this.props.currentArticle.title
+        maps: this.concatContentList("maps"),
+        texts: this.concatContentList("text_contents"),
+        title: this.props.currentArticle.title,
+        doubleContentActives: this.doubleContentInitialStates()
       }, () => {
         this.createMaps()
         this.createTextContentsHTML()
       })
     }
+  }
+
+  doubleContentInitialStates = () => {
+    let doubleContentActives = this.state.doubleContentActives
+    this.props.currentArticle.double_contents.forEach( x => {
+      const key = `doubleContent-${x.id}`
+      doubleContentActives = update(doubleContentActives, {[key]: { $set: false }})
+    })
+    return doubleContentActives
   }
 
   checkUpdate(prevProps, newProps) {
@@ -47,12 +65,18 @@ export class Article extends Component {
     return false
   }
 
+  concatContentList = (content) => {
+    let articleContent = this.props.currentArticle[content]
+    let doubleContentsContent = this.props.currentArticle.double_contents.reduce((acc, x) => acc.concat(x[content]), [])
+    return articleContent.concat(doubleContentsContent)
+  }
+
   createMaps() {
     Object.keys(this.mapDivs).map(mapID => {
-      const map = this.state.articleElements.find( x => x.id === parseInt(mapID) && x.class_name === 'Map' )
+      const map = this.state.maps.find( x => x.id === parseInt(mapID))
       const googleMap = this.createMap(map, mapID)
 
-      let markers = map.markers
+      let markers = map.markers || []
       this.addCenter(map, markers)
       markers.forEach( marker => {
 
@@ -64,7 +88,7 @@ export class Article extends Component {
         }
       })
 
-      const polylines = map.polylines
+      const polylines = map.polylines || []
       polylines.forEach( polyline => {
 
        const googlePolyline = this.createPolyline(polyline, googleMap)
@@ -116,14 +140,27 @@ export class Article extends Component {
 
   createTextContentsHTML() {
     Object.keys(this.textContentDivs).map(textContentID => {
-      const text = this.state.articleElements.find( x => x.id === parseInt(textContentID) && x.class_name === 'TextContent' ).text
+      const text = this.state.texts.find( x => x.id === parseInt(textContentID) ).text
       this.textContentDivs[textContentID].insertAdjacentHTML('beforeend', text)
     })
   }
 
+  defineHeight = (map) => {
+    return document.body.clientWidth < 768 ? `${map.height}px` : "auto%"
+  }
+
   definePhotoWidth = (photo) => { return this.state.clientWidth >= 768 ? photo.css_width : 100}
 
+  activateSecondContent = (doubleContentID) => {
+    let doubleContentActives = this.state.doubleContentActives
+    let initialState = doubleContentActives[`doubleContent-${doubleContentID}`]
+    doubleContentActives = update(doubleContentActives, { [`doubleContent-${doubleContentID}`]: { $set: !initialState }})
+    this.setState({ doubleContentActives: doubleContentActives })
+  }
+
   render() {
+    console.log("render")
+    console.log(this.state.doubleContentActives)
     return (
       <div className="container article-container">
         <div className="row">
@@ -153,6 +190,42 @@ export class Article extends Component {
                     style={{width: `${this.definePhotoWidth(element)}%`}} />
                     { element.display_title && <p className="photo-title">{ element.original_filename }</p> }
                   </div>
+                }
+
+                if (element.class_name == "DoubleContent") {
+                  return (
+                      <div className={`doubleContent
+                        ${this.state.doubleContentActives ? (this.state.doubleContentActives[`doubleContent-${element.id}`] ? "active" : "") : null}`}
+                       key={`doubleContent-${element.id}`} style={{minHeight: `${element.height}px`}}>
+                        <ShowSecondContentButton activateSecondContent={this.activateSecondContent} text={"Show second content"}
+                          id={element.id} />
+                      { element.associated_instances_mapping.map( (type, index) => {
+                        if (type[0] === "TextContent") {
+                          const text_content = element.text_contents[index] || element.text_contents[0]
+                          return <div key={`text-${text_content.id}`}
+                            className={`textContent ${text_content.position === 0 ? "firstContent" : "secondContent"}`}
+                            ref={div => this.textContentDivs[text_content.id] = div} >
+                          </div>
+                        }
+                        if (type[0] === "Map") {
+                          const map = element.maps[index] || element.maps[0]
+                          return <div key={`map-${map.id}`} id={`map-${map.id}`} ref={div => this.mapDivs[map.id] = div}
+                            className={`googleMap ${map.position === 0 ? "firstContent" : "secondContent"}`}
+                            style={{ height: `${this.defineHeight(map)}` }}>
+                          </div>
+                        }
+                        if (type[0] === "Photo") {
+                          const photo = element.photos[index] || element.photos[0]
+                          return <div key={`photo-${photo.id}`}
+                            className={`photo ${photo.position === 0 ? "firstContent" : "secondContent"}`}
+                            style={{ backgroundImage: `url(${photo.url})`}}>
+                              <img className="photoMobile"src={photo.url} alt=""/>
+
+                          </div>
+                        }
+                      })}
+                    </div>
+                  )
                 }
               })}
             </div>

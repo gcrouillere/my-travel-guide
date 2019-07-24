@@ -21,12 +21,9 @@ class DoubleContentForm extends Component {
       doubleContent: this.props.doubleContent,
       resizeOrigin: null,
       initialContentHeight: null,
-      textHeight: this.props.doubleContent.height,
+      textHeight: this.props.doubleContent.texts ? this.props.doubleContent.height : 0,
+      secondContentActive: false
     }
-  }
-
-  componentDidMount() {
-
   }
 
   onDragStart = (event) => {
@@ -54,12 +51,6 @@ class DoubleContentForm extends Component {
     this.props.moveDown(this.props.id, this.props.position)
   }
 
-  // hideMapCustomizations = () => {
-  //   this.abandonCustomization()
-  //   this.hidePolylineCustomization()
-  //   this.hideMarkerCustomization()
-  // }
-
   initResize = (event) => {
     const yOrigin = event.touches ? event.touches[0].screenY : event.screenY
     this.setState({ resizeOrigin: yOrigin, initialContentHeight: this.state.doubleContent.height });
@@ -78,6 +69,8 @@ class DoubleContentForm extends Component {
     const yMove = event.touches ? event.touches[0].screenY : event.screenY
 
     newHeight = (this.state.initialContentHeight + (yMove - this.state.resizeOrigin))
+    console.log(this.state.textHeight, "this.state.textHeight")
+    console.log(newHeight, "newHeight")
     validHeight = this.state.textHeight > 250 ?
       (this.state.textHeight < newHeight ? newHeight : this.state.textHeight) :
       (newHeight < 250 ? 250 : newHeight)
@@ -95,7 +88,10 @@ class DoubleContentForm extends Component {
 
   reportNewTextHeight = (newHeight) => {
     this.setState({ textHeight: newHeight })
-    if (newHeight > this.state.doubleContent.height) this.updateDoubleContent({ height: newHeight })
+    if (newHeight > this.state.doubleContent.height) {
+      console.log(newHeight)
+      this.updateDoubleContent({ height: newHeight })
+    }
   }
 
   async updateDoubleContent(doubleContentCharacteristics) {
@@ -111,6 +107,8 @@ class DoubleContentForm extends Component {
   preventDraggingOnOtherElements = (trigger) => {
     this.props.preventDraggingOnOtherElements(trigger)
   }
+
+  activateSecondContent = () => { this.setState({ secondContentActive: !this.state.secondContentActive })}
 
   render() {
 
@@ -130,7 +128,8 @@ class DoubleContentForm extends Component {
         <DragVisualElements initMoveDown={this.initMoveDown} initMoveUp={this.initMoveUp} active={this.props.draggable}/>
         <DeleteButton deleteElement={this.deleteElement} active={this.props.draggable}/>
         <DropZone area={"before"} onDrop={this.onDrop} dropTarget={this.props.dropTarget} active={this.props.draggable}/>
-        <div className="double-content-elements" draggable={false} style={{ height: `${this.state.doubleContent.height}px`}}>
+        <div className={`double-content-elements ${ this.state.secondContentActive ? "active" : "" }`}
+        draggable={false} style={{ height: `${this.state.doubleContent.height}px`}}>
           <ElementResize initResize={this.initResize} direction="vertical" active={this.props.draggable}/>
           { this.props.doubleContent.associated_instances_mapping.map( (type, index) => {
             if (type[0] === "TextContent") {
@@ -141,7 +140,8 @@ class DoubleContentForm extends Component {
               dragging={false} draggingElement={false} dropTarget={null} position={text_content.position}
               onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
               onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={null} moveUp={null} moveDown={null}
-              reportNewTextHeight={this.reportNewTextHeight} doubleContentHeight={this.state.doubleContent.height} />
+              reportNewTextHeight={this.reportNewTextHeight} doubleContentHeight={this.state.doubleContent.height}
+              activateSecondContent={this.activateSecondContent} height={this.state.doubleContent.height}/>
             }
             if (type[0] === "Map") {
               const map = this.props.doubleContent.maps[index] || this.props.doubleContent.maps[0]
@@ -150,7 +150,8 @@ class DoubleContentForm extends Component {
               dragging={false} draggingElement={false} dropTarget={null}
               onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
               onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={null} moveUp={null} moveDown={null}
-              preventDraggingOnOtherElements={this.preventDraggingOnOtherElements}/>
+              preventDraggingOnOtherElements={this.preventDraggingOnOtherElements}
+              activateSecondContent={this.activateSecondContent} height={this.state.doubleContent.height}/>
             }
             if (type[0] === "Photo") {
               const photo = this.props.doubleContent.photos[index] || this.props.doubleContent.photos[0]
@@ -159,7 +160,8 @@ class DoubleContentForm extends Component {
               id={photo.id} token={this.props.token}
               dragging={false} draggingElement={false} dropTarget={null} position={photo.position}
               onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
-              onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={null} moveUp={null} moveDown={null} />
+              onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={null} moveUp={null} moveDown={null}
+              activateSecondContent={this.activateSecondContent} />
             }
           })}
         </div>
