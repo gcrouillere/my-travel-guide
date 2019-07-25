@@ -78,35 +78,3 @@
     }
   }
 }
-
-.doubleContent {
-  .swapContent {
-    position: absolute;
-    background: #343a40;
-    border-radius: 2px;
-    color: white;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.6);
-    border: 2px solid white;
-    padding: 4px;
-    display: none;
-    z-index: auto;
-    right: calc(50% - 80px);
-    bottom: -15px;
-    p {
-      margin: 0;
-      font-size: 12px;
-    }
-    img {
-      display: block;
-      width: 10%;
-    }
-  }
-  @media all and (max-width:767px) {
-    .swapContent {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-    }
-  }
-}

@@ -79,6 +79,7 @@
       height: auto !important;
       position: relative;
       margin: 30px auto;
+      border-bottom: 1px solid rgba(0,0,0,0.2);
       .googleMap, .textContent, .photo {
         width: 100%;
         margin: 0;
@@ -92,19 +93,54 @@
       }
       .firstContent {
         display: block;
-        border-bottom: 1px solid rgba(0,0,0,0.2);
       }
       .secondContent {
         display: none;
       }
     }
     .doubleContent.active {
+      box-shadow: inset 0px 0px 3px 1px rgba(0,0,0,0.15);
+      border-bottom: none;
+      padding: 15px;
       .firstContent {
         display: none;
       }
       .secondContent {
         display: block;
       }
+    }
+  }
+}
+
+.doubleContent {
+  .swapContent {
+    position: absolute;
+    background: #243B54;
+    border-radius: 2px;
+    color: white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2), 0px 0px 0 1px rgba(0, 0, 0, 0.2), 0px 0px 0 1px rgba(0, 0, 0, 0.2);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.6);
+    border: 2px solid white;
+    padding: 4px;
+    display: none;
+    z-index: auto;
+    right: calc(50% - 52px);
+    bottom: -15px;
+    p {
+      margin: 0;
+      font-size: 12px;
+    }
+    img {
+      display: block;
+      width: 14%;
+    }
+  }
+  @media all and (max-width:767px) {
+    .swapContent {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 1;
     }
   }
 }

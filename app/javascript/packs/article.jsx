@@ -145,8 +145,8 @@ export class Article extends Component {
     })
   }
 
-  defineHeight = (map) => {
-    return document.body.clientWidth < 768 ? `${map.height}px` : "auto%"
+  defineHeight = (element) => {
+    return document.body.clientWidth < 768 ? `${element.height}px` : "auto"
   }
 
   definePhotoWidth = (photo) => { return this.state.clientWidth >= 768 ? photo.css_width : 100}
@@ -197,7 +197,7 @@ export class Article extends Component {
                       <div className={`doubleContent
                         ${this.state.doubleContentActives ? (this.state.doubleContentActives[`doubleContent-${element.id}`] ? "active" : "") : null}`}
                        key={`doubleContent-${element.id}`} style={{minHeight: `${element.height}px`}}>
-                        <ShowSecondContentButton activateSecondContent={this.activateSecondContent} text={"Show second content"}
+                        <ShowSecondContentButton activateSecondContent={this.activateSecondContent} text={"Flip content"}
                           id={element.id} />
                       { element.associated_instances_mapping.map( (type, index) => {
                         if (type[0] === "TextContent") {
@@ -211,7 +211,7 @@ export class Article extends Component {
                           const map = element.maps[index] || element.maps[0]
                           return <div key={`map-${map.id}`} id={`map-${map.id}`} ref={div => this.mapDivs[map.id] = div}
                             className={`googleMap ${map.position === 0 ? "firstContent" : "secondContent"}`}
-                            style={{ height: `${this.defineHeight(map)}` }}>
+                            style={{ height: `${this.defineHeight(element)}` }}>
                           </div>
                         }
                         if (type[0] === "Photo") {
