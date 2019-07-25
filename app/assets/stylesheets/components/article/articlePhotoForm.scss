@@ -1,4 +1,11 @@
+.doubleContentInput {
+  .photoContainer {
+    border: none;
+  }
+}
+
 .photoContainer {
+  background: white;
   @media all and (min-width:769px) {
     display: flex;
     justify-content: center;
@@ -32,6 +39,22 @@
   }
 }
 
+.double-content-elements .photoContainer {
+  padding: 0px;
+  flex-direction: column;
+  height: 100%;
+  .mixedPhoto {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position-y: center;
+    background-position-x: center;
+    @media all and (max-width:768px) {
+      background-image: none !important;
+    }
+  }
+}
+
 .photoCustomization {
   overflow: hidden;
   @media all and (min-width:769px) {
@@ -42,31 +65,27 @@
     top: 0;
     left: 0;
     height: 100%;
-    width: 30%;
+    width: 21%;
   }
   @media all and (max-width:768px) {
     height: 0;
   }
-  // @media all and (max-width:870px) {
-  //   width: 100%;
-  //   height: 40%;
-  // }
-
   cursor: default;
   transition: all 0.3s ease-in-out;
   .overflowContainer {
-    padding: 20px;
+    padding: 15px;
     background: linear-gradient(to right, #fefefe, #F7F7F7);
     box-shadow: -2px 0px 5px -1px rgba(0,0,0,0.2);
     width: 100%;
     min-height: 100%;
+    font-size: 15px;
     @media all and (min-width:769px) {
       position: absolute;
       border: 1px solid #ccc;
       left: -100%;
     }
     @media all and (max-width:768px) {
-      // top: - 100%;
+
     }
     transition: all 0.3s ease-in-out;
   }
@@ -85,13 +104,14 @@
     border-radius: 2px;
     margin: 10px auto;
     width: 100%;
+    font-size: 15px;
   }
   button[disabled], input[disabled] {
     cursor: not-allowed;
   }
   h3 {
     margin-bottom: 1.5rem;
-    font-size: 1.5rem;
+    font-size: 20px;
     font-weight: 300;
     color: #495057;
     text-shadow: 0px 2px 0px rgba(0, 0, 0, 0.15)
@@ -123,25 +143,25 @@
 .photoCustomization {
 
   &.active.allow-crop {
-    @media all and (max-width:870px) {
+    // @media all and (max-width:870px) {
      background: transparent;
-    }
+    // }
   }
 
   &.active.allow-crop > .overflowContainer {
-    @media all and (max-width:870px) {
+    // @media all and (max-width:870px) {
       background: transparent;
-    }
+    // }
   }
   &.active.allow-crop > .overflowContainer > * {
-    @media all and (max-width:870px) {
+    // @media all and (max-width:870px) {
       opacity: 0.4;
-    }
+    // }
   }
   &.active.allow-crop > .overflowContainer > .crop-button.crop {
-    @media all and (max-width:870px) {
+    // @media all and (max-width:870px) {
      opacity: 1;
-    }
+    // }
   }
 }
 

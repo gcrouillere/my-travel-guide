@@ -22,9 +22,16 @@ class DragVisualElements extends Component {
 
   initMoveDown = () => { this.props.initMoveDown() }
 
+  renderTuneLogo = () => {
+    return ( this.props.map &&
+      <div className="tuneLogo" onMouseDown={this.activeCustomization}><img src={tuneLogo}/></div>
+    )
+  }
+
   render() {
 
     return (
+      this.props.active ?
       <div className="DragVisualElements">
         { mainHelpers.isTouchDevice() ?
           <div>
@@ -36,6 +43,7 @@ class DragVisualElements extends Component {
         {(this.props.photo || this.props.map) && <div className="tuneLogo" onMouseDown={this.activeCustomization}><img src={tuneLogo}/></div>}
         <div className="dragOverlay"><p>Content being dragged</p></div>
       </div>
+      : this.renderTuneLogo() ? this.renderTuneLogo() : null
     )
   }
 }

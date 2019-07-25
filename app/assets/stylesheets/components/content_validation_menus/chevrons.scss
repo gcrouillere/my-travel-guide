@@ -1,0 +1,23 @@
+.contentMenu, .validationMenu {
+  .chevron-open {
+    display: block;
+  }
+  .chevron-closed {
+    display: none;
+  }
+  &:hover {
+    .chevron-closed {
+      display: block;
+    }
+    .chevron-open {
+      display: none;
+    }
+  }
+  .chevron-open, .chevron-closed {
+    font-size: 27px;
+    padding: 10px 2px 10px 1px;
+    font-weight: 100;
+    color: #495057;
+    text-shadow: 0px 2px 0px rgba(0,0,0,0.15);
+  }
+}

@@ -1,5 +1,6 @@
 class TextContent < ApplicationRecord
-  belongs_to :article
+  belongs_to :article, required: false
+  belongs_to :double_content, required: false
 
   include AlgoliaSearch
 
@@ -18,6 +19,6 @@ class TextContent < ApplicationRecord
   end
 
   def article_id
-    self.article.id
+    self.article ? self.article.id : self.double_content.article.id
   end
 end

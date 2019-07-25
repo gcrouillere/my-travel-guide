@@ -1,3 +1,27 @@
+.doubleContentInput {
+  .ql-container.ql-snow {
+    border: none;
+  }
+
+  .ql-toolbar.ql-snow {
+    border: none;
+    border-bottom: 1px solid #ccc;
+  }
+}
+
+.textContentInput {
+  background: white;
+}
+
 .ql-tooltip.ql-editing {
   left: 0 !important;
+}
+
+.ql-toolbar.ql-snow {
+  border-radius: 2px 2px 0px 0px;
+  @media all and (max-width:1200px) {
+    .ql-formats {
+      margin-right: 9px !important;
+    }
+  }
 }

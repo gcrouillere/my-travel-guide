@@ -1,33 +1,52 @@
 class ArticlesController < ApplicationController
   before_action :authenticate_user!, only: [:new, :show, :edit]
+  before_action :retrieve_article, only: [:show, :edit, :update]
 
   def index
-    @articles = Article.all.order(updated_at: :desc).includes(:text_contents).includes(:maps).includes(:photos).includes(:audience_selections).includes(:user)
+    @articles = Article.all
+      .order(updated_at: :desc)
+      .includes(:text_contents)
+      .includes(:maps)
+      .includes(:photos)
+      .includes(:double_contents)
+      .includes(:audience_selections)
+      .includes(:user)
+
     filter_by_audience if params[:audience_selection]
     filter_by_article_ids if params[:article_ids]
     filter_by_user
     filter_by_lat_lng if params[:mapBounds]
     limit_articles_to_display
+
     @audience_selection = AudienceSelection.all.order(updated_at: :desc)
+
     respond_to do |format|
       format.html { render "index" }
       format.json { render json: @articles.as_json(include: {
         text_contents: { methods: :class_name },
         user: {},
         audience_selections: {},
-        maps: { methods: :class_name, include: { markers: {} } }
+        maps: { methods: :class_name, include: { markers: {} }},
+        double_contents: {
+          include: { text_contents: {}, photos: {}, maps: {} },
+          methods: [:class_name, :associated_instances_mapping]
+        }
       })}
     end
   end
 
   def show
     @audience_selection = AudienceSelection.all.order(updated_at: :desc)
-    @article = Article.includes(:text_contents).includes(:maps).includes(:photos).includes(:audience_selections).find(params[:id])
+
     @article = @article.as_json(include: {
       text_contents: { methods: :class_name },
       audience_selections: {},
       maps:{ methods: :class_name, include: { markers: {}, polylines: { include: { markers: {} } } } },
-      photos:{ methods: :class_name }
+      photos:{ methods: :class_name },
+      double_contents: {
+          include: { text_contents: {}, photos: {}, maps: {} },
+          methods: [:class_name, :associated_instances_mapping]
+        }
     })
 
     respond_to do |format|
@@ -47,12 +66,10 @@ class ArticlesController < ApplicationController
 
   def edit
     @audience_selection = AudienceSelection.all.order(updated_at: :desc)
-    @article = Article.includes(:text_contents).includes(:maps).includes(:photos).includes(:audience_selections).find(params[:id])
     render "content/home"
   end
 
   def update
-    @article = Article.includes(:text_contents).includes(:maps).includes(:photos).includes(:audience_selections).find(params[:id])
     if @article.update(article_params)
       render json: @article.as_json(include: { audience_selections: {} })
     else
@@ -98,7 +115,11 @@ class ArticlesController < ApplicationController
       text_contents: { methods: :class_name },
       audience_selections: {},
       maps:{ methods: :class_name, include: { markers: {}, polylines: { include: { markers: {} } } } },
-      photos: { methods: :class_name }
+      photos: { methods: :class_name },
+      double_contents: {
+        include: { text_contents: {}, photos: {}, maps: {} },
+        methods: [:class_name, :associated_instances_mapping]
+      }
     })
   end
 
@@ -118,6 +139,15 @@ class ArticlesController < ApplicationController
         .require(:article)
         .permit(:title, :audience_valid, :article_valid, :user_id)
     end
+  end
+
+  def retrieve_article
+    @article = Article.includes(:text_contents)
+      .includes(:maps)
+      .includes(:photos)
+      .includes(:double_contents)
+      .includes(:audience_selections)
+      .find(params[:id])
   end
 
   def filter_by_audience

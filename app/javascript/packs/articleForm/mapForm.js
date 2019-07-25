@@ -8,6 +8,7 @@ import MapComponent from './mapForm/mapComponent'
 import MapCustomization from './mapForm/mapCustomization'
 import MarkerCustomization from './mapForm/markerCustomization'
 import PolylineCustomization from './mapForm/polylineCustomization'
+import ShowSecondContentButton from './formElementManagement/showSecondContentButton'
 
 class MapForm extends Component {
 
@@ -53,10 +54,12 @@ class MapForm extends Component {
   deleteElement = (event) => {this.props.deleteElement(event, this.props.id, this.props.position, "maps")}
 
   onDragStart = (event) => {
-    this.setState({customizationActive: false})
-    this.markerCustomizationRef.current.hideMarkerCustomization()
-    this.polylineCustomizationRef.current.hidePolylineCustomization()
-    this.props.onDragStart(event, this.props.id, this.props.position, this.props.map)
+    if (this.props.draggable) {
+      this.setState({customizationActive: false})
+      this.markerCustomizationRef.current.hideMarkerCustomization()
+      this.polylineCustomizationRef.current.hidePolylineCustomization()
+      this.props.onDragStart(event, this.props.id, this.props.position, this.props.map)
+    }
   }
 
   onDragOver = (event) => {this.props.onDragOver(event, this.props.id, this.props.position)}
@@ -93,25 +96,31 @@ class MapForm extends Component {
     this.props.moveDown(this.props.id, this.props.position)
   }
 
+  activateSecondContent = () => { this.props.activateSecondContent(this.state.active) }
+
   render() {
 
-
     return (
-      <div id={`content-${this.props.position}`}
-        className={`mapInput ${this.props.dragging ? "dragging" : ""} ${this.props.draggingElement ? "draggingElement" : ""}`}
-        draggable={!this.state.customizationOnGoing.status}
+      <div id={`map-content-${this.props.id}`}
+        className={`mapInput ${this.props.dragging ? "dragging" : ""} ${this.props.draggingElement ? "draggingElement" : ""}
+        ${!this.props.draggable && this.props.position === 0 ? "firstContent" : "secondContent"}`}
+        draggable={!this.state.customizationOnGoing.status && this.props.draggable}
         onDragStart={this.onDragStart}
         onDragOver={this.onDragOver}
         onDragEnter={this.onDragEnter}
         onDragLeave={this.onDragLeave}
         onDrop={this.onDrop}>
 
-        <DeleteButton deleteElement={this.deleteElement}/>
+        { !this.props.draggable &&
+          <ShowSecondContentButton activateSecondContent={this.activateSecondContent}/>
+        }
+
+        <DeleteButton deleteElement={this.deleteElement} active={this.props.draggable}/>
 
         <DragVisualElements map={this.state.map} activeCustomization={this.activeCustomization}
-        initMoveDown={this.initMoveDown} initMoveUp={this.initMoveUp}/>
+        initMoveDown={this.initMoveDown} initMoveUp={this.initMoveUp} active={this.props.draggable}/>
 
-        <DropZone area={"before"} onDrop={this.onDrop} dropTarget={this.props.dropTarget}/>
+        <DropZone area={"before"} onDrop={this.onDrop} dropTarget={this.props.dropTarget} active={this.props.draggable}/>
 
         <MapCustomization googleMap={this.state.googleMap} map={this.state.map} token={this.props.token}
         customizationOnGoing={this.state.customizationOnGoing}
@@ -130,14 +139,14 @@ class MapForm extends Component {
         ref={this.polylineCustomizationRef}/>
 
         <MapComponent map={this.state.map} polylines={this.state.map.polylines}
-        markers={this.state.map.markers} token={this.props.token}
+        markers={this.state.map.markers} token={this.props.token} active={this.props.draggable}
         customizationOnGoing={this.state.customizationOnGoing} manageMarker={this.manageMarker}
         managePolyline={this.managePolyline} managePolylinePoint={this.managePolylinePoint}
         handleZoom={this.handleZoom} setGoogleMap={this.setGoogleMap} setMap={this.setMap}
         preventCustomizationMix={this.preventCustomizationMix} updateMap={this.updateMap}
         ref={this.mapComponentRef}/>
 
-        <DropZone area={"after"} onDrop={this.onDrop} dropTarget={this.props.dropTarget}/>
+        <DropZone area={"after"} onDrop={this.onDrop} dropTarget={this.props.dropTarget} active={this.props.draggable}/>
       </div>
     );
   }
@@ -145,7 +154,6 @@ class MapForm extends Component {
 
 MapForm.propTypes = {
   id: PropTypes.number.isRequired,
-  articleId: PropTypes.number.isRequired,
   position: PropTypes.number.isRequired,
   map: PropTypes.object.isRequired,
   token: PropTypes.string.isRequired,
@@ -154,8 +162,8 @@ MapForm.propTypes = {
   onDragEnter: PropTypes.func.isRequired,
   onDragLeave: PropTypes.func.isRequired,
   onDrop: PropTypes.func.isRequired,
-  deleteElement: PropTypes.func.isRequired,
-  preventDraggingOnOtherElements: PropTypes.func.isRequired,
+  deleteElement: PropTypes.func,
+  preventDraggingOnOtherElements: PropTypes.func,
   draggingElement: PropTypes.bool.isRequired,
   dragging: PropTypes.bool.isRequired,
   dropTarget: PropTypes.object

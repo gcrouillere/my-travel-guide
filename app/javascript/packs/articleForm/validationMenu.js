@@ -50,8 +50,9 @@ class ValidationMenu extends Component {
     return articleElements.some(x => x.class_name === thing)
   }
 
-  componentDidUpdate = () => {
-    this.updateArticleValidity()
+  componentDidUpdate = async (prevProps) => {
+    const newStatus = await this.checkArticleValidity()
+    if (this.state.articleValid !== newStatus) this.updateArticleValidity()
   }
 
   componentDidMount = () => {
@@ -59,16 +60,18 @@ class ValidationMenu extends Component {
   }
 
   updateArticleValidity = async () => {
-    const article = await ajaxHelpers.ajaxCall('GET', `/articles/${this.props.id}`, {}, {})
-    const articleElements = orderHelper.orderArticleElements(article)
-    const article_valid = Object.keys(ValidationMenu.validations.outputs).every( fname =>
-      ValidationMenu.validations.functions[fname](articleElements))
+    const article_valid = await this.checkArticleValidity()
 
     this.setState({ articleValid:  article_valid })
     ajaxHelpers.ajaxCall('PUT', `/articles/${this.props.id}`, { article: { article_valid: article_valid }}, this.props.token)
   }
 
-  coverAllValidations = () => {
+  checkArticleValidity = async () => {
+    return Object.keys(ValidationMenu.validations.outputs).every( fname =>
+      ValidationMenu.validations.functions[fname](this.props.articleElements))
+  }
+
+  displayValidations = () => {
     return Object.keys(ValidationMenu.validations.outputs).map( fname =>
       ValidationMenu.validations.functions[fname](this.props.articleElements) ?
       <p key={fname} className="valid">{ ValidationMenu.validations.outputs[fname][0] }</p> :
@@ -109,7 +112,7 @@ class ValidationMenu extends Component {
           </div>
 
           <div className="buttons">
-            { this.coverAllValidations() }
+            { this.displayValidations() }
           </div>
         </div>
       </div>

@@ -10,6 +10,7 @@ import Marker from './mapComponent/marker'
 import Polyline from './mapComponent/polyline'
 import ElementResize from './../formElementManagement/elementResize'
 import ajaxHelpers from './../../../utils/ajaxHelpers'
+import mainHelpers from './../../../utils/mainHelpers'
 
 class MapComponent extends Component {
 
@@ -62,11 +63,13 @@ class MapComponent extends Component {
     const yOrigin = event.touches ? event.touches[0].screenY : event.screenY
     this.setState({ resizeOrigin: yOrigin, initialMapHeight: this.state.map.height });
 
-    onmousemove = (event) => { this.resizeOnMove(event) }
-    onmouseup = () => { this.stopResizing() }
-
-    ontouchmove = (event) => { this.resizeOnMove(event) }
-    ontouchend  = () => { this.stopResizing() }
+    if (mainHelpers.isTouchDevice()) {
+      ontouchmove = (event) => { this.resizeOnMove(event) }
+      ontouchend  = () => { this.stopResizing() }
+    } else {
+      onmousemove = (event) => { this.resizeOnMove(event) }
+      onmouseup = () => { this.stopResizing() }
+    }
   }
 
   resizeOnMove(event) {
@@ -126,13 +129,23 @@ class MapComponent extends Component {
     event.stopPropagation()
   }
 
+  defineHeight = () => {
+    if (document.body.clientWidth < 768 || this.props.active) {
+      return `${this.state.map.height}px`
+    } else {
+      return "auto"
+    }
+  }
+
   render() {
 
     return (
       <div className="mapBloc">
-        <ElementResize initResize={this.initResize} direction="vertical"/>
+        { document.body.clientWidth < 768 &&
+          <ElementResize initResize={this.initResize} direction="vertical" active={this.props.draggable}/>
+        }
         <MapLocationInput id={this.props.map.id} location={this.state.map.name} handleMap={this.handleMap}/>
-        <div id={`map${this.state.map.id}`} className="googleMap" style={{ width: '100%', height: `${this.state.map.height}px` }}
+        <div id={`map${this.state.map.id}`} className="googleMap" style={{ width: '100%', height: `${this.defineHeight()}` }}
         onMouseDown={this.onMouseDown}>
           {this.state.showCenterAsMarker &&
             <Marker googleMap={this.state.googleMap} map={this.state.map}
@@ -162,8 +175,8 @@ class MapComponent extends Component {
 
 MapComponent.propTypes = {
   map: PropTypes.object.isRequired,
-  polylines: PropTypes.array.isRequired,
-  markers: PropTypes.array.isRequired,
+  polylines: PropTypes.array,
+  markers: PropTypes.array,
   token: PropTypes.string.isRequired,
   customizationOnGoing: PropTypes.object.isRequired,
   manageMarker: PropTypes.func.isRequired,

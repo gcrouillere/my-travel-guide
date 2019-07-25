@@ -1,0 +1,60 @@
+.contents {
+  width: 100%;
+}
+
+.contentChoices {
+  display: flex;
+  justify-content: center;
+  .contentSelect {
+    margin: 0 3px;
+    width: 80px;
+    .dragMix {
+      cursor: move;
+    }
+  }
+}
+
+.selectedContents {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  .selectedContentBox {
+    padding: 50px;
+    height: 200px;
+    width: 200px;
+    border-radius: 2px;
+    border: 1px solid #ccc;
+    background: white;
+    margin: 0 10px;
+    .selectedContent {
+      height: 100%;
+      justify-content: space-around;
+      align-items: center;
+      display: flex;
+      position: relative;
+      .contentLogo {
+        width: 22px;
+      }
+      p {
+        margin: 0;
+      }
+      .clearBox {
+        cursor: pointer;
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: 15px;
+      }
+    }
+  }
+}
+
+.mixedContentInitialOverlay {
+  button.btn.btn-dark, button[disabled] {
+    width: 20%;
+    margin-top: 30px;
+  }
+  button[disabled] {
+    cursor: not-allowed;
+  }
+}

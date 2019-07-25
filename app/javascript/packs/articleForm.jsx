@@ -11,6 +11,7 @@ import AudienceForm from './articleForm/audienceForm'
 import TextContentForm from './articleForm/textContentForm'
 import MapForm from './articleForm/mapForm'
 import PhotoForm from './articleForm/photoForm'
+import DoubleContentForm from './articleForm/doubleContentForm'
 import ContentMenu from './articleForm/contentMenu'
 import ValidationMenu from './articleForm/validationMenu'
 import DragImage from './articleForm/dragImage'
@@ -122,6 +123,34 @@ export class ArticleForm extends Component {
     this.updatePositionAfterCreation(initPositionAtCreation, this.state.id)
   }
 
+  addNewMixedContent = async (selectedContents, initPositionAtCreation) => {
+    const doubleContentData = { double_content: { article_id: this.state.id, position: this.state.articleElements.length }}
+    const doubleContent = await ajaxHelpers.ajaxCall('POST', "/double_contents", doubleContentData, this.state.token)
+
+    Object.keys(selectedContents).forEach(box => {
+      const controller = `${selectedContents[box].text.toLowerCase()}`
+
+      let data = { [controller]: selectedContents[box].content }
+      data = update(data, { [controller]: {
+        double_content_id: { $set: doubleContent.id },
+        position: { $set:  box.split("")[3] - 1 },
+      }})
+
+      if (controller === "map") {
+        let mapZoom
+        mapZoom = selectedContents[box].content.lat == 0 && selectedContents[box].content.lng == 0 ? 1 : 11
+        data = update(data, { [controller]: {
+          zoom: { $set:  mapZoom },
+          height: { $set: 250 }
+        }})
+      }
+
+      ajaxHelpers.ajaxCall('POST', `/${controller}s`, data, this.state.token)
+    })
+
+    this.updatePositionAfterCreation(initPositionAtCreation, this.state.id)
+  }
+
   updatePositionAfterCreation = async (initPositionAtCreation, id) => {
     let finalPositionAtCreation = this.definePositionAtCreation(initPositionAtCreation)
 
@@ -192,6 +221,8 @@ export class ArticleForm extends Component {
       await this.addNewTextContent(this.state.id, position)
     } else if (event.dataTransfer.getData("type") == "photoCreation") {
       this.contentMenuRef.current.initAddNewPhotoBloc(position)
+    } else if (event.dataTransfer.getData("type") == "mixedContentCreation") {
+      this.contentMenuRef.current.initAddNewMixedContentBloc(position)
     }
   }
 
@@ -206,7 +237,7 @@ export class ArticleForm extends Component {
   }
 
   preventDraggingOnOtherElements = (trigger) => {
-    this.setState({customizationOnGoing: {status: !this.state.customizationOnGoing.status, trigger: trigger}})
+    this.setState({customizationOnGoing: { status: !this.state.customizationOnGoing.status, trigger: trigger }})
   }
 
   updateArticleCompletion = (module) => {
@@ -234,7 +265,12 @@ export class ArticleForm extends Component {
   }
 
   updateElementsState = (data) => {
-    const sortedElements = data.text_contents.concat(data.maps).concat(data.photos).sort((x, y) => x.position - y.position)
+    const sortedElements = data.text_contents
+      .concat(data.maps)
+      .concat(data.photos)
+      .concat(data.double_contents)
+      .sort((x, y) => x.position - y.position)
+
     this.setState({articleElements: sortedElements, activeDragImage: false, initialPosition: null, dropZone: ""})
   }
 
@@ -296,6 +332,7 @@ export class ArticleForm extends Component {
           <div className="menus">
             <ContentMenu id={this.state.id} addNewTextContent={this.addNewTextContent} addNewMap={this.addNewMap}
             addNewPhotoBloc={this.addNewPhotoBloc} addNewComponentOnDrag={this.addNewComponentOnDrag} ref={this.contentMenuRef}
+            addNewMixedContent={this.addNewMixedContent}
             elementsCount={this.state.articleElements.length} forceContentMenuHidding={this.state.forceContentMenuHidding}/>
             <ValidationMenu articleElements={this.state.articleElements} token={this.state.token} id={this.state.id}/>
           </div>
@@ -318,7 +355,7 @@ export class ArticleForm extends Component {
                   <div className="col" key={`text${element.id}`}>
                     <TextContentForm key={`text${element.id}`} textContent={element}
                     dragging={this.state.dragging} draggingElement={element.position == this.state.draggingElement}
-                    dropTarget={dropTarget}
+                    dropTarget={dropTarget} draggable={true}
                     articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
                     onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                     onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
@@ -334,8 +371,7 @@ export class ArticleForm extends Component {
                   <div className="col" key={`map${element.id}`}>
                     <MapForm key={`map${element.id}`} map={element} name={element.name}
                     dragging={this.state.dragging} draggingElement={element.position == this.state.draggingElement}
-                    dropTarget={dropTarget}
-                    articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
+                    dropTarget={dropTarget} draggable={true} position={element.position} id={element.id} token={this.state.token}
                     onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                     onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
                     preventDraggingOnOtherElements={this.preventDraggingOnOtherElements}
@@ -351,8 +387,8 @@ export class ArticleForm extends Component {
                   <div className="col" key={`photo${element.id}`}>
                     <PhotoForm key={`photo${element.id}`} photo={element}
                     dragging={this.state.dragging} draggingElement={element.position == this.state.draggingElement}
-                    dropTarget={dropTarget}
-                    articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
+                    dropTarget={dropTarget} draggable={true}
+                    position={element.position} id={element.id} token={this.state.token}
                     onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                     onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
                     mapCustomizationOnGoing={this.state.customizationOnGoing} hideMapsCustomizations={this.hideMapsCustomizations}
@@ -361,6 +397,25 @@ export class ArticleForm extends Component {
                 </div>
                 )
               }
+
+              else if (element.class_name == "DoubleContent") {
+                return (
+                <div className="row" key={`double-content${element.id}`}>
+                  <div className="col" key={`double-content${element.id}`}>
+                    <DoubleContentForm key={`double-content${element.id}`} doubleContent={element}
+                    dragging={this.state.dragging} draggingElement={element.position == this.state.draggingElement}
+                    dropTarget={dropTarget} draggable={true}
+                    articleId={this.state.id} position={element.position} id={element.id} token={this.state.token}
+                    onDragStart={this.onDragStart} onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
+                    onDragLeave={this.onDragLeave} onDrop={this.onDrop} deleteElement={this.deleteElement}
+                    mapCustomizationOnGoing={this.state.customizationOnGoing} hideMapsCustomizations={this.hideMapsCustomizations}
+                    moveUp={this.moveUp} moveDown={this.moveDown} preventDraggingOnOtherElements={this.preventDraggingOnOtherElements}
+                    />
+                  </div>
+                </div>
+                )
+              }
+
             })}
              <DragImage ref={this.dragImageRef} dragContent={this.state.dragContent} activeDragImage={this.state.activeDragImage}/>
           </div>

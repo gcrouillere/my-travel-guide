@@ -14,9 +14,11 @@ class DropZone extends Component {
       ""
 
     return (
+      this.props.active ?
       <div className={`dropZone-${this.props.area} drop-${this.props.area} ${active}`}>
         <p className={`drop-${this.props.area}`}>Drop your content here</p>
       </div>
+      : null
     )
   }
 }

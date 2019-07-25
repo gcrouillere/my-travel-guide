@@ -119,19 +119,9 @@
     position: fixed;
     border: 1px solid rgba(0,0,0,.05);
     box-shadow: 1px 0px 6px 1px rgba(0,0,0,0.1);
-    .chevron-open {
-      display: block;
-    }
-    .chevron-closed {
-      display: none;
-    }
     &:hover {
       .chevron-closed {
-        display: block;
         width: 78px;
-      }
-      .chevron-open {
-        display: none;
       }
       .menu {
        display: none;
@@ -148,7 +138,7 @@
       justify-content: center;
       flex-direction: column;
       min-width: 262px;
-      padding: 50px 10px 0px 10px;
+      padding: 50px 8px 0px 10px;
 
       .blocAddition {
         cursor: pointer;
@@ -202,16 +192,13 @@
         text-shadow: 0px 2px 0px rgba(0,0,0,0.15);
         }
         .menu {
-          font-size: 30px;
+          font-size: 16px;
           font-weight: 300;
-          padding: 10px 5px 10px 10px;
+          padding: 10px 5px 10px 5px;
           p {
+            transform: scale(1.4);
             margin-bottom: 5px;
           }
-        }
-        .chevron-open, .chevron-closed {
-          font-size: 50px;
-          padding: 10px 5px 10px 5px;
         }
     }
   }
@@ -224,7 +211,7 @@
   }
 }
 
-.mapInitialCenterOverlay, .photoInitialFileOverlay {
+.mapInitialCenterOverlay, .mixedContentInitialOverlay, .photoInitialFileOverlay {
     z-index: 5;
     background: #fafafa;
     opacity: 0;
@@ -287,7 +274,7 @@
     }
   }
 
-  .mapInitialCenterOverlay.active, .photoInitialFileOverlay.active {
+  .mapInitialCenterOverlay.active, .mixedContentInitialOverlay.active, .photoInitialFileOverlay.active {
     opacity: 1;
     visibility: visible;
     transition: all 0.3s ease-in-out;

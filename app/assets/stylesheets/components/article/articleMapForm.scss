@@ -1,3 +1,9 @@
+.doubleContentInput {
+  .mapInput .mapBloc {
+    border: none;
+  }
+}
+
 .mapLocationInput {
   height: 28px;
   border-radius: 2px;
@@ -11,6 +17,7 @@
 }
 
 .mapInput {
+  background: white;
   .mapBloc {
     padding: 15px;
     border: 1px solid #ccc;
@@ -45,24 +52,21 @@
     z-index: 1;
     top: 0;
     right: 0;
-    width: 30%;
+    width: 21%;
     height: 100%;
   }
   @media all and (max-width:768px) {
     height: 0;
-    // width: 100%;
-    // height: 33%;
-    // border-bottom: 1px solid #ccc;
-    // border-top: 1px solid #ccc;
   }
   cursor: default;
   transition: all 0.3s ease-in-out;
   .overflowContainer {
-    padding: 20px;
+    padding: 15px;
     background: linear-gradient(to right, #fefefe, #F7F7F7);
     box-shadow: -2px 0px 5px -1px rgba(0,0,0,0.2);
     min-height: 100%;
     width: 100%;
+    font-size: 15px;
     @media all and (min-width:769px) {
       position: absolute;
       border: 1px solid #ccc;
@@ -70,7 +74,7 @@
       min-height: 100%;
     }
     @media all and (max-width:768px) {
-      // top: - 100%;
+
     }
     transition: all 0.3s ease-in-out;
   }
@@ -81,21 +85,22 @@
     @media all and (min-width:769px) {
       position: absolute;
     }
-    top: 6px;
-    right: 10px;
+    top: -1px;
+    right: 3px;
     font-size: 1.5rem;
   }
   button.btn {
     border-radius: 2px;
     margin: 10px auto;
     width: 100%;
+    font-size: 15px;
   }
   button[disabled], input[disabled] {
     cursor: not-allowed;
   }
   h3 {
     margin-bottom: 1.5rem;
-    font-size: 1.5rem;
+    font-size: 20px;
     font-weight: 300;
     color: #495057;
     text-shadow: 0px 2px 0px rgba(0, 0, 0, 0.15)
@@ -107,6 +112,21 @@
     animation: finishPathBlink 1.3s ease-in-out infinite alternate;
     .actionCancelInfo {
        animation: actionCancelInfoBlink 1.3s ease-in-out infinite alternate;;
+    }
+  }
+}
+
+.doubleContentInput {
+  .mapCustomization, .markerCustomization, .polylineCustomization {
+    @media all and (min-width:769px) {
+      width: 27%
+    }
+    .overflowContainer {
+      font-size: 12px;
+      padding: 8px;
+    }
+    button.btn {
+      font-size: 12px;
     }
   }
 }

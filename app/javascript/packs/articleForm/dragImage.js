@@ -38,6 +38,13 @@ class DragImage extends Component {
               <p>Image : {this.props.dragContent[dragContentKey]}</p>
             </div>
           )}
+            else if (dragContentKey == "associated_instances_mapping") {
+              return (
+                <div key={"dragImageContentMap"}>
+                  <p>Mix content : {`${this.props.dragContent[dragContentKey][0][0]} & ${this.props.dragContent[dragContentKey][1][0]}`}</p>
+                </div>
+              )
+            }
         })}
       </div>
     )
